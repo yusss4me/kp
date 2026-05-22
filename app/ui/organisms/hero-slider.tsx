@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
+import { Img } from "../atoms/image";
 import { Container } from "../atoms/container";
-import { Box } from "lucide-react";
 
 const SLIDES = [
   { id: 1, src: "/images/slider-1.jpg", alt: "Modern Tech Office" },
@@ -11,7 +10,22 @@ const SLIDES = [
   { id: 3, src: "/images/slider-3.jpg", alt: "Premium Architecture" },
 ];
 
-export default function HeroSlider() {
+export interface HeroSliderProps {
+  className?: string;
+}
+
+/**
+ * HeroSlider
+ * 
+ * Komponen slider gambar otomatis untuk bagian hero.
+ * Menampilkan rangkaian gambar slide dengan transisi halus, navigasi dot, 
+ * dan indikator progres waktu (progress bar).
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {HeroSliderProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen HeroSlider
+ */
+export default function HeroSlider({}: HeroSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -31,10 +45,13 @@ export default function HeroSlider() {
       >
         {SLIDES.map((slide) => (
           <Container key={slide.id} className="min-w-full h-full relative">
-            <Image
+            <Img
               src={slide.src}
               alt={slide.alt}
               fill
+              width={undefined}
+              height={undefined}
+              sizes="(max-width: 600px) 100vw, 600px"
               priority={slide.id === 1}
               className="object-cover"
             />

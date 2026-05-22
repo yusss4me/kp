@@ -1,47 +1,65 @@
 import { ReactNode, ButtonHTMLAttributes } from 'react';
 import { cn } from '@/app/lib/utils'; // Menggunakan helper cn yang kita bahas sebelumnya
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: 'red' | 'orange' | 'pink' | 'light' | 'dark' | 'transparent';
+  variant?: 'red' | 'light' | 'transparent';
+  textColor?: 'red' | 'light' | 'dark' | 'darkred';
   size?: 'sm' | 'md' | 'lg';
   shape?: 'square' | 'circle' | 'rounded';
+  borderColor?: 'red' | 'light' | 'dark';
   border?: 'border' | 'none';
   isLoading?: boolean;
+  
 }
 
 /**
- * Komponen Button (Btn) kustom dengan berbagai varian warna, ukuran, dan bentuk.
+ * Button (Btn)
+ * 
+ * Komponen tombol dasar dengan berbagai varian warna, ukuran, dan bentuk.
+ * Mendukung status loading dan kustomisasi border.
  * 
  * @param {ReactNode} children - Konten di dalam tombol (teks atau icon)
- * @param {'red' | 'orange' | 'pink' | 'light' | 'dark' | 'transparent'} variant - Varian warna tombol 'red' | 'orange' | 'pink' | 'light' | 'dark' | 'transparent'
- * @param {'sm' | 'md' | 'lg'} size - Ukuran tombol (kecil, menengah, besar) 'sm' | 'md' | 'lg'
- * @param {'square' | 'circle' | 'rounded'} shape - Bentuk sudut tombol 'square' | 'circle' | 'rounded'
- * @param {'border' | 'none'} border - Border tombol 'border' | 'none'
- * @param {string} className - Class tambahan Tailwind CSS
- * @param {ButtonHTMLAttributes} props - Atribut standar HTML button lainnya
+ * @param {'red' | 'light' | 'transparent'} variant - Varian warna background tombol
+ * @param {'red' | 'light' | 'dark'} textColor - Warna teks tombol
+ * @param {'sm' | 'md' | 'lg'} size - Ukuran tombol
+ * @param {'square' | 'circle' | 'rounded'} shape - Bentuk sudut tombol
+ * @param {'red' | 'light' | 'dark'} borderColor - Warna border tombol
+ * @param {'border' | 'none'} border - Ketebalan border
+ * @param {boolean} isLoading - Status loading tombol
+ * @param {ButtonProps} props - Properti komponen
  * @returns {JSX.Element} Komponen Tombol
  */
 export const Btn = ({ 
   children,  
   variant = 'red', 
+  textColor, 
   size = 'sm', 
   shape = 'circle',
   border = 'none',
+  borderColor = 'red',
   className, 
   isLoading,
   ...props 
 }: ButtonProps) => {
   
+  const computedTextColor = textColor || (
+    variant === 'red' || variant === 'light' ? 'light' : 'dark'
+  );
+
   const variants = {
-    red: 'bg-red-primary text-red-secondary hover:text-red-neutral hover:bg-red-tertiary cursor-pointer border border-red-secondary',
-    orange: 'bg-orange-primary text-orange-secondary hover:text-orange-neutral hover:bg-orange-tertiary cursor-pointer border border-orange-secondary',
-    pink: 'bg-pink-primary text-pink-secondary hover:text-pink-tertiary hover:bg-pink-neutral cursor-pointer border border-pink-secondary',
-    light: 'bg-lightdark-primary text-lightdark-tertiary hover:text-lightdark-neutral hover:bg-lightdark-secondary cursor-pointer border border-lightdark-tertiary',
-    dark: 'bg-lightdark-tertiary text-lightdark-primary hover:text-lightdark-secondary hover:bg-lightdark-neutral cursor-pointer border border-lightdark-tertiary',
-    transparent: 'bg-transparent text-lightdark-primary hover:text-red-primary hover:bg-red-secondary cursor-pointer border border-gray-secondary',
-    
+    red: 'bg-red-primary hover:bg-red-secondary',
+    light: 'bg-red-secondary hover:bg-red-primary',
+    transparent: 'bg-transparent',
   };
+
+  const textVariants = {
+    red: 'text-red-primary hover:text-red-secondary',
+    light: 'text-lightdark-primary hover:text-lightdark-tertiary',
+    dark: 'text-lightdark-tertiary hover:text-lightdark-primary',
+    darkred: 'text-lightdark-tertiary hover:text-red-primary',
+    
+  }
 
   const sizes = {
     sm: 'px-3 py-1.5 text-sm',
@@ -53,7 +71,12 @@ export const Btn = ({
     border: 'border',
     none: 'border-none',
   }
-
+  const borderColors = {
+    red: 'border-red-primary hover:border-red-secondary',
+    light: 'border-lightdark-primary',
+    dark: 'border-lightdark-tertiary hover:border-lightdark-primary',
+    
+  }
   const shapes = {
     square: 'rounded-none',
     circle: 'rounded-full',
@@ -63,10 +86,12 @@ export const Btn = ({
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center transition-colors duration-300 active:scale-95 disabled:opacity-50',
+        'inline-flex items-center justify-center transition-colors duration-300 active:scale-95 disabled:opacity-50 cursor-pointer',
         variants[variant],
+        textVariants[computedTextColor],
         sizes[size],
         borders[border],
+        borderColors[borderColor],
         shapes[shape],
         className
       )}

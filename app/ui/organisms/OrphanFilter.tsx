@@ -1,26 +1,40 @@
 import React from 'react';
 import { Search, Plus, Filter } from 'lucide-react';
 import { Btn } from '../atoms/button';
+import { Container } from '../atoms/container';
+import { Input } from '../atoms/input';
 
-interface OrphanFilterProps {
+export interface OrphanFilterProps {
   onSearch: (query: string) => void;
   onAddClick: () => void;
 }
 
+/**
+ * OrphanFilter
+ * 
+ * Komponen filter untuk mencari dan mengelola data anak asuh.
+ * Terdiri dari input pencarian, tombol filter, dan tombol aksi 
+ * untuk menambah data anak baru.
+ * 
+ * @param {(query: string) => void} onSearch - Handler saat kueri pencarian berubah
+ * @param {() => void} onAddClick - Handler saat tombol tambah anak diklik
+ * @param {OrphanFilterProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen OrphanFilter
+ */
 export const OrphanFilter = ({ onSearch, onAddClick }: OrphanFilterProps) => {
   return (
-    <div className="flex flex-col md:flex-row items-center gap-4 bg-white p-4 rounded-[28px] border border-gray-100 shadow-sm">
-      <div className="relative flex-grow w-full">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-        <input 
+    <Container className="flex flex-col md:flex-row items-center gap-4 bg-white p-4 rounded-[28px] border border-gray-100 shadow-sm">
+      <Container className="relative flex-grow w-full">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 z-10" size={18} />
+        <Input 
           type="text" 
           placeholder="Cari nama anak asuh..." 
           onChange={(e) => onSearch(e.target.value)}
           className="w-full h-12 pl-12 pr-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-red-primary/20 text-sm font-medium transition-all"
         />
-      </div>
+      </Container>
       
-      <div className="flex items-center gap-2 w-full md:w-auto">
+      <Container className="flex items-center gap-2 w-full md:w-auto">
         <Btn 
           variant="light" 
           className="flex-1 md:flex-none gap-2 h-12 rounded-2xl border border-gray-100"
@@ -31,12 +45,12 @@ export const OrphanFilter = ({ onSearch, onAddClick }: OrphanFilterProps) => {
         <Btn 
           variant="red" 
           onClick={onAddClick}
-          className="flex-1 md:flex-none gap-2 h-12 rounded-2xl shadow-lg shadow-red- primary/20"
+          className="flex-1 md:flex-none gap-2 h-12 rounded-2xl shadow-lg shadow-red-primary/20"
         >
           <Plus size={18} />
           Tambah Anak
         </Btn>
-      </div>
-    </div>
+      </Container>
+    </Container>
   );
 };

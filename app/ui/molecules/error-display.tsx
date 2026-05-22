@@ -4,7 +4,7 @@ import { Txt } from '../atoms/text';
 import { Container } from '../atoms/container';
 import { cn } from '@/app/lib/utils';
 
-interface ErrorDisplayProps {
+export interface ErrorDisplayProps {
   title?: string;
   message?: string;
   onRetry?: () => void;
@@ -13,14 +13,18 @@ interface ErrorDisplayProps {
 }
 
 /**
- * ErrorDisplay component to show error messages with a retry option.
+ * ErrorDisplay
  * 
- * @param {string} title - The title of the error (default: 'Oops! Terjadi Kesalahan')
- * @param {string} message - The error message (default: 'Mohon maaf, sistem sedang mengalami kendala. Silakan coba beberapa saat lagi.')
- * @param {() => void} onRetry - Function to call when retry button is clicked
- * @param {boolean} fullPage - Whether to display as a full page or inline (default: false)
- * @param {string} className - Additional CSS classes
- * @returns {JSX.Element} ErrorDisplay component
+ * Komponen untuk menampilkan pesan kesalahan secara visual 
+ * dengan opsi tombol coba lagi.
+ * 
+ * @param {string} title - Judul pesan kesalahan
+ * @param {string} message - Detail pesan kesalahan
+ * @param {() => void} onRetry - Handler untuk mencoba ulang proses (opsional)
+ * @param {boolean} fullPage - Apakah ditampilkan memenuhi layar (full page)
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {ErrorDisplayProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen ErrorDisplay
  */
 export const ErrorDisplay = ({
   title = 'Oops! Terjadi Kesalahan',
@@ -33,19 +37,19 @@ export const ErrorDisplay = ({
     <Container 
       className={cn(
         "flex flex-col items-center justify-center text-center p-8 space-y-6 max-w-md mx-auto",
-        !fullPage && "bg-red-primary/5 rounded-3xl border border-red-primary/10",
+        !fullPage && "bg-danger/5 rounded-3xl border border-danger/10",
         className
       )}
     >
-      <div className="p-4 bg-red-primary/10 rounded-full">
-        <AlertCircle className="w-12 h-12 text-red-primary" />
+      <div className="p-4 bg-danger/10 rounded-full">
+        <AlertCircle className="w-12 h-12 text-danger" />
       </div>
       
       <div className="space-y-2">
-        <Txt variant="h3" weight="bold" color="black">
+        <Txt variant="h3" weight="bold" color="danger" align='center'>
           {title}
         </Txt>
-        <Txt variant="body" className="text-lightdark-neutral">
+        <Txt variant="body" className="text-lightdark-neutral" align='center'>
           {message}
         </Txt>
       </div>

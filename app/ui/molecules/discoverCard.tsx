@@ -1,27 +1,52 @@
 import React from 'react';
 
-interface DiscoverCardProps {
+import { Img } from '@/app/ui/atoms/image';
+import { Btn } from '@/app/ui/atoms/button';
+import { Container } from '@/app/ui/atoms/container';
+import { Txt } from '@/app/ui/atoms/text';
+
+export interface DiscoverCardProps {
   title: string;
   image: string;
   category: string;
   onClick?: () => void;
 }
 
+/**
+ * DiscoverCard
+ * 
+ * Komponen kartu horizontal kecil untuk menampilkan konten yang ditemukan 
+ * di bagian eksplorasi.
+ * 
+ * @param {string} title - Judul konten yang ditemukan
+ * @param {string} image - URL gambar sampul
+ * @param {string} category - Label kategori konten
+ * @param {() => void} onClick - Handler saat kartu diklik
+ * @param {DiscoverCardProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen DiscoverCard
+ */
 export const DiscoverCard: React.FC<DiscoverCardProps> = ({ title, image, category, onClick }) => {
   return (
-    <div 
+    <Btn 
       onClick={onClick}
-      className="min-w-[240px] bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 cursor-pointer active:scale-95 transition-transform"
+      variant='light'
+      textColor='dark'
+      border='border'
+      shape='rounded'
+      borderColor='light'
+      className="flex-col min-w-[240px] overflow-hidden shadow-sm  active:scale-95 transition-transform"
     >
-      <div className="relative h-32 w-full">
-        <img src={image} alt={title} className="w-full h-full object-cover" />
-        <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight">
+      <Container className="relative h-32 w-full">
+        <Img src={image} alt={title} width={500} height={500} className="w-full h-full object-cover" />
+        <Txt className="absolute top-3 left-3 bg-lightdark-primary/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight">
           {category}
-        </span>
-      </div>
-      <div className="p-4">
-        <h4 className="font-bold text-gray-800 leading-tight line-clamp-2">{title}</h4>
-      </div>
-    </div>
+        </Txt>
+      </Container>
+      <Container variant='transparent' padding='md'>
+        <Txt color='current' className="font-bold leading-tight line-clamp-2">
+          {title}
+        </Txt>
+      </Container>
+    </Btn>
   );
 };

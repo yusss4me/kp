@@ -4,7 +4,8 @@ import { ProfileTemplate } from "../templates/profile";
 import { Container } from "@/app/ui/atoms/container";
 import { useState } from "react";
 import { Btn } from "@/app/ui/atoms/button";
-import Image from "next/image";
+import { Img } from "@/app/ui/atoms/image";
+import { Icn } from "@/app/ui/atoms/icon";
 import { Txt } from "@/app/ui/atoms/text";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -43,13 +44,12 @@ export interface NavLink {
  */
 const DEFAULT_LINKS: NavLink[] = [
   { label: "Beranda", href: "/home", icon: Home },
-  { label: "Jelajahi", href: "/home/explore", icon: Compass },
   { label: "Aktivitas", href: "/home/donasi", icon: HandCoins },
   { label: "Broadcast", href: "/home/broadcast", icon: MessageCircleMore },
   { label: "Profil", href: "/home/profile", icon: User, hideOnDesktop: true },
 ];
 
-interface NavbarProps {
+export interface NavbarProps {
   links?: NavLink[];
   user?: {
     name: string;
@@ -60,6 +60,18 @@ interface NavbarProps {
 /**
  * Navbar component that adapts between a Sidebar for Desktop
  * and a Header/Bottom-Navigation split for Mobile.
+ */
+/**
+ * Navbar
+ * 
+ * Komponen navigasi utama yang adaptif antara Sidebar untuk Desktop 
+ * dan Split Header/Bottom-Navigation untuk Mobile.
+ * Menangani routing, status aktif tautan, dan overlay profil pengguna.
+ * 
+ * @param {NavLink[]} links - Daftar tautan navigasi
+ * @param {object} user - Data pengguna yang sedang login
+ * @param {NavbarProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen Navbar
  */
 export const Navbar = ({
   links = DEFAULT_LINKS,
@@ -84,12 +96,13 @@ export const Navbar = ({
         {/* Top Section: Branding & Header */}
         <Container className="flex flex-col gap-10">
           <Container className="flex items-center justify-center">
-            <Image
+            <Img
               src="/logo/yamuti.png"
               alt="Logo"
-              width={50}
-              height={50}
-              className="rounded-full"
+              w={50}
+              h={50}
+              rounded="full"
+              aspect="square"
             />
           </Container>
 
@@ -117,9 +130,12 @@ export const Navbar = ({
         <Container className="pt-6 border-t border-white/10">
           <Container className="flex items-center justify-center p-3">
             <Btn onClick={() => setIsProfileOpen(!isProfileOpen)}
-              variant="orange">
-              {isProfileOpen ? <X size={20} /> : <User size={20} />}
-            </Btn>
+            variant="transparent"
+            className="text-white hover:bg-white/10 rounded-full p-3">
+            {isProfileOpen
+              ? <Icn icon={X} size={25} color="current" />
+              : <Icn icon={User} size={25} color="current" />}
+          </Btn>
           </Container>
         </Container>
 
@@ -141,20 +157,6 @@ export const Navbar = ({
       {/* Mobile View: Top Header + Bottom Navigation */}
       <Container className="md:hidden flex flex-col">
         {/* Mobile Top Header: Logo Branding */}
-        {/* <Container className="fixed top-0 left-0 w-full h-16 flex items-center justify-between px-6 bg-red-primary border-b border-white/10 z-50">
-          <Container className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-red-primary font-black text-sm">
-              Y
-            </div>
-            <Txt weight="bold" color="white" className="tracking-tight">
-              YAMUTI
-            </Txt>
-          </Container>
-
-          <Container className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center border border-white/10">
-            <User size={18} className="text-white" />
-          </Container>
-        </Container> */}
 
         {/* Mobile Bottom Navigation Bar */}
         <Container
@@ -183,7 +185,7 @@ export const Navbar = ({
       </Container>
 
       {/* Mobile Top Header Spacer */}
-      <div className="md:hidden h-16" />
+      <div className="md:hidden" />
     </>
   );
 };

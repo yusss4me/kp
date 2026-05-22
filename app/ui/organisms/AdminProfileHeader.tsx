@@ -2,59 +2,86 @@
 import React from 'react';
 import { ShieldCheck, LayoutDashboard, Clock, Wallet } from 'lucide-react';
 import { Txt } from '../atoms/text';
+import { Container } from '../atoms/container';
+import { Img } from '../atoms/image';
+import { Icn } from '../atoms/icon';
+import { Btn } from '../atoms/button';
+import { Badge } from '../atoms/badge';
+import { MilestoneCard } from '../molecules/milestoneCard';
 
-export const AdminProfileHeader: React.FC = () => {
+export interface AdminProfileHeaderProps {
+  className?: string;
+  title: string;
+  subtitle: string;
+  image: string;
+  totalDonasi: string;
+  programAktif: string;
+  menungguVerifikasi: string;
+}
+
+/**
+ * AdminProfileHeader
+ * 
+ * Komponen header khusus untuk halaman profil Administrator.
+ * Menampilkan foto profil admin, status verifikasi shield, dan ringkasan 
+ * statistik admin (Total Donasi, Program Aktif, Menunggu Verifikasi).
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {AdminProfileHeaderProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen AdminProfileHeader
+ */
+export const AdminProfileHeader: React.FC<AdminProfileHeaderProps> = (props) => {
+    const { title, subtitle, image, totalDonasi, programAktif, menungguVerifikasi, className } = props;
   return (
-    <div className="bg-red-primary p-8 rounded-b-[40px] shadow-xl relative overflow-hidden">
+    <Container display='none' variant='red' padding='md' radius='lg' shadow='xl' className="relative overflow-hidden">
       {/* Decorative element */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16" />
       
-      <div className="flex items-center gap-6 relative z-10">
-        <div className="relative">
-          <img 
-            src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop" 
-            className="w-20 h-20 rounded-[28px] object-cover border-4 border-white/20 shadow-xl" 
-            alt="Administrator" 
-          />
-          <div className="absolute -bottom-1 -right-1 bg-blue-500 w-5 h-5 rounded-full border-4 border-red-primary flex items-center justify-center">
-            <ShieldCheck size={10} className="text-white" />
-          </div>
-        </div>
-        <div className="space-y-1">
-          <Txt variant="h5" weight="bold" color="white">M. Ardiansyah</Txt>
-          <div className="flex items-center gap-2 px-2.5 py-1 bg-white/10 rounded-full border border-white/10">
-            <span className="text-[10px] text-white font-black uppercase tracking-widest">Administrator</span>
-          </div>
-        </div>
-      </div>
+      
+      <Container gap='lg' className="items-center relative z-10">
+        <MilestoneCard 
+        image={image} 
+        title={title} 
+        range={subtitle}/>
+      </Container>
 
       {/* Admin Quick Stats Card */}
-      <div className="mt-8 grid grid-cols-2 gap-4">
-          <div className="bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10">
-              <Wallet size={16} className="text-white/60 mb-2" />
-              <p className="text-white font-black text-lg">Rp 152.4jt</p>
-              <p className="text-white/60 text-[10px] font-bold uppercase tracking-wider">Total Donasi</p>
-          </div>
-          <div className="bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10">
-              <LayoutDashboard size={16} className="text-white/60 mb-2" />
-              <p className="text-white font-black text-lg">24</p>
-              <p className="text-white/60 text-[10px] font-bold uppercase tracking-wider">Program Aktif</p>
-          </div>
-          <div className="col-span-2 bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                  <div className="bg-warning/20 p-2 rounded-xl">
-                      <Clock size={16} className="text-warning" />
-                  </div>
-                  <div>
-                      <p className="text-white font-black text-sm">8 Menunggu</p>
-                      <p className="text-white/60 text-[10px] font-bold">Verifikasi Donasi</p>
-                  </div>
-              </div>
-              <button className="px-4 py-2 bg-white text-red-primary rounded-xl text-[10px] font-black uppercase tracking-wider transition-all active:scale-95">
-                  Proses
-              </button>
-          </div>
-      </div>
-    </div>
+      <Container className="mt-8 grid grid-cols-2 gap-4">
+        
+        <Container display='none'  className="flex-col bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10">
+          <Icn icon={Wallet} size={16} color="light"  />
+          <Txt variant="h5" weight="bold" color="white">{totalDonasi}</Txt>
+          <Txt variant="caption" weight="bold" color="white" className="opacity-60 uppercase tracking-wider">
+            Total Donasi
+          </Txt>
+        </Container>
+        <Container className="flex-col bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10">
+          <Icn icon={LayoutDashboard} size={16} color="light" />
+          <Txt variant="h5" weight="bold" color="white">{programAktif}</Txt>
+          <Txt variant="caption" weight="bold" color="white" className="opacity-60 uppercase tracking-wider">
+            Program Aktif
+          </Txt>
+        </Container>
+        <Container display='none' className="col-span-2 bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10 flex items-center justify-between">
+          
+          <Container className="flex items-center gap-3">
+            <Container display='none' className="bg-warning/20 p-2 rounded-xl">
+              <Icn icon={Clock} size={16} color="light" />
+            </Container>
+            <Container display='none'>
+              <Txt variant="small" weight="bold" color="white">{menungguVerifikasi}</Txt>
+              <Txt variant="caption" color="white" className="opacity-60">Verifikasi Donasi</Txt>
+            </Container>
+          </Container>
+          <Btn
+            variant="light"
+            size="sm"
+            shape="rounded"
+            className="px-4 py-2 bg-white text-red-primary text-[10px] font-black uppercase tracking-wider"
+          >
+            Proses
+          </Btn>
+        </Container>
+      </Container>
+    </Container>
   );
 };

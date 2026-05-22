@@ -3,36 +3,62 @@ import { CheckCircle2, ArrowRight } from "lucide-react";
 import { DiscoverSection } from "../organisms/discoverSction";
 import Link from "next/link";
 import { Btn } from "../atoms/button";
+import { Container } from "../atoms/container";
+import { Badge } from "../atoms/badge";
 
-export const ProgramsSection = () => {
+
+export interface ProgramsSectionProps {
+  items: {
+    id: string;
+    title: string;
+    category: string;
+    image: string;
+  }[];
+}
+
+/**
+ * ProgramsSection
+ * 
+ * Bagian section pada landing page yang menampilkan daftar program 
+ * kebaikan pilihan (terverifikasi).
+ * Menggunakan DiscoverSection untuk menampilkan item program dalam 
+ * format scroller horizontal.
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {ProgramsSectionProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen ProgramsSection
+ */
+export const ProgramsSection = ({items}: ProgramsSectionProps) => {
     return (
-        <section id="programs" className="py-16 md:py-24">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
-              <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-success/10 rounded-full">
-                  <CheckCircle2 size={14} className="text-success" />
-                  <span className="text-[10px] font-black text-success uppercase tracking-widest">Program Terverifikasi</span>
-                </div>
+        <Container id="programs" className="py-16 md:py-24 flex flex-col">
+          <Container className="max-w-7xl mx-auto px-6 flex flex-col">
+            <Container className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+              <Container className="space-y-4 flex flex-col">
+                <Badge
+                  icon={CheckCircle2}
+                  color="success"
+                  
+                >
+                  <Txt color="current">
+
+                  program terverifikasi
+                  </Txt>
+                </Badge>
                 <Txt variant="h2" weight="bold" className="text-lightdark-tertiary text-2xl md:text-3xl">Program Kebaikan Pilihan</Txt>
                 <Txt variant="body" className="text-lightdark-neutral max-w-xl text-sm md:text-base">
                   Pilih program yang paling menyentuh hati Anda dan jadilah bagian dari perubahan besar bagi mereka.
                 </Txt>
-              </div>
+              </Container>
               <Link href="/home/donasi/program" className="w-full md:w-auto">
                 <Btn variant="light" shape="circle" className="w-full md:w-auto gap-2 text-sm">
                   Lihat Semua Program
                   <ArrowRight size={16} />
                 </Btn>
               </Link>
-            </div>
-
-            <DiscoverSection items={[
-              { id: '1', title: 'Pembangunan Masjid Al-Ikhlas', category: 'Pembangunan', image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop' },
-              { id: '2', title: 'Beasiswa Anak Yatim Piatu', category: 'Pendidikan', image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070&auto=format&fit=crop' },
-              { id: '3', title: 'Bantuan Pangan Lansia', category: 'Sosial', image: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070&auto=format&fit=crop' }
-            ]} />
-          </div>
-        </section>
+            </Container>
+ 
+            <DiscoverSection items={items} />
+          </Container>
+        </Container>
     )
 }

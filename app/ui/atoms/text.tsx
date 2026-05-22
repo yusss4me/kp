@@ -1,27 +1,32 @@
 import { ReactNode, ElementType, HTMLAttributes } from 'react';
 import { cn } from '@/app/lib/utils';
 
-interface TextProps extends HTMLAttributes<HTMLElement> {
+export interface TextProps extends HTMLAttributes<HTMLElement> {
   children: ReactNode;
   as?: ElementType;
   variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body' | 'small' | 'caption';
   weight?: 'light' | 'normal' | 'medium' | 'semibold' | 'bold';
-  color?: 'default' | 'black' | 'white' | 'danger' | 'success' | 'warning' | 'info';
+  color?: 'current' | 'default' | 'light' | 'dark' | 'grey' | 'red' | 'danger' | 'success' | 'warning' | 'info';
   align?: 'left' | 'center' | 'right' | 'justify';
+  decoration?: 'none' | 'bold' | 'italic' | 'underline';
   font?: 'jakarta' | 'roboto';
 }
 
 /**
- * Komponen teks kustom dengan berbagai varian, bobot, warna, dan font.
+ * Text (Txt)
+ * 
+ * Komponen tipografi utama dengan berbagai varian ukuran, ketebalan, 
+ * warna, dan jenis font yang terstandarisasi.
  * 
  * @param {ReactNode} children - Konten teks yang akan ditampilkan
  * @param {ElementType} as - Tag HTML yang akan digunakan (default: 'p')
- * @param {'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body' | 'small' | 'caption'} variant - Varian ukuran dan gaya teks 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body' | 'small' | 'caption'
- * @param {'light' | 'normal' | 'medium' | 'semibold' | 'bold'} weight - Ketebalan font teks 'light' | 'normal' | 'medium' | 'semibold' | 'bold'
- * @param {'default' | 'black' | 'white' | 'danger' | 'success' | 'warning' | 'info'} color - Warna teks sesuai tema 'default' | 'black' | 'white' | 'danger' | 'success' | 'warning' | 'info'
- * @param {'left' | 'center' | 'right' | 'justify'} align - Perataan teks 'left' | 'center' | 'right' | 'justify'
- * @param {'jakarta' | 'roboto'} font - Jenis font yang digunakan 'jakarta' | 'roboto'
- * @param {string} className - Class tambahan Tailwind CSS
+ * @param {'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body' | 'small' | 'caption'} variant - Varian ukuran dan gaya teks
+ * @param {'light' | 'normal' | 'medium' | 'semibold' | 'bold'} weight - Ketebalan font teks
+ * @param {'current' | 'default' | 'white' | 'black' | 'light' | 'grey' | 'red' | 'danger' | 'success' | 'warning' | 'info'} color - Warna teks sesuai tema
+ * @param {'left' | 'center' | 'right' | 'justify'} align - Perataan teks
+ * @param {'none' | 'bold' | 'italic' | 'underline'} decoration - Dekorasi gaya teks
+ * @param {'jakarta' | 'roboto'} font - Jenis font yang digunakan
+ * @param {TextProps} props - Properti komponen
  * @returns {JSX.Element} Komponen teks yang telah diformat
  */
 export const Txt = ({
@@ -31,6 +36,7 @@ export const Txt = ({
   weight,
   color = 'default',
   align = 'left',
+  decoration = 'none',
   font = 'jakarta',
   className,
   ...props
@@ -49,10 +55,13 @@ export const Txt = ({
   };
 
   const colors = {
-    default: 'text-foreground',
-    
-    black: 'text-lightdark-tertiary',
-    white: 'text-lightdark-primary',
+    current: 'text-current',
+    default: 'text-lightdark-tertiary',
+    light: 'text-lightdark-primary',
+   
+    dark: 'text-lightdark-tertiary',
+    grey: 'text-lightdark-neutral',
+    red: 'text-red-primary',
     danger: 'text-danger',
     success: 'text-success',
     warning: 'text-warning',
@@ -65,6 +74,13 @@ export const Txt = ({
     medium: 'font-medium',
     semibold: 'font-semibold',
     bold: 'font-bold',
+  };
+
+  const decorations = {
+    none: '',
+    bold: 'font-bold',
+    italic: 'italic',
+    underline: 'underline',
   };
 
   const aligns = {
@@ -87,6 +103,7 @@ export const Txt = ({
         color && colors[color],
         weight && weights[weight],
         align && aligns[align],
+        decoration && decorations[decoration],
         className
       )}
       {...props}

@@ -27,7 +27,22 @@ type VisitFormValues = z.infer<typeof visitSchema>;
  * Template halaman kunjungan untuk role Klien/Donatur.
  * Mengikuti gaya visual halaman donasi dan beranda klien.
  */
-export const KunjunganClientTemplate = () => {
+export interface KunjunganClientTemplateProps {
+  className?: string;
+}
+
+/**
+ * KunjunganClientTemplate
+ * 
+ * Template halaman pengajuan kunjungan untuk role Klien/Donatur.
+ * Menyediakan formulir lengkap untuk mendata rencana kunjungan silaturahmi 
+ * ke yayasan dengan validasi skema Zod.
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {KunjunganClientTemplateProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen KunjunganClientTemplate
+ */
+export const KunjunganClientTemplate = ({}: KunjunganClientTemplateProps) => {
   const {
     register,
     handleSubmit,
@@ -49,7 +64,7 @@ export const KunjunganClientTemplate = () => {
       <div className="bg-red-primary p-8 rounded-b-[40px] space-y-8 shadow-xl relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/5 rounded-full blur-2xl" />
-        <div className="absolute top-20 -left-10 w-24 h-24 bg-orange-primary/10 rounded-full blur-xl" />
+        <div className="absolute top-20 -left-10 w-24 h-24 bg-white/10 rounded-full blur-xl" />
 
         <div className="relative z-10 flex justify-between items-center text-white">
           <Link href="/home" className="p-2.5 bg-white/10 rounded-xl hover:bg-white/20 transition-all">
@@ -68,10 +83,7 @@ export const KunjunganClientTemplate = () => {
       {/* Form Content Area */}
       <div className="px-6 -mt-12 relative z-20">
         <Container
-          variant="white"
-          radius="2xl"
-          padding="none"
-          className="p-6 md:p-10 shadow-2xl shadow-black/10 border border-white/20"
+          className="p-6 md:p-10 shadow-2xl shadow-black/10 border border-white/20 rounded-2xl bg-white"
         >
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
             <div className="flex flex-col gap-6">

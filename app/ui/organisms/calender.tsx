@@ -3,8 +3,24 @@
 import React, { useState } from 'react';
 import { CalendarHeader } from '../molecules/calenderHeader';
 import { CalendarDay } from '../atoms/calenderDay';
+import { Container } from '../atoms/container';
+import { Txt } from '../atoms/text';
 
-export const Calendar: React.FC = () => {
+export interface CalendarProps {
+  className?: string;
+}
+
+/**
+ * Calendar
+ * 
+ * Komponen kalender dasar untuk menampilkan tanggal dalam sebulan.
+ * Memungkinkan pengguna untuk memilih tanggal tertentu.
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {CalendarProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen Calendar
+ */
+export const Calendar: React.FC<CalendarProps> = () => {
   const [selectedDate, setSelectedDate] = useState<number>(24);
   
   // Dummy data untuk hari dalam seminggu
@@ -14,7 +30,7 @@ export const Calendar: React.FC = () => {
   const days = Array.from({ length: 30 }, (_, i) => i + 1);
 
   return (
-    <div className="w-80 bg-white border rounded-xl shadow-lg overflow-hidden">
+    <Container className="w-80 bg-white border rounded-xl shadow-lg overflow-hidden flex flex-col">
       <CalendarHeader 
         monthName="April" 
         year={2026} 
@@ -22,18 +38,20 @@ export const Calendar: React.FC = () => {
         onNext={() => {}} 
       />
       
-      <div className="p-4">
+      <Container className="p-4 flex flex-col">
         {/* Grid Hari */}
-        <div className="grid grid-cols-7 mb-2">
-          {daysOfWeek.map((day) => (
-            <div key={day} className="text-center text-xs font-bold text-gray-400 py-2">
-              {day}
-            </div>
+        <Container className="grid grid-cols-7 mb-2">
+          {daysOfWeek.map((day, idx) => (
+            <Container key={`${day}-${idx}`} className="text-center py-2 justify-center">
+              <Txt variant="caption" weight="bold" className="text-gray-400">
+                {day}
+              </Txt>
+            </Container>
           ))}
-        </div>
+        </Container>
         
         {/* Grid Tanggal */}
-        <div className="grid grid-cols-7 gap-1">
+        <Container className="grid grid-cols-7 gap-1">
           {days.map((d) => (
             <CalendarDay 
               key={d} 
@@ -42,8 +60,8 @@ export const Calendar: React.FC = () => {
               onClick={() => setSelectedDate(d)}
             />
           ))}
-        </div>
-      </div>
-    </div>
+        </Container>
+      </Container>
+    </Container>
   );
 };

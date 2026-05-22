@@ -1,7 +1,7 @@
 import { InputHTMLAttributes, forwardRef } from 'react';
 import { cn } from '@/app/lib/utils';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   suffix?: React.ReactNode;
@@ -9,21 +9,24 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 /**
- * Komponen Input teks dengan label, pesan error, dan suffix opsional.
+ * Input
+ * 
+ * Komponen Input teks dasar dengan dukungan label, pesan validasi, 
+ * elemen suffix, dan status loading.
  * 
  * @param {string} label - Label teks di atas input
  * @param {string} error - Pesan kesalahan di bawah input
- * @param {React.ReactNode} suffix - Elemen yang ditampilkan di sisi kanan input (misal: icon)
- * @param {string} className - Class tambahan Tailwind CSS
- * @param {InputHTMLAttributes} props - Atribut standar HTML input lainnya
- * @returns {JSX.Element} Komponen Input
+ * @param {React.ReactNode} suffix - Elemen tambahan di sisi kanan (misal: icon)
+ * @param {boolean} isLoading - Status loading/proses pada input
+ * @param {InputProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen Input yang telah diformat
  */
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, suffix, className, isLoading, ...props }, ref) => {
     return (
-      <div className="flex flex-col gap-1.5 w-full">
+      <div className="flex flex-col gap-2 w-full">
         {label && (
-          <label className="text-sm font-semibold text-lightdark-tertiary ml-1">
+          <label className="text-md font-semibold text-lightdark-tertiary ml-1">
             {label}
           </label>
         )}
@@ -33,7 +36,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             className={cn(
               'w-full px-4 py-3 rounded-xl border-2 transition-all border-lightdark-tertiary',
               'focus:border-lightdark-neutral bg-lightdark-secondary text-lightdark-tertiary outline-none',
-              'placeholder:text-lightdark-tertiary/40 hover:border-lightdark-tertiary/80',
+              'placeholder:text-lightdark-neutral hover:border-lightdark-neutral',
               error ? 'border-danger' : 'border-lightdark-secondary',
               suffix && 'pr-14',
               isLoading && 'opacity-70 pointer-events-none animate-pulse',
@@ -42,12 +45,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
           {suffix && (
-            <div className="absolute right-1 flex items-center justify-center h-[calc(100%-8px)] w-fit overflow-hidden rounded-lg">
+            <div className="absolute right-1 flex items-center justify-center h-[calc(100%-8px)] w-fit overflow-hidden rounded-lg p-4 text-lightdark-tertiary">
               {suffix}
             </div>
           )}
         </div>
-        {error && <span className="text-xs text-danger ml-1">{error}</span>}
+        {error && <span className="text-sm text-danger ml-1">{error}</span>}
       </div>
     );
   }

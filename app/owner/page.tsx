@@ -23,7 +23,7 @@ export default function OwnerDashboard() {
     <DashboardTemplate headerTitle="Ringkasan Eksekutif">
       <div className="space-y-10">
         {/* Executive Welcome Section */}
-        <div className="bg-gradient-to-br from-red-primary to-orange-primary p-8 md:p-12 rounded-[40px] text-white shadow-2xl relative overflow-hidden">
+        <div className="bg-gradient-to-br from-red-primary to-red-primary/80 p-8 md:p-12 rounded-[40px] text-white shadow-2xl relative overflow-hidden">
           <div className="absolute -top-10 -right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
           <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-black/10 rounded-full blur-2xl" />
           
@@ -66,7 +66,7 @@ export default function OwnerDashboard() {
             label="Total Aset Dana" 
             value="Rp 2.1B" 
             icon={Wallet} 
-            color="secondary" 
+            color="primary" 
           />
         </div>
 
@@ -85,8 +85,8 @@ export default function OwnerDashboard() {
              <div className="space-y-4">
                 {[
                   { name: "Admin Pusat (Bpk. M. Ardi)", role: "Super Admin", task: "12 Aksi", color: "bg-red-primary", status: "Aktif" },
-                  { name: "Admin Keuangan (Ibu Sarah)", role: "Finance", task: "28 Aksi", color: "bg-orange-primary", status: "Aktif" },
-                  { name: "Admin Inventaris (Bpk. Doni)", role: "Inventory", task: "5 Aksi", color: "bg-pink-primary", status: "Idle" },
+                  { name: "Admin Keuangan (Ibu Sarah)", role: "Finance", task: "28 Aksi", color: "bg-lightdark-neutral", status: "Aktif" },
+                  { name: "Admin Inventaris (Bpk. Doni)", role: "Inventory", task: "5 Aksi", color: "bg-lightdark-secondary", status: "Idle" },
                 ].map((admin, i) => (
                   <div key={i} className="flex items-center justify-between p-4 bg-gray-50/50 rounded-2xl border border-gray-100 hover:border-red-primary/20 transition-all group">
                     <div className="flex items-center gap-4">
@@ -148,16 +148,16 @@ export default function OwnerDashboard() {
 
         {/* Foundation Settings CTA */}
         <div className="bg-white p-10 rounded-[40px] border border-gray-100 shadow-xl shadow-black/5 flex flex-col md:flex-row items-center gap-10">
-           <div className="w-24 h-24 bg-orange-primary/10 rounded-[32px] flex items-center justify-center text-orange-primary shrink-0 shadow-inner">
+           <div className="w-24 h-24 bg-red-primary/10 rounded-[32px] flex items-center justify-center text-red-primary shrink-0 shadow-inner">
               <Globe size={48} />
            </div>
            <div className="space-y-2 text-center md:text-left flex-grow">
               <Txt variant="h3" weight="bold" className="text-gray-900">Konfigurasi Identitas Yayasan</Txt>
               <Txt variant="body" className="text-gray-500 max-w-2xl">
-                 Sesuaikan informasi publik yayasan, visi misi, logo, dan profil institusi yang akan ditampilkan kepada donatur dan publik.
+                  Sesuaikan informasi publik yayasan, visi misi, logo, dan profil institusi yang akan ditampilkan kepada donatur dan publik.
               </Txt>
            </div>
-           <Btn variant="orange" size="lg" shape="rounded" className="px-10 py-4 shadow-xl shadow-orange-primary/20">
+           <Btn variant="red" size="lg" shape="rounded" className="px-10 py-4 shadow-xl shadow-red-primary/20">
               Ubah Profil
            </Btn>
         </div>

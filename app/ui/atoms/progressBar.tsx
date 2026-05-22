@@ -2,32 +2,36 @@
 import React from 'react';
 import { cn } from '@/app/lib/utils';
 
-interface ProgressBarProps {
+export interface ProgressBarProps {
   current: number;
   target: number;
 }
 
 /**
- * Komponen Progress Bar untuk menampilkan progres donasi atau pencapaian target.
+ * ProgressBar
+ * 
+ * Komponen visual untuk menampilkan progres donasi atau pencapaian target 
+ * dalam bentuk grafik batang.
  * 
  * @param {number} current - Nilai progres saat ini
  * @param {number} target - Nilai target yang ingin dicapai
- * @returns {JSX.Element} Komponen Progress Bar dengan label jumlah terkumpul
+ * @param {ProgressBarProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen Progress Bar dengan label statistik
  */
 export const ProgressBar: React.FC<ProgressBarProps> = ({ current, target }) => {
   const percentage = Math.min((current / target) * 100, 100);
 
   return (
     <div className="w-full space-y-2">
-      <div className="w-full bg-gray-200 rounded-full h-2.5">
+      <div className="w-full bg-red-secondary rounded-full h-2.5">
         <div 
-          className="bg-green-500 h-2.5 rounded-full" 
+          className="bg-red-primary h-2.5 rounded-full" 
           style={{ width: `${percentage}%` }}
         ></div>
       </div>
       <div className="flex justify-between text-sm">
-        <span className="font-bold text-gray-900">${current}</span>
-        <span className="text-gray-500 font-medium">Raised of ${target}</span>
+        <span className="font-bold text-lightdark-neutral">${current}</span>
+        <span className="text-lightdark-neutral font-medium">Raised of ${target}</span>
       </div>
     </div>
   );

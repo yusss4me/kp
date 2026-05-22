@@ -1,14 +1,28 @@
+'use client';
+
 import { useState, forwardRef, InputHTMLAttributes } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "../atoms/input";
 import { Btn } from "../atoms/button";
 
-interface PasswordFieldProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface PasswordFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     label: string;
     placeholder: string;
     error?: string;
 }
 
+/**
+ * PasswordField
+ * 
+ * Komponen input password khusus yang menyertakan tombol 
+ * untuk menampilkan/menyembunyikan karakter password.
+ * 
+ * @param {string} label - Label teks di atas input password
+ * @param {string} placeholder - Teks petunjuk di dalam input
+ * @param {string} error - Pesan kesalahan validasi
+ * @param {PasswordFieldProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen PasswordField
+ */
 export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
     ({ label, placeholder, error, ...props }, ref) => {
         const [showPassword, setShowPassword] = useState(false);
@@ -26,10 +40,12 @@ export const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
                 error={error}
                 suffix={
                     <Btn 
-                        type="button"
+                        type="button"                    
                         onClick={togglePasswordVisibility}
-                        variant="orange"
-                        className=" text-orange-secondary hover:text-orange-neutral transition-colors cursor-pointer w-full h-full rounded-r-xl"
+                        variant="transparent"
+                        textColor="dark"
+                        
+                        className="transition-colors hover:text-lightdark-neutral"
                         aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}

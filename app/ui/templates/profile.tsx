@@ -5,10 +5,24 @@ import { LogOut } from "lucide-react";
 import { Btn } from "../atoms/button";
 import { PROFILE_MENU_GROUPS } from "@/app/lib/constants/profile-constants";
 
-interface ProfileTemplateProps {
-    isFlyout?: boolean;
+export interface ProfileTemplateProps {
+  /** 
+   * @param {boolean} isFlyout - Menentukan apakah template ditampilkan sebagai overlay flyout 
+   * (misal: di sidebar desktop) atau sebagai halaman penuh. 
+   */
+  isFlyout?: boolean;
 }
 
+/**
+ * ProfileTemplate
+ * 
+ * Template untuk halaman profil pengguna.
+ * Menampilkan kartu profil (ProfileCard), daftar menu aksi yang 
+ * dikelompokkan, serta tombol keluar akun.
+ * 
+ * @param {ProfileTemplateProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen ProfileTemplate
+ */
 export const ProfileTemplate = ({ isFlyout = false }: ProfileTemplateProps) => {
     return (
         <div className={`h-full w-full ${isFlyout ? 'max-w-md bg-white shadow-2xl' : 'max-w-4xl mx-auto'} overflow-hidden flex flex-col transition-all duration-500`}>

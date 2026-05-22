@@ -1,29 +1,65 @@
 'use client';
 import React, { useState } from 'react';
+import { Icn } from "../atoms/icon";
+import { Txt } from "../atoms/text";
+import { Container } from "../atoms/container";
+import { Btn } from '../atoms/button';
 
-type DonationTarget = 'anak' | 'program';
+type DonationTarget = 'anak' | 'program' | 'kunjungan' | 'sumbangan';
 
+/**
+ * DonationSwitcher
+ * 
+ * Komponen pengalih (switch) sederhana untuk memilih antara 
+ * donasi anak atau program donasi atau kunjungan atau sumbangan.
+ * 
+ * @returns {JSX.Element} Komponen DonationSwitcher
+ */
 export const DonationSwitcher: React.FC = () => {
   const [target, setTarget] = useState<DonationTarget>('program');
 
   return (
-    <div className="flex bg-white rounded-2xl p-1 shadow-sm w-full max-w-md mx-auto">
-      <button
+    <Container className="flex bg-white rounded-2xl p-1 shadow-sm w-full max-w-md mx-auto">
+      <Btn
+        variant='light'
+        textColor='red'
         onClick={() => setTarget('anak')}
         className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${
-          target === 'anak' ? 'bg-red-600 text-white' : 'text-gray-500'
+          target === 'anak' ? 'bg-red-primary text-lightdark-primary' : 'text-lightdark-neutral'
         }`}
       >
         Donasi Anak
-      </button>
-      <button
+      </Btn>
+      <Btn
+        variant="light"
+        textColor="red"
         onClick={() => setTarget('program')}
         className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${
-          target === 'program' ? 'bg-red-600 text-white' : 'text-gray-500'
+          target === 'program' ? 'bg-red-primary text-lightdark-primary' : 'text-lightdark-neutral'
         }`}
       >
         Program Donasi
-      </button>
-    </div>
+      </Btn>
+      <Btn
+        variant="light"
+        textColor="red"
+        onClick={() => setTarget('kunjungan')}
+        className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${
+          target === 'kunjungan' ? 'bg-red-primary text-lightdark-primary' : 'text-lightdark-neutral'
+        }`}
+      >
+        Program Kunjungan
+      </Btn>
+      <Btn
+        variant="light"
+        textColor="red"
+        onClick={() => setTarget('sumbangan')}
+        className={`flex-1 py-3 rounded-xl text-sm font-bold transition-all ${
+          target === 'sumbangan' ? 'bg-red-primary text-lightdark-primary' : 'text-lightdark-neutral'
+        }`}
+      >
+        Program Sumbangan
+      </Btn>
+    </Container>
   );
 };

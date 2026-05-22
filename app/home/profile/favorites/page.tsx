@@ -19,7 +19,7 @@ export default function FavoritesPage() {
         </Link>
 
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-pink-50 flex items-center justify-center text-red-primary shadow-sm">
+          <div className="w-16 h-16 rounded-2xl bg-red-secondary flex items-center justify-center text-red-primary shadow-sm">
             <Heart size={32} fill="currentColor" />
           </div>
           <div>

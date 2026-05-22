@@ -3,11 +3,23 @@ import { Txt } from "../atoms/text";
 import { Container } from "../atoms/container";
 import { Bell, Search, User } from "lucide-react";
 
-interface DashboardTemplateProps {
+export interface DashboardTemplateProps {
   children: React.ReactNode;
   headerTitle: string;
 }
 
+/**
+ * DashboardTemplate
+ * 
+ * Template layout utama untuk portal manajemen/dashboard.
+ * Menyediakan struktur header statis dengan pencarian, notifikasi, 
+ * dan informasi profil admin, serta area konten utama.
+ * 
+ * @param {React.ReactNode} children - Konten utama yang akan ditampilkan di dalam template
+ * @param {string} headerTitle - Judul yang ditampilkan pada bagian header portal
+ * @param {DashboardTemplateProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen DashboardTemplate
+ */
 export const DashboardTemplate = ({
   children,
   headerTitle,

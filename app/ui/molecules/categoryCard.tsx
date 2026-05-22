@@ -1,49 +1,67 @@
 // components/molecules/CategoryCard.tsx
-import React from 'react';
+
+import { Btn } from "@/app/ui/atoms/button";
+import { Txt } from "@/app/ui/atoms/text";
+import { Icn } from "@/app/ui/atoms/icon";
+import { LucideIcon } from 'lucide-react';
 
 // Definisi interface untuk type-safety
-interface CategoryCardProps {
+export interface CategoryCardProps {
   label: string;
-  icon: React.ReactNode;
+  iconCard: LucideIcon;
   isActive?: boolean;
   onClick?: () => void;
-  colorScheme?: 'green' | 'blue' | 'red' | 'purple';
+  colorScheme?: 'red' | 'light' | 'dark' | 'transparent';
 }
 
+/**
+ * CategoryCard
+ * 
+ * Komponen kartu kategori berbentuk tombol dengan icon dan label.
+ * Digunakan untuk filter atau navigasi berdasarkan kategori program.
+ * 
+ * @param {string} label - Label nama kategori
+ * @param {LucideIcon} iconCard - Icon kategori dari lucide-react
+ * @param {boolean} isActive - Apakah kategori ini sedang aktif/dipilih
+ * @param {() => void} onClick - Handler saat kartu kategori diklik
+ * @param {'red' | 'light' | 'dark' | 'transparent'} colorScheme - Skema warna tema kartu
+ * @param {CategoryCardProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen CategoryCard
+ */
 export const CategoryCard: React.FC<CategoryCardProps> = ({ 
   label, 
-  icon, 
+  iconCard, 
   isActive = false, 
   onClick,
-  colorScheme = 'blue'
+  colorScheme = 'light'
 }) => {
-  // Mapping warna berdasarkan skema untuk menjaga konsistensi brand
-  const colors = {
-    green: isActive ? 'bg-green-600 text-white' : 'bg-green-50 text-green-700',
-    blue: isActive ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-700',
-    red: isActive ? 'bg-red-600 text-white' : 'bg-red-50 text-red-700',
-    purple: isActive ? 'bg-purple-600 text-white' : 'bg-purple-50 text-purple-700',
-  };
 
   return (
-    <button
+    <Btn
+      variant={isActive ? "red" : "light"}
+      size="sm"
+      shape="rounded"
+      textColor={isActive ? "light" : "red"}
       onClick={onClick}
       className={`
-        flex flex-col items-center justify-center p-4 rounded-2xl transition-all duration-200
-        min-w-[100px] gap-2 shadow-sm active:scale-95 cursor-pointer
-        ${colors[colorScheme]}
-        ${isActive ? 'shadow-md ring-2 ring-offset-2 ring-blue-400' : 'hover:bg-opacity-80'}
+        flex flex-col items-center justify-center p-4 min-w-[120px] gap-3 transition-all duration-300 shadow-lg
+        ${isActive ? 'ring-2 ring-offset-2 ring-red-primary/50 shadow-lg scale-105' : 'hover:scale-105 hover:shadow-md'}
       `}
     >
-      {/* Container Ikon (Atom) */}
-      <div className={`p-2 rounded-xl ${isActive ? 'bg-white/20' : 'bg-white'}`}>
-        {icon}
+      {/* Container Ikon */}
+      <div className={`p-3 rounded-2xl ${isActive ? 'bg-white/20' : 'bg-white/10'} backdrop-blur-sm`}>
+        <Icn icon={iconCard} size={20} color="current" />
       </div>
       
-      {/* Label (Atom) */}
-      <span className="text-xs font-bold uppercase tracking-wider">
+      {/* Label (Atom Txt) */}
+      <Txt 
+        variant="caption" 
+        weight="bold" 
+        color="current"
+        className="uppercase tracking-widest text-[10px]"
+      >
         {label}
-      </span>
-    </button>
+      </Txt>
+    </Btn>
   );
 };

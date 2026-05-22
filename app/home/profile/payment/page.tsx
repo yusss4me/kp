@@ -20,7 +20,7 @@ export default function PaymentPage() {
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-primary shadow-sm">
+            <div className="w-16 h-16 rounded-2xl bg-red-secondary flex items-center justify-center text-red-primary shadow-sm">
               <CreditCard size={32} />
             </div>
             <div>
@@ -35,7 +35,7 @@ export default function PaymentPage() {
 
         <div className="grid gap-6">
           {methods.map((method) => (
-            <Container key={method.id} variant="white" radius="2xl" padding="lg" shadow="sm" className="border border-gray-100 flex items-center justify-between group cursor-pointer hover:border-red-primary/30 transition-all">
+            <Container key={method.id} variant="light" radius="2xl" padding="lg" shadow="sm" className="border border-gray-100 flex items-center justify-between group cursor-pointer hover:border-red-primary/30 transition-all">
               <div className="flex items-center gap-5">
                 <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-red-50 group-hover:text-red-primary transition-colors">
                   {method.icon}

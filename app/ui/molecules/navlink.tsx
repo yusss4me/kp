@@ -1,47 +1,57 @@
 "use client";
 
-import Link from "next/link";
+
 import { LucideIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/app/lib/utils";
 import { Txt } from "../atoms/text";
+import { Icn } from "../atoms/icon";
+import { Lnk } from "../atoms/link";
 import { Btn } from "../atoms/button";
+
 
 /**
  * Props for the NavLink component.
  */
-interface NavLinkProps {
-  /** The destination URL */
+export interface NavLinkProps {
   href: string;
-  /** The text label to display */
   label: string;
-  /** Optional icon component from lucide-react */
   icon?: LucideIcon;
-  /** Optional additional CSS classes for the container */
   className?: string;
-  /** Optional additional CSS classes for the label */
+  Color?: "red" | "dark" | "light" | undefined;
   labelClassName?: string;
-  /** Optional CSS classes to apply when the link is active */
   activeClassName?: string;
-  /** Size of the icon in pixels. Defaults to 20. */
   iconSize?: number;
-  /** Whether to show the label text. Defaults to true. */
   showLabel?: boolean;
-  /** Direction of the link content. Defaults to 'row'. */
   direction?: "row" | "col";
-  /** Optional click handler */
   onClick?: () => void;
 }
 
 /**
- * A reusable navigation link component that automatically handles active states
- * and supports optional icons and labels.
+ * NavLink
+ * 
+ * Komponen tautan navigasi yang menangani status aktif secara otomatis 
+ * dan mendukung kombinasi icon serta label.
+ * 
+ * @param {string} href - URL tujuan navigasi
+ * @param {string} label - Label teks yang ditampilkan
+ * @param {LucideIcon} icon - Icon optional dari lucide-react
+ * @param {string} className - Class tambahan untuk container (Link)
+ * @param {string} labelClassName - Class tambahan untuk label teks
+ * @param {string} activeClassName - Class tambahan saat link sedang aktif
+ * @param {number} iconSize - Ukuran icon dalam pixel (default: 20)
+ * @param {boolean} showLabel - Apakah menampilkan label teks (default: true)
+ * @param {"row" | "col"} direction - Arah konten (horizontal/vertikal)
+ * @param {() => void} onClick - Handler saat link diklik
+ * @param {NavLinkProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen NavLink
  */
 export const NavLink = ({
   href,
   label,
   icon: Icon,
   className,
+  Color,
   labelClassName,
   activeClassName,
   iconSize = 20,
@@ -57,9 +67,10 @@ export const NavLink = ({
     (href !== "/" && pathname.startsWith(href));
 
   return (
-    <Link
+    <Lnk
       href={href}
       onClick={onClick}
+      color={Color}
       className={cn(
         "flex items-center gap-2 p-2 rounded-md transition-all duration-200 ",
         direction === "col" ? "flex-col justify-center text-center" : "flex-row",
@@ -67,29 +78,33 @@ export const NavLink = ({
       )}
     >
       
+      
 
       {Icon && (
         <div className="flex items-center justify-center shrink-0 cursor-pointer">
-          <Icon 
-            size={iconSize} 
+          <Icn
+            icon={Icon}
+            size={iconSize}
+            color="current"
             className={cn(
               "transition-all duration-200",
-              isActive ? "text-lightdark-primary" : "text-red-secondary opacity-80"
-            )} 
+              isActive ? "text-current" : "text-red-secondary opacity-80"
+            )}
             />
         </div>
       )}
       {showLabel && (
-        <Txt as="label" color="white" className={cn(
+        <Txt as="label" color="current" className={cn(
           "transition-colors duration-200 cursor-pointer", 
-          isActive ? "text-lightdark-primary" : "text-red-secondary",
+          isActive ? "text-current" : "text-red-secondary",
           labelClassName
         )}>
           {label}
         </Txt>
       )}
+      
      
-    </Link>
+    </Lnk>
   );
 };
 

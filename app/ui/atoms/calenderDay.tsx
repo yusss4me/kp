@@ -1,7 +1,7 @@
 // components/atoms/CalendarDay.tsx
 import React from 'react';
 
-interface CalendarDayProps {
+export interface CalendarDayProps {
   day: number;
   isCurrentMonth?: boolean;
   isSelected?: boolean;
@@ -9,12 +9,16 @@ interface CalendarDayProps {
 }
 
 /**
- * Komponen satu sel hari dalam kalender.
+ * CalendarDay
+ * 
+ * Komponen sel tanggal tunggal dalam kalender.
+ * Menangani status aktif, terpilih, dan interaksi klik.
  * 
  * @param {number} day - Angka tanggal yang akan ditampilkan
  * @param {boolean} isCurrentMonth - Apakah tanggal ini termasuk bulan yang sedang ditampilkan
  * @param {boolean} isSelected - Apakah tanggal ini sedang dipilih
- * @param {Function} onClick - Handler saat tanggal diklik
+ * @param {() => void} onClick - Handler saat tanggal diklik
+ * @param {CalendarDayProps} props - Properti komponen
  * @returns {JSX.Element} Komponen sel hari kalender
  */
 export const CalendarDay: React.FC<CalendarDayProps> = ({ 

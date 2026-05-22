@@ -1,45 +1,57 @@
 // components/molecules/ProfileListItem.tsx
 
 'use client';
+import { Icn } from '../atoms/icon';
+import { Lnk } from '../atoms/link';
+import { Container } from '../atoms/container';
 
 import React from 'react';
-import { ChevronRight } from 'lucide-react';
+
 import { Btn } from '../atoms/button';
 import Link from 'next/link';
+import { LucideIcon, ChevronRight } from 'lucide-react';
 
-interface ListItemProps {
-  icon: React.ReactNode;
+export interface ListItemProps {
+  icon: LucideIcon;
   label: string;
   href?: string;
 }
 
 /**
- * Komponen item daftar untuk menu profil atau navigasi.
- * Dapat bertindak sebagai tautan (Link) atau tombol biasa.
+ * ListItem
+ * 
+ * Komponen item daftar serbaguna untuk menu profil atau navigasi.
+ * Mendukung mode tautan (Link) atau tombol (Button) biasa.
  * 
  * @param {React.ReactNode} icon - Icon yang ditampilkan di sebelah kiri label
  * @param {string} label - Teks label yang ditampilkan
  * @param {string} href - URL tujuan jika item ini adalah tautan (opsional)
+ * @param {ListItemProps} props - Properti komponen
  * @returns {JSX.Element} Komponen item daftar
  */
-export const ListItem: React.FC<ListItemProps> = ({ icon, label, href }) => {
+export const ListItem: React.FC<ListItemProps> = ({ 
+  icon:Icon, 
+  label, 
+  href }) => {
   const content = (
-    <div className="w-full flex items-center justify-between py-4 border-b border-gray-50 group active:bg-gray-50 transition-all cursor-pointer">
-      <div className="flex items-center gap-4">
-        <div className="text-gray-600 group-hover:text-red-primary transition-colors">
-          {icon}
-        </div>
-        <span className="text-sm font-medium text-gray-800 group-hover:text-black transition-colors">{label}</span>
-      </div>
+    <Container 
+    padding='md'
+    className="w-full flex items-center justify-between  border-b border-gray-50 group active:bg-gray-50 transition-all cursor-pointer">
+      <Container className="flex items-center gap-4">
+        <Container className="text-gray-600 group-hover:text-red-secondary transition-colors">
+          <Icn icon={Icon} size={20} color='current' />
+        </Container>
+        <span className="text-sm font-medium text-gray-800 group-hover:text-red-secondary transition-colors">{label}</span>
+      </Container>
       <ChevronRight size={18} className="text-gray-300 group-hover:text-red-primary group-hover:translate-x-1 transition-all" />
-    </div>
+    </Container>
   );
 
   if (href) {
     return (
-      <Link href={href} className="block w-full">
+      <Lnk href={href} className="block w-full">
         {content}
-      </Link>
+      </Lnk>
     );
   }
 
@@ -47,8 +59,9 @@ export const ListItem: React.FC<ListItemProps> = ({ icon, label, href }) => {
     <Btn 
       variant="light"
       className="w-full p-0 h-auto"
+      textColor='darkred'
     >
       {content}
     </Btn>
   );
-};
+};

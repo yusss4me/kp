@@ -2,6 +2,9 @@
 
 import React from 'react';
 import { Txt } from '../atoms/text';
+import { Container } from '../atoms/container';
+import { Img } from '../atoms/image';
+import { Btn } from '../atoms/button';
 import { MessageSquare, Calendar, ArrowRight, Share2 } from 'lucide-react';
 
 interface UpdateItem {
@@ -13,7 +16,22 @@ interface UpdateItem {
   image?: string;
 }
 
-export const UpdateList: React.FC = () => {
+export interface UpdateListProps {
+  className?: string;
+}
+
+/**
+ * UpdateList
+ * 
+ * Komponen untuk menampilkan linimasa kabar terbaru (updates) dari yayasan.
+ * Berisi daftar informasi progres program, laporan penyaluran, atau 
+ * undangan kegiatan dalam bentuk kartu informatif.
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {UpdateListProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen UpdateList
+ */
+export const UpdateList: React.FC<UpdateListProps> = () => {
   const updates: UpdateItem[] = [
     {
       id: '1',
@@ -41,44 +59,56 @@ export const UpdateList: React.FC = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-6 pb-24">
+    <Container className="flex flex-col gap-6 pb-24">
       {/* Header */}
-      <div className="bg-red-primary p-8 rounded-b-[40px] shadow-xl">
-        <div className="flex justify-between items-center text-white mb-6">
+      <Container className="bg-red-primary p-8 rounded-b-[40px] shadow-xl flex flex-col">
+        <Container className="flex justify-between items-center text-white mb-6">
           <Txt variant="h5" weight="bold" color="white">Kabar Terbaru</Txt>
-          <div className="p-2 bg-white/10 rounded-xl">
+          <Container className="p-2 bg-white/10 rounded-xl">
             <MessageSquare size={20} />
-          </div>
-        </div>
+          </Container>
+        </Container>
         <Txt className="text-white/70 text-sm">
           Ikuti perkembangan program dan dampak yang Anda berikan melalui update rutin kami.
         </Txt>
-      </div>
+      </Container>
 
       {/* List */}
-      <div className="px-6 space-y-8">
+      <Container className="px-6 space-y-8 flex flex-col">
         {updates.map((update) => (
-          <div key={update.id} className="group relative space-y-4">
+          <Container key={update.id} className="group relative space-y-4 flex flex-col">
             {/* Date line */}
-            <div className="flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-red-primary shadow-[0_0_8px_#db1a1a]" />
+            <Container className="flex items-center gap-3">
+                <Container className="w-2 h-2 rounded-full bg-red-primary shadow-[0_0_8px_#db1a1a]" />
                 <Txt className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{update.date}</Txt>
-                <div className="h-px flex-1 bg-gray-100" />
-            </div>
+                <Container className="h-px flex-1 bg-gray-100" />
+            </Container>
 
-            <div className="bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300">
+            <Container className="bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col">
                 {update.image && (
-                    <img src={update.image} className="w-full h-40 object-cover" alt={update.title} />
+                    <Img 
+                      src={update.image} 
+                      w={600} 
+                      h={240} 
+                      aspect="video"
+                      rounded="none"
+                      className="w-full h-40 object-cover" 
+                      alt={update.title} 
+                    />
                 )}
-                <div className="p-6 space-y-3">
-                    <div className="flex justify-between items-start">
-                        <span className="px-3 py-1 rounded-full bg-red-50 text-red-primary text-[10px] font-black uppercase">
+                <Container className="p-6 space-y-3 flex flex-col">
+                    <Container className="flex justify-between items-start">
+                        <Txt variant="caption" weight="black" className="px-3 py-1 rounded-full bg-red-50 text-red-primary text-[10px] uppercase">
                             {update.category}
-                        </span>
-                        <button className="text-gray-300 hover:text-red-primary transition-colors">
+                        </Txt>
+                        <Btn 
+                          variant="transparent" 
+                          textColor="dark"
+                          className="text-gray-300 hover:text-red-primary transition-colors p-0 border-none bg-transparent"
+                        >
                             <Share2 size={16} />
-                        </button>
-                    </div>
+                        </Btn>
+                    </Container>
                     <Txt variant="body" weight="bold" className="text-gray-900 text-lg leading-tight group-hover:text-red-primary transition-colors">
                         {update.title}
                     </Txt>
@@ -86,14 +116,19 @@ export const UpdateList: React.FC = () => {
                         {update.content}
                     </Txt>
                     
-                    <button className="flex items-center gap-2 text-red-primary text-xs font-bold pt-2 group-hover:gap-3 transition-all">
+                    <Btn 
+                      variant="transparent" 
+                      textColor="red"
+                      size="sm"
+                      className="flex items-center gap-2 text-red-primary text-xs font-bold pt-2 group-hover:gap-3 transition-all p-0 border-none"
+                    >
                         Baca Selengkapnya <ArrowRight size={14} />
-                    </button>
-                </div>
-            </div>
-          </div>
+                    </Btn>
+                </Container>
+            </Container>
+          </Container>
         ))}
-      </div>
-    </div>
+      </Container>
+    </Container>
   );
 };

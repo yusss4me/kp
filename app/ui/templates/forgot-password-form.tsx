@@ -21,7 +21,22 @@ type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>;
  * Sesuai dengan hierarki Atomic Design, komponen ini menggabungkan berbagai atom 
  * untuk membentuk struktur halaman Lupa Kata Sandi.
  */
-export default function ForgotPasswordForm() {
+export interface ForgotPasswordFormProps {
+  className?: string;
+}
+
+/**
+ * ForgotPasswordForm
+ * 
+ * Template untuk halaman lupa kata sandi.
+ * Menyediakan form input email untuk pengiriman instruksi pengaturan 
+ * ulang kata sandi dengan validasi skema Zod.
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {ForgotPasswordFormProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen ForgotPasswordForm
+ */
+export default function ForgotPasswordForm({}: ForgotPasswordFormProps) {
   const {
     register,
     handleSubmit,
@@ -39,20 +54,16 @@ export default function ForgotPasswordForm() {
 
   return (
     <Container
-      variant="white"
-      radius="2xl"
-      padding="none"
-      className="w-full flex flex-col gap-8 p-6 md:p-10 shadow-2xl shadow-black/5"
+      className="w-full flex flex-col gap-8 p-6 md:p-10 shadow-2xl shadow-black/5 rounded-2xl bg-white"
     >
       {/* Header Bagian */}
       <Container className="flex flex-col items-center gap-2">
         <Txt
           variant="h2"
           weight="bold"
-          color="black"
           align="center"
           font="jakarta"
-          className="tracking-tight"
+          className="tracking-tight text-lightdark-tertiary"
         >
           Lupa Kata Sandi?
         </Txt>

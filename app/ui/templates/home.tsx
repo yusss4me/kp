@@ -2,22 +2,42 @@ import { Txt } from "../atoms/text"
 import { CategoryList } from "../organisms/categoryList"
 import { DiscoverSection } from "../organisms/discoverSction"
 
-export default function Home() {
+export interface HomeProps {
+  className?: string;
+  user?: {
+    name: string;
+    totalDonasi: number;
+    programDibantu: number;
+  };
+}
+
+/**
+ * Home
+ * 
+ * Template halaman beranda utama untuk role Donatur.
+ * Menampilkan ringkasan dampak donasi personal, daftar kategori program, 
+ * dan bagian eksplorasi program pilihan.
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {HomeProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen Home
+ */
+export default function Home({user}: HomeProps) {
     return (
         <div className="flex flex-col gap-10">
             {/* Hero Section */}
             <section className="bg-red-primary  p-6 rounded-b-[40px] shadow-2xl relative overflow-hidden">
                 {/* Decorative Circles */}
                 <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
-                <div className="absolute top-40 -left-20 w-48 h-48 bg-orange-primary/10 rounded-full blur-2xl" />
+                <div className="absolute top-40 -left-20 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
 
                 <div className="relative z-10 space-y-8">
                     <div className="space-y-1">
                         <Txt variant="caption" className="text-white/60 uppercase tracking-[0.2em] font-bold">
                             Selamat Datang
                         </Txt>
-                        <Txt variant="h4" weight="bold" color="white">
-                            Halo, M. Ardiansyah
+                        <Txt variant="h4" weight="bold" color="light">
+                            Halo, {user?.name}
                         </Txt>
                     </div>
 
@@ -25,15 +45,15 @@ export default function Home() {
                     <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-[32px] flex items-center justify-between shadow-xl">
                         <div className="flex flex-col gap-1">
                             <Txt className="text-white/60 text-md font-medium">Total Donasi</Txt>
-                            <Txt color="white" className="text-xl tracking-tight">
-                                Rp 2.450.000
+                            <Txt color="light" className="text-xl tracking-tight">
+                                {user?.totalDonasi}
                             </Txt>
                         </div>
                         <div className="w-px h-10 bg-white/10" />
                         <div className="flex flex-col gap-1 text-right">
                             <Txt className="text-white/60 text-xs font-medium">Program Dibantu</Txt>
-                            <Txt color="white" className="text-xl tracking-tight">
-                                12
+                            <Txt color="light" className="text-xl tracking-tight">
+                                {user?.programDibantu}
                             </Txt>
                         </div>
                     </div>

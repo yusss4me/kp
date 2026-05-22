@@ -2,7 +2,22 @@ import { Txt } from "../atoms/text";
 import { SearchGroup } from "../molecules/search-group";
 import { DonationCard } from "../molecules/donationCard";
 
-export default function Explore() {
+export interface ExploreProps {
+  className?: string;
+}
+
+/**
+ * Explore
+ * 
+ * Template untuk halaman eksplorasi program donasi.
+ * Menampilkan pencarian program dan daftar rekomendasi kartu donasi 
+ * dalam format grid.
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {ExploreProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen Explore
+ */
+export default function Explore({}: ExploreProps) {
     const featuredCampaigns = [
         {
             name: "Beasiswa Anak Yatim Piatu",
@@ -31,7 +46,7 @@ export default function Explore() {
             </div>
 
             {/* Grid Content */}
-            <div className="px-6 space-y-6">
+            <divclassName="px-6 space-y-6">
                 <div className="flex justify-between items-center">
                     <Txt weight="bold" className="text-gray-900">Rekomendasi Untuk Anda</Txt>
                     <Txt className="text-xs text-red-primary font-bold">Filter</Txt>

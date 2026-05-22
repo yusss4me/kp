@@ -4,7 +4,7 @@ import { Container } from "@/app/ui/atoms/container";
 import { Txt } from "@/app/ui/atoms/text";
 import { Btn } from "@/app/ui/atoms/button";
 
-interface FormFieldProps {
+export interface FormFieldProps {
   label: string;
   icon?: LucideIcon;
   error?: string;
@@ -13,6 +13,21 @@ interface FormFieldProps {
   name?: string;
 }
 
+/**
+ * FormField
+ * 
+ * Komponen pembungkus input yang menyertakan label dengan icon 
+ * dan penanganan pesan error.
+ * 
+ * @param {string} label - Label teks untuk field input
+ * @param {LucideIcon} icon - Icon optional dari lucide-react
+ * @param {string} error - Pesan kesalahan validasi
+ * @param {string} placeholder - Teks petunjuk di dalam input
+ * @param {string} type - Tipe input (text, email, password, dll)
+ * @param {string} name - Nama field untuk integrasi form
+ * @param {FormFieldProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen FormField
+ */
 export const FormField = ({
   label,
   icon: Icon,

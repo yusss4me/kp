@@ -18,7 +18,7 @@ const ADMIN_LINKS: NavLink[] = [
   { label: "Broadcast", href: "/admin/broadcast", icon: MessageSquareText },
   { label: "Keuangan", href: "/admin/finance", icon: Wallet },
   { label: "Inventaris", href: "/admin/inventory", icon: Package },
-  { label: "Kunjungan", href: "/admin/booking", icon: Calendar },
+  { label: "Kunjungan", href: "/admin/kunjungan", icon: Calendar },
   { label: "Publikasi", href: "/admin/social-media", icon: Share2 },
 ];
 

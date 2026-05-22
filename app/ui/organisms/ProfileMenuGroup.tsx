@@ -14,117 +14,122 @@ import {
   Wallet,
   MessageCircle,
 } from "lucide-react";
-import { ProfileListItem } from "../molecules/ListItem";
+import { ListItem } from "../molecules/ListItem";
 import { Txt } from "../atoms/text";
+import { Img } from "../atoms/image";
+import { Icn } from "../atoms/icon";
+import { Btn } from "../atoms/button";
 
-export const ProfileMenuGroup: React.FC = () => {
+import { Container } from "../atoms/container";
+
+export interface ProfileMenuGroupProps {
+  className?: string;
+}
+
+/**
+ * ProfileMenuGroup
+ * 
+ * Komponen grup menu navigasi untuk profil pengguna umum (Donatur).
+ * Menampilkan header profil dengan statistik dampak personal (Program, Terdonasi) 
+ * dan daftar aksi akun yang dikelompokkan (Aktivitas Saya, Dukungan, Lainnya).
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {ProfileMenuGroupProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen ProfileMenuGroup
+ */
+export const ProfileMenuGroup: React.FC<ProfileMenuGroupProps> = () => {
   return (
-    <div className="flex flex-col gap-8 pb-24">
+    <Container className="flex flex-col gap-8 pb-24">
       {/* Profile Header */}
-      <div className="bg-red-primary p-8 rounded-b-[40px] shadow-xl relative overflow-hidden">
+      <Container className="bg-red-primary p-8 rounded-b-[40px] shadow-xl relative overflow-hidden flex flex-col">
         {/* Decorative element */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16" />
-
-        <div className="flex items-center gap-6 relative z-10">
-          <div className="relative">
-            <img
+        <Container className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16" />
+ 
+        <Container className="flex items-center gap-6 relative z-10">
+          <Container className="relative">
+            <Img
               src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop"
-              className="w-20 h-20 rounded-[28px] object-cover border-4 border-white/20 shadow-xl"
               alt="M. Ardiansyah"
+              w={80}
+              h={80}
+              rounded="lg"
+              aspect="square"
+              className="w-20 h-20 rounded-[28px] border-4 border-white/20 shadow-xl"
             />
-            <div className="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-4 border-red-primary" />
-          </div>
-          <div className="space-y-1">
+            <Container className="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-4 border-red-primary" />
+          </Container>
+          <Container className="space-y-1 flex flex-col">
             <Txt variant="h5" weight="bold" color="white">
               M. Ardiansyah
             </Txt>
-            <div className="flex items-center gap-2 px-2.5 py-1 bg-white/10 rounded-full border border-white/10">
-              <span className="text-[10px] text-white font-black uppercase tracking-widest">
+            <Container className="flex items-center gap-2 px-2.5 py-1 bg-white/10 rounded-full border border-white/10">
+              <Txt variant="caption" weight="bold" className="text-[10px] text-white uppercase tracking-widest">
                 Donatur Tetap
-              </span>
-            </div>
-          </div>
-        </div>
-
+              </Txt>
+            </Container>
+          </Container>
+        </Container>
+ 
         {/* Impact Summary Card */}
-        <div className="mt-8 grid grid-cols-2 gap-4">
-          <div className="bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10">
-            <Heart size={16} className="text-white/60 mb-2" />
-            <p className="text-white font-black text-lg">12</p>
-            <p className="text-white/60 text-[10px] font-bold uppercase tracking-wider">
-              Program
-            </p>
-          </div>
-          <div className="bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10">
-            <Wallet size={16} className="text-white/60 mb-2" />
-            <p className="text-white font-black text-lg">Rp 2.4jt</p>
-            <p className="text-white/60 text-[10px] font-bold uppercase tracking-wider">
-              Terdonasi
-            </p>
-          </div>
-        </div>
-      </div>
-
+        <Container className="mt-8 grid grid-cols-2 gap-4">
+          <Container className="bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10 flex flex-col">
+            <Icn icon={Heart} size={16} color="current" className="text-white/60 mb-2" />
+            <Txt variant="h5" weight="bold" color="white">12</Txt>
+            <Txt variant="caption" weight="bold" color="white" className="opacity-60 uppercase tracking-wider">Program</Txt>
+          </Container>
+          <Container className="bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10 flex flex-col">
+            <Icn icon={Wallet} size={16} color="current" className="text-white/60 mb-2" />
+            <Txt variant="h5" weight="bold" color="white">Rp 2.4jt</Txt>
+            <Txt variant="caption" weight="bold" color="white" className="opacity-60 uppercase tracking-wider">Terdonasi</Txt>
+          </Container>
+        </Container>
+      </Container>
+ 
       {/* Menu Sections */}
-      <div className="px-6 space-y-8">
-        <div className="space-y-4">
+      <Container className="px-6 space-y-8 flex flex-col">
+        <Container className="space-y-4 flex flex-col">
           <Txt weight="bold" className="text-gray-900 ml-2">
             Aktivitas Saya
           </Txt>
-          <div className="bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
-            <ProfileListItem
-              icon={<History size={18} />}
-              label="Riwayat Donasi"
-            />
-            <ProfileListItem
-              icon={<Wallet size={18} />}
-              label="Metode Pembayaran"
-            />
-            <ProfileListItem
-              icon={<Heart size={18} />}
-              label="Program Favorit"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-4">
+          <Container className="bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm flex flex-col">
+            <ListItem icon={History} label="Riwayat Donasi" />
+            <ListItem icon={Wallet} label="Metode Pembayaran" />
+            <ListItem icon={Heart} label="Program Favorit" />
+          </Container>
+        </Container>
+ 
+        <Container className="space-y-4 flex flex-col">
           <Txt weight="bold" className="text-gray-900 ml-2">
             Dukungan
           </Txt>
-          <div className="bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
-            <ProfileListItem
-              icon={<MessageCircle size={18} />}
-              label="Hubungi Kami"
-            />
-            <ProfileListItem
-              icon={<HelpCircle size={18} />}
-              label="Pusat Bantuan"
-            />
-            <ProfileListItem icon={<Info size={18} />} label="Tentang YAMUTI" />
-          </div>
-        </div>
-
-        <div className="space-y-4">
+          <Container className="bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm flex flex-col">
+            <ListItem icon={MessageCircle} label="Hubungi Kami" />
+            <ListItem icon={HelpCircle} label="Pusat Bantuan" />
+            <ListItem icon={Info} label="Tentang YAMUTI" />
+          </Container>
+        </Container>
+ 
+        <Container className="space-y-4 flex flex-col">
           <Txt weight="bold" className="text-gray-900 ml-2">
             Lainnya
           </Txt>
-          <div className="bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
-            <ProfileListItem
-              icon={<Settings size={18} />}
-              label="Pengaturan Akun"
-            />
-            <ProfileListItem
-              icon={<Share2 size={18} />}
-              label="Bagikan Aplikasi"
-            />
-            <ProfileListItem icon={<Star size={18} />} label="Beri Rating" />
-          </div>
-        </div>
-
-        <button className="w-full py-4 rounded-[24px] bg-red-50 text-red-primary font-black text-sm transition-all active:scale-95 mb-8">
+          <Container className="bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm flex flex-col">
+            <ListItem icon={Settings} label="Pengaturan Akun" />
+            <ListItem icon={Share2} label="Bagikan Aplikasi" />
+            <ListItem icon={Star} label="Beri Rating" />
+          </Container>
+        </Container>
+ 
+        <Btn
+          variant="transparent"
+          textColor="red"
+          size="lg"
+          shape="rounded"
+          className="w-full py-4 rounded-[24px] bg-red-50 text-red-primary font-black text-sm mb-8"
+        >
           Keluar Akun
-        </button>
-      </div>
-    </div>
+        </Btn>
+      </Container>
+    </Container>
   );
 };

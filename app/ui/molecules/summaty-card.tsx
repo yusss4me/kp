@@ -1,13 +1,24 @@
 import { Container } from "../atoms/container";
 import { Txt } from "../atoms/text";
-import { Wallet } from "lucide-react";
 
-interface SummaryCardProps {
+export interface SummaryCardProps {
   title: string;
   value: string;
   icon: React.ReactNode;
 }
 
+/**
+ * SummaryCard
+ * 
+ * Komponen kartu ringkasan (summary) yang menampilkan icon, judul, dan nilai.
+ * Sering digunakan untuk statistik cepat di dashboard.
+ * 
+ * @param {string} title - Judul informasi ringkasan
+ * @param {string} value - Nilai atau data yang diringkas
+ * @param {React.ReactNode} icon - Icon visual pendukung
+ * @param {SummaryCardProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen SummaryCard
+ */
 export const SummaryCard: React.FC<SummaryCardProps> = ({
   title,
   value,

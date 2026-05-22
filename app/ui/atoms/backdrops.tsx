@@ -1,16 +1,18 @@
 import { ReactNode } from "react";
 import { cn } from "@/app/lib/utils";
 
-interface BackdropProps {
+export interface BackdropProps {
     children: ReactNode;
-    
 }
 
 /**
- * Komponen Backdrop untuk overlay modal atau drawer.
- * Menampilkan lapisan transparan di atas seluruh layar.
+ * Backdrop
+ * 
+ * Komponen untuk overlay modal atau drawer.
+ * Menampilkan lapisan transparan di atas seluruh layar untuk memfokuskan perhatian.
  * 
  * @param {ReactNode} children - Konten yang akan ditampilkan di tengah backdrop
+ * @param {BackdropProps} props - Properti komponen
  * @returns {JSX.Element} Komponen Backdrop
  */
 export const Backdrop = ({ children }: BackdropProps) => {

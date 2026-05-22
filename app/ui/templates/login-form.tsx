@@ -17,7 +17,22 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-export default function LoginForm() {
+export interface LoginFormProps {
+  className?: string;
+}
+
+/**
+ * LoginForm
+ * 
+ * Template untuk halaman masuk (login).
+ * Menyediakan form input nama pengguna dan kata sandi dengan 
+ * validasi keamanan dasar.
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {LoginFormProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen LoginForm
+ */
+export default function LoginForm({}: LoginFormProps) {
   const {
     register,
     handleSubmit,
@@ -35,19 +50,15 @@ export default function LoginForm() {
 
   return (
     <Container
-      variant="white"
-      radius="2xl"
-      padding="none"
-      className="w-full flex flex-col gap-8 p-6 md:p-10 shadow-2xl shadow-black/5"
+      className="w-full flex flex-col gap-8 p-6 md:p-10 shadow-2xl shadow-black/5 rounded-2xl bg-white"
     >
       <Container className="flex flex-col items-center gap-2">
         <Txt
           variant="h2"
           weight="bold"
-          color="black"
           align="center"
           font="jakarta"
-          className="tracking-tight"
+          className="tracking-tight text-lightdark-tertiary"
         >
           Selamat Datang Kembali
         </Txt>
@@ -99,7 +110,7 @@ export default function LoginForm() {
           Belum punya akun?{" "}
           <Link
             href="/auth/daftar"
-            className="text-orange-primary font-bold hover:text-orange-tertiary transition-colors hover:underline"
+            className="text-red-primary font-bold hover:text-red-tertiary transition-colors hover:underline"
           >
             Daftar Sekarang
           </Link>

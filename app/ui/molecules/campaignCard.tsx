@@ -1,29 +1,57 @@
 // components/molecules/CampaignerCard.tsx
 import React from 'react';
+import { Txt } from '@/app/ui/atoms/text';
+import { Btn } from '@/app/ui/atoms/button';
+import { Container } from '@/app/ui/atoms/container';
+import { Avatar } from '@/app/ui/atoms/avatar';
+import { Icn } from '@/app/ui/atoms/icon';
 import { Plus, CheckCircle2 } from 'lucide-react';
 
-interface CampaignerProps {
+export interface CampaignerCardProps {
   name: string;
   avatar: string;
+  title: string;
   isVerified?: boolean;
 }
 
-export const CampaignerCard: React.FC<CampaignerProps> = ({ name, avatar, isVerified }) => {
+/**
+ * CampaignerCard
+ * 
+ * Komponen kartu profil ringkas untuk penggalang dana (campaigner).
+ * Menampilkan avatar, nama, status verifikasi, dan gelar.
+ * 
+ * @param {string} name - Nama penggalang dana / campaigner
+ * @param {string} avatar - URL foto profil campaigner
+ * @param {string} title - Gelar atau jabatan campaigner
+ * @param {boolean} isVerified - Apakah akun campaigner telah diverifikasi
+ * @param {CampaignerCardProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen CampaignerCard
+ */
+export const CampaignerCard: React.FC<CampaignerCardProps> = ({ name, avatar, title, isVerified }) => {
   return (
-    <div className="flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
-      <div className="flex items-center gap-3">
-        <img src={avatar} alt={name} className="w-12 h-12 rounded-full object-cover" />
-        <div>
-          <div className="flex items-center gap-1">
-            <h4 className="font-bold text-gray-900">{name}</h4>
-            {isVerified && <CheckCircle2 size={16} className="text-blue-500 fill-blue-500 text-white" />}
-          </div>
-          <p className="text-xs text-gray-500">Organization</p>
-        </div>
-      </div>
-      <button className="p-2 text-gray-400 hover:bg-gray-50 rounded-full">
-        <Plus size={20} />
-      </button>
-    </div>
+    <Container 
+    variant='light'
+    padding='md'
+    shadow='md'
+    radius='full'
+    
+    className="flex items-center justify-between"
+    >
+      <Container className="flex items-center gap-3">
+        <Avatar src={avatar} alt={name}  />
+        <Container display='none'>
+          <Container className="flex items-center gap-1">
+            <Txt variant="h4" weight="bold" color="default" >{name}</Txt>
+            <Container display='none' radius='full' variant='info'>
+            {isVerified && <Icn icon={CheckCircle2} color='light' />}
+            </Container>
+          </Container>
+          <Txt variant="caption" weight="normal" color="default">{title}</Txt>
+        </Container>
+      </Container>
+      <Btn variant="transparent" textColor='dark'>
+        <Icn icon={Plus} />
+      </Btn>
+    </Container>
   );
 };

@@ -1,19 +1,23 @@
 import React from 'react';
 
-interface ActivityBadgeProps {
+export interface ActivityBadgeProps {
   type: 'pemberdayaan' | 'pendidikan' | 'kemanusiaan';
 }
 
 /**
- * Komponen badge aktivitas kecil berbentuk lingkaran berwarna.
+ * ActivityBadge
  * 
- * @param {'pemberdayaan' | 'pendidikan' | 'kemanusiaan'} type - Jenis aktivitas yang menentukan warna badge
+ * Komponen badge aktivitas kecil berbentuk lingkaran berwarna.
+ * Digunakan untuk indikator kategori pada kartu atau daftar.
+ * 
+ * @param {'pemberdayaan' | 'pendidikan' | 'kemanusiaan'} type - yang menentukan warna badge
+ * @param {ActivityBadgeProps} props - Properti komponen
  * @returns {JSX.Element} Badge aktivitas berwarna
  */
 export const ActivityBadge: React.FC<ActivityBadgeProps> = ({ type }) => {
   const colors = {
-    pemberdayaan: 'bg-green-primary',
-    pendidikan: 'bg-blue-primary',
+    pemberdayaan: 'bg-success',
+    pendidikan: 'bg-info',
     kemanusiaan: 'bg-red-primary',
   };
 

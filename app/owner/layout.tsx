@@ -19,7 +19,7 @@ const OWNER_LINKS: NavLink[] = [
   { label: "Kelola Admin", href: "/owner/admins", icon: ShieldCheck },
   { label: "Laporan Keuangan", href: "/owner/reports", icon: FilePieChart },
   { label: "Profil Yayasan", href: "/owner/foundation", icon: Globe },
-  { label: "Log Aktivitas", href: "/owner/activity", icon: Activity },
+  { label: "Log Aktivitas", href: "/owner/donations", icon: Activity },
   { label: "Pengaturan", href: "/owner/settings", icon: Settings },
 ];
 

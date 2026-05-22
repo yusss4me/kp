@@ -1,42 +1,52 @@
 import { Container } from "@/app/ui/atoms/container";
-import Image from "next/image";
+import { Img } from "@/app/ui/atoms/image";
 import { Txt } from "@/app/ui/atoms/text";
 /**
- * @description Komponen brandlight untuk menampilkan logo dan nama brand dengan warna terang
- * @returns {JSX.Element}
+ * BrandLight
+ * 
+ * Komponen untuk menampilkan identitas brand (logo dan nama) 
+ * dengan skema warna terang (teks putih). Cocok untuk background gelap.
+ * 
+ * @returns {JSX.Element} Komponen BrandLight
  */
 
 export const BrandLight = () => {
   return (
     <Container className="flex items-center gap-2 w-fit h-fit ">
-      <Image
+      <Img
         src="/logo/yamuti.png"
         alt="Logo"
-        width={60}
-        height={60}
-        className="rounded-full object-cover"
+        rounded="full"
+        w={60}
+        h={60}
+        className="object-cover"
       />
-      <Txt variant="h3" weight="bold" color="white" className="flex">
+      <Txt variant="h3" weight="bold" color="light" className="flex">
         YAMUTI
       </Txt>
     </Container>
   );
 };
 /**
- * @description Komponen branddark untuk menampilkan logo dan nama brand dengan warna gelap
- * @returns {JSX.Element}
+ * BrandDark
+ * 
+ * Komponen untuk menampilkan identitas brand (logo dan nama) 
+ * dengan skema warna gelap (teks default). Cocok untuk background terang.
+ * 
+ * @returns {JSX.Element} Komponen BrandDark
  */
 export const BrandDark = () => {
   return (
     <Container className="flex items-center gap-2 w-fit h-fit">
-      <Image
+      <Img
         src="/logo/yamuti.png"
         alt="Logo"
-        width={60}
-        height={60}
-        className="rounded-full object-cover"
+        rounded="full"
+        w={60}
+        h={60}
+        className=" object-cover"
       />
-      <Txt variant="h3" weight="bold" color="black" className="flex">
+      <Txt variant="h3" weight="bold" color="default" className="flex">
         YAMUTI
       </Txt>
     </Container>

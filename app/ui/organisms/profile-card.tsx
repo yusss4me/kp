@@ -4,13 +4,26 @@ import { Txt } from "../atoms/text";
 import { Wallet, Heart, CreditCard, MapPin } from "lucide-react";
 import { SummaryCard } from "../molecules/summaty-card";
 
-export const ProfileCard = () => {
+export interface ProfileCardProps {
+  className?: string;
+}
+
+/**
+ * ProfileCard
+ * 
+ * Komponen kartu profil yang menampilkan ringkasan profil pengguna 
+ * (foto, nama, peran) dan statistik dampak donasi (Program, Kunjungan, Terdonasi).
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {ProfileCardProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen ProfileCard
+ */
+export const ProfileCard = ({}: ProfileCardProps) => {
   return (
     <Container
-      className="flex flex-col gap-8 w-full border border-red-secondary/20 shadow-lg shadow-red-primary/5"
+      className="flex flex-col gap-8 w-full border border-red-secondary/20 shadow-lg shadow-red-primary/5 rounded-xl"
       variant="red"
       padding="lg"
-      radius="xl"
     >
       <ProfileHeader
         name="M. Ardiansyah"

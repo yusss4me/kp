@@ -22,7 +22,22 @@ const regisSchema = z.object({
 
 type RegisFormValues = z.infer<typeof regisSchema>;
 
-export default function RegisForm() {
+export interface RegisFormProps {
+  className?: string;
+}
+
+/**
+ * RegisForm
+ * 
+ * Template untuk halaman pendaftaran akun baru.
+ * Menyediakan formulir input data diri lengkap (nama, email, kata sandi) 
+ * dengan validasi konfirmasi kata sandi.
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {RegisFormProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen RegisForm
+ */
+export default function RegisForm({}: RegisFormProps) {
   const {
     register,
     handleSubmit,
@@ -40,19 +55,15 @@ export default function RegisForm() {
 
   return (
     <Container
-      variant="white"
-      radius="2xl"
-      padding="none"
-      className="w-full flex flex-col gap-8 p-6 md:p-10 shadow-2xl shadow-black/5"
+      className="w-full flex flex-col gap-8 p-6 md:p-10 shadow-2xl shadow-black/5 rounded-2xl bg-white"
     >
       <Container className="flex flex-col items-center gap-2">
         <Txt
           variant="h2"
           weight="bold"
-          color="black"
           align="center"
           font="jakarta"
-          className="tracking-tight"
+          className="tracking-tight text-lightdark-tertiary"
         >
           Daftar Akun Baru
         </Txt>

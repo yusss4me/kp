@@ -4,30 +4,39 @@
 import { ReactNode, HTMLAttributes } from 'react';
 import { cn } from '@/app/lib/utils';
 
-export interface BoxProps extends HTMLAttributes<HTMLDivElement> {
+export interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
+  /** @param {ReactNode} children - Konten yang akan dibungkus oleh container */
   children?: ReactNode;
-  variant?: 'white' | 'red' | 'orange' | 'pink' | 'transparent' | 'black';
+  /** @param {'light' | 'red' | 'transparent' | 'dark' | 'danger' | 'success' | 'warning' | 'info'} variant - Varian warna latar belakang */
+  variant?: 'light' | 'red' | 'transparent' | 'dark' | 'danger' | 'success' | 'warning' | 'info';
+  /** @param {'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'} shadow - Bayangan container */
   shadow?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  /** @param {'none' | 'sm' | 'md' | 'lg' | 'xl'} padding - Padding internal container */
   padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
-  radius?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+  /** @param {'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'rounded' | 'full'} radius - Radius sudut container */
+  radius?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'rounded' | 'full';
+  /** @param {'none' | 'default' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'} border - Ketebalan border */
   border?: 'none' | 'default' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  /** @param {'left' | 'right' | 'center'} position - Perataan konten internal */
   position?: 'left' | 'right' | 'center';
-  bordercolor?: 'dark' | 'light' | 'danger' | 'success' | 'warning' | 'info';
+  /** @param {'dark' | 'red' | 'light' | 'danger' | 'success' | 'warning' | 'info'} bordercolor - Warna border */
+  bordercolor?: 'dark' | 'red' | 'light' | 'danger' | 'success' | 'warning' | 'info';
+  /** @param {'default' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'none'} gap - Jarak antar elemen internal */
+  gap?: 'default' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'|'none';
+  
+  
+  
 }
 
 
 /**
+ * Container
  * 
- * @param {'white' | 'red' | 'orange' | 'pink' | 'transparent' | 'black'} variant - Warna background container dengan value | white | red | orange | pink | transparent | black
- * @param {'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'} shadow - Bayangan container dengan value | none | sm | md | lg | xl | 2xl
- * @param {'none' | 'sm' | 'md' | 'lg' | 'xl'} padding - Padding container dengan value | none | sm | md | lg | xl
- * @param {'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'} radius - Radius sudut container dengan value | none | sm | md | lg | xl | 2xl | full
- * @param {'none' | 'default' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'} border - Border container dengan value | none | default | sm | md | lg | xl | 2xl
- * @param {'left' | 'right' | 'center'} position - Posisi konten container dengan value | left | right | center
- * @param {'dark' | 'light' | 'danger' | 'success' | 'warning' | 'info'} bordercolor - Warna border container
- * @param {ReactNode} children - Konten yang akan dibungkus oleh container
- * @param {string} className - Class tambahan untuk container
- * @returns {JSX.Element} - Container yang dibungkus oleh props yang diberikan
+ * Komponen pembungkus serbaguna untuk mengatur layout, latar belakang, 
+ * bayangan, border, dan padding secara konsisten.
+ * 
+ * @param {ContainerProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen Container
  */
 export const Container = ({ 
   children, 
@@ -38,17 +47,22 @@ export const Container = ({
   border = 'none',
   position = 'left',
   bordercolor = 'dark',
+  gap = 'default',
+  
   className, 
   ...props 
-}: BoxProps) => {
+}: ContainerProps) => {
   
   const variants = {
-    white: 'bg-lightdark-primary',
+    light: 'bg-lightdark-primary',
     red: 'bg-red-primary',
-    orange: 'bg-orange-primary',
-    pink: 'bg-pink-primary',
     transparent: 'bg-transparent',
-    black: 'bg-lightdark-tertiary',
+    dark: 'bg-lightdark-tertiary',
+    danger: 'bg-danger',
+    success: 'bg-success',
+    warning: 'bg-warning',
+    info: 'bg-info',
+   
   };
 
   const shadows = {
@@ -81,7 +95,8 @@ export const Container = ({
     lg: 'rounded-lg',
     xl: 'rounded-xl',
     '2xl': 'rounded-2xl',
-    'full': 'rounded-full',
+    rounded: 'rounded',
+    full: 'rounded-full',
   };
 
   const borders = {
@@ -94,17 +109,24 @@ export const Container = ({
     '2xl': 'border-12',
   };
 
-  
-
-  
-
   const bordercolors = {
+    red: 'border-red-primary',
     dark: 'border-lightdark-neutral',
     light: 'border-lightdark-primary',
     danger: 'border-danger',
     success: 'border-success',
     warning: 'border-warning',
     info: 'border-info',
+  };
+
+  const gaps = {
+    default: 'gap-1',
+    sm: 'gap-2',
+    md: 'gap-4',
+    lg: 'gap-6',
+    xl: 'gap-10',
+    '2xl': 'gap-12',
+    none: 'gap-0',
   };
 
   return (
@@ -116,6 +138,8 @@ export const Container = ({
         radii[radius],
         borders[border],
         bordercolors[bordercolor],
+        positions[position],
+        gaps[gap],
         className
       )}
       {...props}

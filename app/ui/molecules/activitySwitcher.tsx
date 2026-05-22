@@ -1,12 +1,25 @@
 'use client';
 import React from 'react';
+import { Btn } from '../atoms/button';
 
 export type ActivityType = 'anak' | 'program' | 'barang' | 'kunjungan';
 
-interface ActivitySwitcherProps {
+export interface ActivitySwitcherProps {
   activeActivity: ActivityType;
   onActivityChange: (activity: ActivityType) => void;
 }
+
+/**
+ * ActivitySwitcher
+ * 
+ * Komponen navigasi tab untuk beralih antar jenis aktivitas (Anak, Program, Barang, Kunjungan).
+ * Dirancang dengan gaya glassmorphism untuk tampilan premium.
+ * 
+ * @param {ActivityType} activeActivity - Jenis aktivitas yang sedang aktif/terpilih
+ * @param {(activity: ActivityType) => void} onActivityChange - Handler saat aktivitas diubah
+ * @param {ActivitySwitcherProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen ActivitySwitcher
+ */
 
 export const ActivitySwitcher: React.FC<ActivitySwitcherProps> = ({ 
   activeActivity, 
@@ -23,7 +36,7 @@ export const ActivitySwitcher: React.FC<ActivitySwitcherProps> = ({
     <div className="flex bg-white/10 backdrop-blur-md rounded-2xl p-1 shadow-inner w-full overflow-x-auto scrollbar-hide">
       <div className="flex min-w-full gap-1">
         {activities.map((activity) => (
-          <button
+          <Btn
             key={activity.id}
             onClick={() => onActivityChange(activity.id)}
             className={`flex-1 min-w-[100px] py-2.5 px-3 rounded-xl text-[11px] font-bold transition-all whitespace-nowrap ${
@@ -33,7 +46,7 @@ export const ActivitySwitcher: React.FC<ActivitySwitcherProps> = ({
             }`}
           >
             {activity.label}
-          </button>
+          </Btn>
         ))}
       </div>
     </div>

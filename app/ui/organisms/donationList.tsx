@@ -1,15 +1,33 @@
 "use client"
 import React, { useState } from 'react';
-import { SlidersHorizontal, ArrowDownWideNarrow, Package, Calendar, Heart, GraduationCap } from 'lucide-react';
+import { SlidersHorizontal, ArrowDownWideNarrow, Package, Calendar, ArrowLeft, Plus } from 'lucide-react';
 import { ActivitySwitcher, ActivityType } from '../molecules/activitySwitcher';
 import { DonationCard } from '../molecules/donationCard';
-import { KunjunganClientTemplate } from '../templates/kunjungan-client';
 import { Container } from '../atoms/container';
 import { Txt } from '../atoms/text';
 import { Input } from '../atoms/input';
 import { Btn } from '../atoms/button';
+import { Icn } from '../atoms/icon';
 
-export const DonationList: React.FC = () => {
+import { SearchGroup } from '../molecules/search-group';
+import { ButtonList } from '../molecules/buttonList';
+
+export interface DonationListProps {
+  className?: string;
+}
+
+/**
+ * DonationList
+ * 
+ * Komponen utama untuk menampilkan daftar donasi dan aktivitas yayasan.
+ * Memungkinkan pengguna beralih antara melihat program donasi, donasi anak asuh, 
+ * pengajuan sumbangan barang, hingga penjadwalan kunjungan.
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {DonationListProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen DonationList
+ */
+export const DonationList: React.FC<DonationListProps> = () => {
   const [activeActivity, setActiveActivity] = useState<ActivityType>('program');
 
   const campaigns = [
@@ -44,9 +62,11 @@ export const DonationList: React.FC = () => {
       case 'anak':
         return (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-             <div className="flex justify-between items-center">
-              <p className="font-bold text-gray-900">Donasi Anak Asuh</p>
-              <button className="text-xs text-red-primary font-bold hover:underline">Lihat semua</button>
+            <div className="flex justify-between items-center">
+              <Txt weight="bold" className="text-gray-900">Donasi Anak Asuh</Txt>
+              <Btn variant="transparent" textColor="red" size="sm" shape="rounded" className="text-xs text-red-primary font-bold hover:underline">
+                Lihat semua
+              </Btn>
             </div>
             <div className="space-y-4">
               {campaigns.filter(c => c.categoryTag === "EDU").map((camp, i) => (
@@ -59,8 +79,10 @@ export const DonationList: React.FC = () => {
         return (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex justify-between items-center">
-              <p className="font-bold text-gray-900">Program Aktif</p>
-              <button className="text-xs text-red-primary font-bold hover:underline">Lihat semua</button>
+              <Txt weight="bold" className="text-gray-900">Program Aktif</Txt>
+              <Btn variant="transparent" textColor="red" size="sm" shape="rounded" className="text-xs text-red-primary font-bold hover:underline">
+                Lihat semua
+              </Btn>
             </div>
             <div className="space-y-4">
               {campaigns.map((camp, i) => (
@@ -72,10 +94,10 @@ export const DonationList: React.FC = () => {
       case 'barang':
         return (
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <Container variant="white" radius="2xl" className="p-6 border border-gray-100 shadow-sm space-y-6">
+            <Container className="p-6 border border-gray-100 shadow-sm space-y-6 rounded-2xl bg-white">
               <div className="flex items-center gap-4 text-red-primary">
-                <div className="p-3 bg-red-50 rounded-2xl">
-                  <Package size={24} />
+                <div className="p-3 bg-red-50 rounded-2xl text-red-primary">
+                  <Icn icon={Package} size={24} color="current" />
                 </div>
                 <div>
                   <Txt weight="bold" className="text-gray-900">Sumbangan Barang</Txt>
@@ -90,47 +112,16 @@ export const DonationList: React.FC = () => {
                 <Btn variant="red" size="lg" className="w-full mt-4">Ajukan Penjemputan</Btn>
               </div>
             </Container>
-            
-            <div className="bg-orange-50 p-4 rounded-2xl border border-orange-100 flex gap-3">
-              <div className="text-orange-500 pt-1">ℹ️</div>
-              <Txt variant="caption" className="text-orange-800">
+
+            <div className="bg-red-secondary p-4 rounded-2xl border border-red-primary/10 flex gap-3">
+              <div className="text-red-primary pt-1">ℹ️</div>
+              <Txt variant="caption" className="text-red-primary/90 font-medium">
                 Barang akan kami salurkan ke panti asuhan dan keluarga dhuafa binaan YAMUTI.
               </Txt>
             </div>
           </div>
         );
-      case 'kunjungan':
-        return (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-             {/* We only render the form part of the Kunjungan template here */}
-             <Container
-                variant="white"
-                radius="2xl"
-                padding="none"
-                className="p-6 shadow-xl border border-gray-100 flex flex-col gap-6"
-              >
-                <div className="flex items-center gap-4 text-red-primary">
-                  <div className="p-3 bg-red-50 rounded-2xl">
-                    <Calendar size={24} />
-                  </div>
-                  <div>
-                    <Txt weight="bold" className="text-gray-900">Jadwalkan Kunjungan</Txt>
-                    <Txt variant="caption" className="text-gray-500">Silaturahmi langsung ke kantor/asrama kami</Txt>
-                  </div>
-                </div>
 
-                <div className="space-y-4">
-                  <Input label="Nama Lengkap" placeholder="Masukkan Nama Lengkap Anda" />
-                  <Input label="Keperluan" placeholder="Contoh: Silaturahmi, Penyerahan Donasi" />
-                  <div className="grid grid-cols-2 gap-4">
-                    <Input label="Tanggal" type="date" />
-                    <Input label="Waktu" type="time" />
-                  </div>
-                  <Btn variant="red" size="lg" className="w-full mt-4">Kirim Pengajuan</Btn>
-                </div>
-              </Container>
-          </div>
-        );
       default:
         return null;
     }
@@ -141,31 +132,30 @@ export const DonationList: React.FC = () => {
       {/* Search Header Area */}
       <div className="bg-red-primary p-8 rounded-b-[40px] space-y-8 shadow-xl">
         <div className="flex justify-between items-center text-white">
-          <button className="p-2.5 bg-white/10 rounded-xl hover:bg-white/20 transition-all">←</button>
-          <h2 className="font-bold text-lg">Aktivitas Kami</h2>
-          <button className="p-2.5 bg-white/10 rounded-xl hover:bg-white/20 transition-all">⊕</button>
+          <Btn variant="transparent" size="sm" shape="rounded" className="p-2.5 bg-white/10 hover:bg-white/20"><Icn icon={ArrowLeft} color="light" /></Btn>
+          <Txt variant="h6" weight="bold" color="light">Aktivitas Kami</Txt>
+          <Btn variant="transparent" size="sm" shape="rounded" className="p-2.5 bg-white/10 hover:bg-white/20"><Icn icon={Plus} color="light" /></Btn>
         </div>
-        
+
         {/* Activity Switcher */}
-        <ActivitySwitcher 
-          activeActivity={activeActivity} 
-          onActivityChange={setActiveActivity} 
+        <ActivitySwitcher
+          activeActivity={activeActivity}
+          onActivityChange={setActiveActivity}
         />
 
         {/* Filter/Sort Area (Only for donations) */}
         {(activeActivity === 'anak' || activeActivity === 'program') && (
-          <div className="flex items-center gap-3">
-             <button className="p-3.5 bg-white/10 rounded-2xl text-white backdrop-blur-sm"><SlidersHorizontal size={20}/></button>
-             <div className="flex-1 bg-white/10 backdrop-blur-sm rounded-2xl p-3 text-white/60 text-sm italic">
-                Cari program...
-             </div>
-             <button className="p-3.5 bg-white/10 rounded-2xl text-white backdrop-blur-sm"><ArrowDownWideNarrow size={20}/></button>
+          <div className="flex items-center gap-3 ">
+            <SearchGroup placeholder='Cari program...'/>
+            <Btn variant="transparent" size="sm" shape="rounded" className="p-3.5 bg-white/10 text-white backdrop-blur-sm">
+              <Icn icon={ArrowDownWideNarrow} size={20} color="current" className="text-white" />
+            </Btn>
           </div>
         )}
       </div>
 
       {/* Content Area */}
-      <div className="px-6">
+      <div className="p-6">
         {renderContent()}
       </div>
     </div>

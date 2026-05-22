@@ -17,8 +17,10 @@ import { Btn } from '@/app/ui/atoms/button';
 import { ProgressBar } from '@/app/ui/atoms/progressBar';
 import { Avatar } from '@/app/ui/atoms/avatar';
 import { cn } from '@/app/lib/utils';
+import { Img } from '../atoms/image';
+import { Container } from '../atoms/container';
 
-interface DonationDetailTemplateProps {
+export interface DonationDetailTemplateProps {
   image: string;
   location: string;
   title: string;
@@ -34,6 +36,28 @@ interface DonationDetailTemplateProps {
   gallery: string[];
 }
 
+/**
+ * DonationDetailTemplate
+ * 
+ * Template untuk menampilkan detail lengkap sebuah program donasi.
+ * Mencakup informasi visual (hero image, galeri), progres dana, 
+ * deskripsi mendalam, serta integrasi tombol aksi donasi.
+ * 
+ * @param {string} image - URL gambar utama program
+ * @param {string} location - Lokasi pelaksanaan program
+ * @param {string} title - Judul program donasi
+ * @param {number} currentAmount - Nominal dana yang sudah terkumpul
+ * @param {number} targetAmount - Target nominal dana yang ingin dicapai
+ * @param {object} author - Informasi mengenai pembuat/penanggung jawab program
+ * @param {string} author.name - Nama pembuat program
+ * @param {string} author.avatar - URL foto profil pembuat program
+ * @param {number} donorsCount - Jumlah total donatur yang berpartisipasi
+ * @param {number} daysRemaining - Sisa hari sebelum program berakhir
+ * @param {string} description - Deskripsi lengkap mengenai program
+ * @param {string[]} gallery - Daftar URL gambar untuk galeri kegiatan
+ * @param {DonationDetailTemplateProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen DonationDetailTemplate
+ */
 export const DonationDetailTemplate: React.FC<DonationDetailTemplateProps> = ({
   image,
   location,
@@ -60,10 +84,10 @@ export const DonationDetailTemplate: React.FC<DonationDetailTemplateProps> = ({
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 pb-24">
+    <Container className="flex flex-col min-h-screen bg-gray-50 pb-24">
       {/* Hero Section */}
       <div className="relative h-[450px] w-full overflow-hidden">
-        <img 
+        <Img 
           src={image} 
           alt={title} 
           className="w-full h-full object-cover"
@@ -72,12 +96,12 @@ export const DonationDetailTemplate: React.FC<DonationDetailTemplateProps> = ({
         
         {/* Top Actions */}
         <div className="absolute top-6 left-0 right-0 px-6 flex justify-between items-center">
-          <button 
+          <Btn 
             onClick={() => router.back()}
             className="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md text-white"
           >
             <ArrowLeft size={20} />
-          </button>
+          </Btn>
           <div className="flex gap-3">
             <button className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-success shadow-lg">
               <Heart size={20} fill="currentColor" />
@@ -101,28 +125,28 @@ export const DonationDetailTemplate: React.FC<DonationDetailTemplateProps> = ({
         <div className="absolute bottom-12 left-0 right-0 px-6 space-y-4">
           <div className="flex items-center gap-2 text-white/80">
             <MapPin size={16} />
-            <Txt variant="caption" color="white" className="opacity-80">
+            <Txt variant="caption" color="light" className="opacity-80">
               {location}
             </Txt>
           </div>
-          <Txt variant="h3" color="white" weight="bold" className="leading-tight">
+          <Txt variant="h3" color="light" weight="bold" className="leading-tight">
             {title}
           </Txt>
 
           <div className="space-y-2">
-            <div className="flex items-baseline gap-2">
-              <Txt variant="h6" className="text-warning font-bold">
+            <div className="flex justify-between items-baseline gap-2">
+              <Txt color='light' variant="h6" className=" font-bold">
                 {formatCurrency(currentAmount)}
               </Txt>
-              <Txt variant="caption" color="white" className="opacity-60">
+              <Txt variant="caption" color="light" className="opacity-60">
                 Terkumpul dari {formatCurrency(targetAmount)}
               </Txt>
             </div>
             
             {/* Custom Progress Bar to match design */}
             <div className="w-full bg-white/20 h-2 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-warning transition-all duration-500"
+              <Container variant='red'
+                className="h-full transition-all duration-500"
                 style={{ width: `${Math.min((currentAmount / targetAmount) * 100, 100)}%` }}
               />
             </div>
@@ -130,7 +154,7 @@ export const DonationDetailTemplate: React.FC<DonationDetailTemplateProps> = ({
 
           {/* Tab Switches */}
           <div className="mt-8 bg-white/20 backdrop-blur-md p-1 rounded-full flex">
-            <button 
+            <Btn 
               onClick={() => setActiveTab('donasi')}
               className={cn(
                 "flex-1 py-3 rounded-full text-sm font-bold transition-all",
@@ -138,8 +162,8 @@ export const DonationDetailTemplate: React.FC<DonationDetailTemplateProps> = ({
               )}
             >
               Donasi
-            </button>
-            <button 
+            </Btn>
+            <Btn 
               onClick={() => setActiveTab('volunteer')}
               className={cn(
                 "flex-1 py-3 rounded-full text-sm font-bold transition-all",
@@ -147,7 +171,7 @@ export const DonationDetailTemplate: React.FC<DonationDetailTemplateProps> = ({
               )}
             >
               Volunteer
-            </button>
+            </Btn>
           </div>
         </div>
       </div>
@@ -160,8 +184,8 @@ export const DonationDetailTemplate: React.FC<DonationDetailTemplateProps> = ({
             <Avatar src={author.avatar} size="sm" />
             <div className="flex flex-col">
               <div className="flex items-center gap-1">
-                <Txt variant="caption" className="text-gray-500">Oleh</Txt>
-                <Txt variant="caption" className="text-warning font-bold">{author.name}</Txt>
+                <Txt color='grey' variant="caption">Oleh</Txt>
+                <Txt color='dark' variant="caption" className=" font-bold">{author.name}</Txt>
               </div>
             </div>
           </div>
@@ -180,7 +204,7 @@ export const DonationDetailTemplate: React.FC<DonationDetailTemplateProps> = ({
 
         {/* Description */}
         <div className="space-y-3 mb-8">
-          <Txt variant="h6" weight="bold" className="text-gray-900">Deskripsi</Txt>
+          <Txt color='grey' variant="h6" weight="bold" >Deskripsi</Txt>
           <div className={cn(
             "text-gray-400 text-sm leading-relaxed",
             !isDescExpanded && "line-clamp-5"
@@ -208,13 +232,13 @@ export const DonationDetailTemplate: React.FC<DonationDetailTemplateProps> = ({
 
       {/* Sticky Bottom Bar */}
       <div className="bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-4 flex items-center gap-4">
-        <button className="w-14 h-14 flex items-center justify-center rounded-2xl bg-gray-50 border border-gray-100 text-gray-400">
+        <Btn color='light' className="w-14 h-14 flex items-center justify-center rounded-2xl bg-gray-50 border border-gray-100 text-gray-400">
           <MapPin size={24} />
-        </button>
-        <button className="flex-grow h-14 bg-success text-white font-bold rounded-2xl flex items-center justify-center hover:bg-success/90 transition-colors">
+        </Btn>
+        <Btn color='red' textColor='light' className="flex-grow h-14 hover:bg-current/20 font-bold rounded-2xl flex items-center justify-center  transition-colors">
           DONASI SEKARANG
-        </button>
+        </Btn>
       </div>
-    </div>
+    </Container>
   );
 };

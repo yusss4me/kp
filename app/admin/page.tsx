@@ -13,7 +13,7 @@ export default function DashboardPage() {
         <div className="bg-red-primary/5 rounded-[40px] p-8 md:p-12 border border-red-primary/10 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
           {/* Decorative Circles */}
           <div className="absolute -top-10 -right-10 w-40 h-40 bg-red-primary/5 rounded-full blur-3xl" />
-          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-orange-primary/5 rounded-full blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-red-primary/5 rounded-full blur-3xl" />
 
           <div className="space-y-3 relative z-10">
             <Txt variant="h2" weight="bold" className="text-red-primary">
@@ -49,7 +49,7 @@ export default function DashboardPage() {
             label="Stok Beras (Kg)" 
             value="450" 
             icon={Package} 
-            color="secondary"
+            color="info"
             trend={{ value: 2, isUp: false }} 
           />
           <StatCard 
@@ -96,8 +96,8 @@ export default function DashboardPage() {
         </section>
 
         {/* Call to action for Broadcast */}
-        <div className="bg-orange-primary/5 rounded-[40px] p-8 md:p-12 border border-orange-primary/10 flex flex-col items-center text-center gap-6 relative overflow-hidden">
-           <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-20 bg-orange-primary/10 rounded-full blur-3xl" />
+        <div className="bg-red-primary/5 rounded-[40px] p-8 md:p-12 border border-red-primary/10 flex flex-col items-center text-center gap-6 relative overflow-hidden">
+           <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-20 bg-red-primary/10 rounded-full blur-3xl" />
            
           <div className="space-y-2 relative z-10">
             <Txt variant="h3" weight="bold" className="text-gray-900">
@@ -107,7 +107,7 @@ export default function DashboardPage() {
               Gunakan fitur Broadcast WhatsApp untuk mengirimkan laporan kegiatan atau ucapan terima kasih secara massal dengan satu klik.
             </Txt>
           </div>
-          <Btn variant="orange" size="lg" shape="circle" className="px-12 shadow-xl shadow-orange-primary/20 relative z-10">
+          <Btn variant="red" size="lg" shape="circle" className="px-12 shadow-xl shadow-red-primary/20 relative z-10">
             Buka Menu Broadcast
           </Btn>
         </div>

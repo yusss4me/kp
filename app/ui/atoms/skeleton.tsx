@@ -1,23 +1,26 @@
 import { HTMLAttributes } from 'react';
 import { cn } from '@/app/lib/utils';
 
-interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
+export interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
   variant?: 'rectangle' | 'circle' | 'rounded';
   width?: string | number;
   height?: string | number;
 }
 
 /**
- * Skeleton component to show a pulsing placeholder during loading.
+ * Skeleton
  * 
- * @param {'rectangle' | 'circle' | 'rounded'} variant - Shape of the skeleton (default: 'rounded')
- * @param {string | number} width - Width of the skeleton
- * @param {string | number} height - Height of the skeleton
- * @param {string} className - Additional CSS classes
- * @returns {JSX.Element} Skeleton component
+ * Komponen placeholder yang berdenyut (pulsing) untuk ditampilkan 
+ * selama proses loading data.
+ * 
+ * @param {'rectangle' | 'circle' | 'rounded'} variant - Bentuk skeleton
+ * @param {string | number} width - Lebar skeleton (pixel atau string)
+ * @param {string | number} height - Tinggi skeleton (pixel atau string)
+ * @param {SkeletonProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen Skeleton
  */
 export const Skeleton = ({
-  variant = 'rounded',
+  variant = 'circle',
   width,
   height,
   className,
@@ -33,7 +36,7 @@ export const Skeleton = ({
   return (
     <div
       className={cn(
-        'animate-pulse bg-lightdark-neutral/20',
+        'animate-pulse bg-lightdark-neutral',
         variants[variant],
         className
       )}

@@ -1,7 +1,14 @@
 import React from 'react';
-import { MessageCircle, Phone, Heart } from 'lucide-react';
+import { Heart } from 'lucide-react';
+import { Img } from '@/app/ui/atoms/image';
+import { Txt } from '@/app/ui/atoms/text';
+import { Btn } from '@/app/ui/atoms/button';
+import { Badge } from '@/app/ui/atoms/badge';
+import { Icn } from '@/app/ui/atoms/icon';
+import { ProgressBar } from '@/app/ui/atoms/progressBar';
+import { Container } from '@/app/ui/atoms/container';
 
-interface DonationCardProps {
+export interface DonationCardProps {
   name: string;
   description: string;
   image: string;
@@ -10,57 +17,109 @@ interface DonationCardProps {
   raised: number;
 }
 
+/**
+ * DonationCard
+ * 
+ * Komponen kartu program donasi yang lengkap dengan informasi progres, 
+ * target, dan aksi donasi.
+ * 
+ * @param {string} name - Nama program donasi
+ * @param {string} description - Deskripsi singkat program donasi
+ * @param {string} image - URL gambar sampul program
+ * @param {string} categoryTag - Label kategori program
+ * @param {number} target - Nilai target donasi yang ingin dicapai
+ * @param {number} raised - Nilai donasi yang sudah terkumpul saat ini
+ * @param {DonationCardProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen DonationCard
+ */
 export const DonationCard: React.FC<DonationCardProps> = ({ name, description, image, categoryTag, target, raised }) => {
-  const percentage = Math.min(Math.round((raised / target) * 100), 100);
-  
   return (
-    <div className="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 mb-5 hover:shadow-md transition-shadow duration-300">
-      <div className="flex gap-5">
-        <div className="relative shrink-0">
-            <img src={image} className="w-24 h-24 rounded-[24px] object-cover" alt={name} />
-            <div className="absolute -top-2 -right-2 bg-red-600 text-white p-1.5 rounded-full shadow-lg">
-                <Heart size={12} fill="currentColor" />
-            </div>
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex justify-between items-start gap-2">
-            <h4 className="font-bold text-gray-900 truncate text-base">{name}</h4>
-            <span className="shrink-0 px-2.5 py-1 rounded-lg bg-red-50 text-red-600 font-bold text-[10px] uppercase tracking-wider">
+    <Container
+      variant="light"
+      radius="2xl"
+      
+      shadow='lg'
+      padding='md'
+      border='md'
+      bordercolor='light'
+      className="  mb-5 hover:shadow-md transition-shadow duration-300"
+    >
+      <Container gap='lg' className='flex'>
+        <Container className="relative shrink-0">
+          <Img
+            src={image}
+            alt={name}
+            w={100}
+            h={100}
+            rounded="lg"
+            aspect="square"
+          />
+          <Container variant='red' radius='full' shadow='lg' padding='sm' className="absolute -top-2 -right-2 ">
+            <Icn icon={Heart} size={12} color="light" />
+          </Container>
+        </Container>
+
+        <Container  className="flex flex-col flex-1 min-w-0">
+          <Container className="flex justify-between items-start gap-2">
+            <Txt variant="h6" weight="bold"  className=" truncate">
+              {name}
+            </Txt>
+            <Badge variant="soft" color="primary" className="shrink-0 rounded-lg text-[10px] uppercase tracking-wider">
               {categoryTag}
-            </span>
-          </div>
-          <p className="text-xs text-gray-500 mt-2 line-clamp-2 leading-relaxed">{description}</p>
-        </div>
-      </div>
-      
+            </Badge>
+          </Container>
+          <Txt variant="small" color='grey'  className="mt-2 line-clamp-2">
+            {description}
+          </Txt>
+        </Container>
+      </Container>
+
       {/* Progress Section */}
-      <div className="mt-6 space-y-2">
-        <div className="flex justify-between items-end">
-            <div className="space-y-0.5">
-                <p className="text-[10px] text-gray-400 font-medium uppercase tracking-tight">Terkumpul</p>
-                <p className="text-sm font-black text-red-600">Rp {raised.toLocaleString('id-ID')}</p>
-            </div>
-            <p className="text-[10px] font-bold text-gray-900 bg-gray-50 px-2 py-1 rounded-md">{percentage}%</p>
-        </div>
-        <div className="w-full h-2.5 bg-gray-100 rounded-full overflow-hidden">
-            <div 
-                className="h-full bg-red-600 rounded-full transition-all duration-1000 ease-out" 
-                style={{ width: `${percentage}%` }}
-            />
-        </div>
-        <div className="flex justify-between">
-            <p className="text-[9px] text-gray-400">Target: <span className="font-bold text-gray-600">Rp {target.toLocaleString('id-ID')}</span></p>
-        </div>
-      </div>
-      
-      <div className="flex gap-3 mt-6">
-        <button className="flex-1 py-3 bg-gray-50 text-gray-600 rounded-2xl font-bold text-xs hover:bg-gray-100 transition-all active:scale-95 border border-gray-100">
+      <Container  padding='sm' className=" mt-6 space-y-2">
+        <Container className=" justify-between items-end">
+          <Container className="space-y-0.5">
+            <Txt variant="caption" color='grey' className="font-medium uppercase tracking-tight">
+              Terkumpul
+            </Txt>
+            <Txt variant="small" weight="bold" color='red'>
+              Rp {raised.toLocaleString('id-ID')}
+            </Txt>
+          </Container>
+          <Container variant='light' radius='rounded' padding='sm'>
+
+          <Txt variant="caption" weight="bold" color='dark'>
+            {Math.min(Math.round((raised / target) * 100), 100)}%
+          </Txt>
+          </Container>
+        </Container>
+        <ProgressBar current={raised} target={target} />
+        <Txt variant="caption" color='grey'>
+          Target:{' '}
+          <span className="font-bold text-gray-600">
+            Rp {target.toLocaleString('id-ID')}
+          </span>
+        </Txt>
+      </Container>
+
+      <Container gap='md' className="flex mt-6">
+        <Btn
+          variant="light"
+          textColor='dark'
+          size="sm"
+          shape="rounded"
+          className="flex-1 py-3  text-xs"
+        >
           Detail
-        </button>
-        <button className="flex-[2] py-3 bg-red-600 text-white rounded-2xl font-bold text-xs hover:bg-red-700 transition-all active:scale-95 shadow-lg shadow-red-100">
+        </Btn>
+        <Btn
+          variant="red"
+          size="sm"
+          shape="rounded"
+          className="flex py-3 text-xs shadow-lg shadow-red-100"
+        >
           Donasi Sekarang
-        </button>
-      </div>
-    </div>
+        </Btn>
+      </Container>
+    </Container>
   );
 };

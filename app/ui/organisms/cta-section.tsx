@@ -2,7 +2,22 @@ import { Txt } from "../atoms/text";
 import { Btn } from "../atoms/button";
 import Link from "next/link";
 
-export const CTASection = () => {
+export interface CTASectionProps {
+  className?: string;
+}
+
+/**
+ * CTASection (Call to Action)
+ * 
+ * Bagian ajakan bertindak (CTA) yang mencolok dengan background kontras.
+ * Digunakan untuk mendorong pengguna agar mendaftar atau bertanya 
+ * mengenai layanan yayasan.
+ * 
+ * @param {string} className - Class tambahan Tailwind CSS
+ * @param {CTASectionProps} props - Properti komponen
+ * @returns {JSX.Element} Komponen CTASection
+ */
+export const CTASection = ({}: CTASectionProps) => {
     return (
         <section className="py-16 md:py-24">
           <div className="max-w-5xl mx-auto px-6">
@@ -11,8 +26,8 @@ export const CTASection = () => {
               <div className="absolute bottom-0 right-0 w-48 md:w-64 h-48 md:h-64 bg-white/5 rounded-full -mr-24 md:-mr-32 -mb-24 md:-mb-32" />
               
               <div className="relative z-10 space-y-4">
-                <Txt variant="h2" weight="bold" color="white" className="text-2xl md:text-4xl">Siap Untuk Menebar Kebaikan?</Txt>
-                <Txt variant="body" color="white" className="opacity-80 max-w-xl mx-auto text-sm md:text-base">
+                <Txt variant="h2" weight="bold" color="light" className="text-2xl md:text-4xl">Siap Untuk Menebar Kebaikan?</Txt>
+                <Txt variant="body" color="light" className="opacity-80 max-w-xl mx-auto text-sm md:text-base">
                   Bergabunglah sekarang dan jadilah alasan seseorang tersenyum hari ini. Sekecil apa pun bantuan Anda, akan sangat berarti bagi mereka.
                 </Txt>
               </div>
@@ -23,7 +38,7 @@ export const CTASection = () => {
                   </Btn>
                 </Link>
                 <Link href="#bantuan" className="w-full sm:w-auto">
-                  <Btn variant="red" size="lg" shape="circle" className="w-full sm:w-auto px-12 h-14 md:h-16 border border-white/20 text-sm md:text-base">
+                  <Btn variant="red" size="lg" border="border" borderColor="light"  shape="circle" className="w-full sm:w-auto px-12 h-14 md:h-16 border border-white/20 text-sm md:text-base">
                     Tanya Kami
                   </Btn>
                 </Link>
