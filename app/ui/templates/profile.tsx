@@ -1,16 +1,32 @@
 import { ProfileCard } from "../organisms/profile-card";
 import { MenuListItems } from "../organisms/menuListItems";
 import { Txt } from "../atoms/text";
-import { LogOut } from "lucide-react";
+import { LogOut, LucideIcon } from "lucide-react";
 import { Btn } from "../atoms/button";
-import { PROFILE_MENU_GROUPS } from "@/app/lib/constants/profile-constants";
 
 export interface ProfileTemplateProps {
-  /** 
-   * @param {boolean} isFlyout - Menentukan apakah template ditampilkan sebagai overlay flyout 
-   * (misal: di sidebar desktop) atau sebagai halaman penuh. 
-   */
-  isFlyout?: boolean;
+    user: {
+        name: string;
+        role: string;
+        image: string;
+    };
+    amountProgramUser: string;
+    amountVisitUser: string;
+    amountDonatedUser: string;
+    listMenu: {
+        title: string;
+        items: {
+            label: string;
+            icon: LucideIcon;
+            href: string;
+        }[];
+    }[];
+    className?: string;
+    /** 
+     * @param {boolean} isFlyout - Menentukan apakah template ditampilkan sebagai overlay flyout 
+     * (misal: di sidebar desktop) atau sebagai halaman penuh. 
+     */
+    isFlyout?: boolean;
 }
 
 /**
@@ -23,9 +39,17 @@ export interface ProfileTemplateProps {
  * @param {ProfileTemplateProps} props - Properti komponen
  * @returns {JSX.Element} Komponen ProfileTemplate
  */
-export const ProfileTemplate = ({ isFlyout = false }: ProfileTemplateProps) => {
+export const ProfileTemplate = ({
+    user,
+    amountProgramUser,
+    amountVisitUser,
+    amountDonatedUser,
+    listMenu,
+    className = "",
+    isFlyout = false
+}: ProfileTemplateProps) => {
     return (
-        <div className={`h-full w-full ${isFlyout ? 'max-w-md bg-white shadow-2xl' : 'max-w-4xl mx-auto'} overflow-hidden flex flex-col transition-all duration-500`}>
+        <div className={`h-full w-full ${isFlyout ? 'max-w-md bg-white shadow-2xl' : 'max-w-4xl mx-auto'} overflow-hidden flex flex-col transition-all duration-500 ${className}`}>
             {/* Header for Page Mode */}
             {!isFlyout && (
                 <div className="p-8 md:p-12 pb-0 flex items-center justify-between">
@@ -40,14 +64,22 @@ export const ProfileTemplate = ({ isFlyout = false }: ProfileTemplateProps) => {
             <div className={`flex-1 overflow-y-auto custom-scrollbar ${isFlyout ? 'p-6' : 'p-8 md:p-12'} flex flex-col gap-10`}>
                 {/* Profile Section */}
                 <div className="animate-in slide-in-from-top-4 duration-700">
-                    <ProfileCard />
+                    <ProfileCard
+                        nameUser={user.name}
+                        roleUser={user.role}
+                        imageUser={user.image}
+                        amountProgramUser={amountProgramUser}
+                        amountVisitUser={amountVisitUser}
+                        amountDonatedUser={amountDonatedUser}
+                    
+                    />
                 </div>
-                
+
                 {/* Menu Lists */}
                 <div className={`grid ${isFlyout ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'} gap-8 pb-10`}>
-                    {PROFILE_MENU_GROUPS.map((group, idx) => (
-                        <div 
-                            key={group.title} 
+                    {listMenu.map((group, idx) => (
+                        <div
+                            key={group.title}
                             className="animate-in slide-in-from-bottom-4 duration-700"
                             style={{ animationDelay: `${(idx + 1) * 150}ms`, animationFillMode: 'both' }}
                         >

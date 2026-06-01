@@ -1,117 +1,119 @@
-import { DashboardTemplate } from '@/app/ui/templates/DashboardTemplate';
-import { StatCard } from '@/app/ui/molecules/StatCard';
-import { OrphanCard } from '@/app/ui/molecules/OrphanCard';
-import { Txt } from '@/app/ui/atoms/text';
-import { Btn } from '@/app/ui/atoms/button';
-import { Users, Wallet, Package, Heart, Plus } from 'lucide-react';
+import { AdminDashboard } from '@/app/ui/templates/admin-dashboardTemplate';
 
-export default function DashboardPage() {
+
+export default function Page() {
   return (
-    <DashboardTemplate headerTitle="Dashboard Utama">
-      <div className="space-y-10">
-        {/* Welcome Section */}
-        <div className="bg-red-primary/5 rounded-[40px] p-8 md:p-12 border border-red-primary/10 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
-          {/* Decorative Circles */}
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-red-primary/5 rounded-full blur-3xl" />
-          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-red-primary/5 rounded-full blur-3xl" />
-
-          <div className="space-y-3 relative z-10">
-            <Txt variant="h2" weight="bold" className="text-red-primary">
-              Selamat Datang, Admin
-            </Txt>
-            <Txt variant="body" className="text-gray-500 max-w-xl">
-              Platform ini dirancang untuk mempermudah manajemen operasional Yayasan Yamuti secara transparan dan akuntabel.
-            </Txt>
-          </div>
-          <Btn variant="red" size="lg" shape="circle" className="gap-2 shrink-0 shadow-xl shadow-red-primary/20 relative z-10 px-8">
-            <Plus size={20} />
-            Donasi Baru
-          </Btn>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatCard 
-            label="Total Anak Asuh" 
-            value="128" 
-            icon={Users} 
-            color="primary"
-            trend={{ value: 12, isUp: true }} 
-          />
-          <StatCard 
-            label="Dana Donasi" 
-            value="Rp 45.2M" 
-            icon={Wallet} 
-            color="success"
-            trend={{ value: 5, isUp: true }} 
-          />
-          <StatCard 
-            label="Stok Beras (Kg)" 
-            value="450" 
-            icon={Package} 
-            color="info"
-            trend={{ value: 2, isUp: false }} 
-          />
-          <StatCard 
-            label="Program Aktif" 
-            value="12" 
-            icon={Heart} 
-            color="info" 
-          />
-        </div>
-
-        {/* Recent Orphans Section */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between px-2">
-            <Txt variant="h3" weight="bold" className="text-gray-900 tracking-tight">Anak Asuh Terbaru</Txt>
-            <Btn variant="light" size="sm" shape="rounded" className="text-red-primary font-bold">Lihat Semua</Btn>
-          </div>
+    <AdminDashboard
+      anak={[
+        {
+          id: "1",
+          nama: "Ahmad Fauzi",
+          jenisKelamin: "Laki-laki",
+          umur: 11,
+          status: "Baru",
+          image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+        },
+        {
+          id: "2",
+          nama: "Ahmad Fauzi",
+          jenisKelamin: "Laki-laki",
+          umur: 10,
+          status: "Baru",
+          image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+        },
+        {
+          id: "3",
+          nama: "Ahmad Fauzi",
+          jenisKelamin: "Laki-laki",
+          umur: 10,
+          status: "Baru",
+          image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+        },
+        {
+          id: "4",
+          nama: "Siti Aminah",
+          jenisKelamin: "Perempuan",
+          umur: 12,
+          status: "Baru",
+          image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+        },
+        {
+          id: "5",
+          nama: "Ahmad Fauzi",
+          jenisKelamin: "Laki-laki",
+          umur: 10,
+          status: "Baru",
+          image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+        }
+      ]}
+      donasi={[
+        {
+          id: "1",
+          jumlah: 1000,
+        },
+        {
+          id: "2",
+          jumlah: 2000,
+        },
+        {
+          id: "3",
+          jumlah: 3000,
+        },
+        {
+          id: "4",
+          jumlah: 4000,
+        }
+      ]}
+      program={[
+        {
+          id: "1",
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <OrphanCard 
-              name="Ahmad Fauzi" 
-              age={10} 
-              gender="Laki-laki" 
-              status="Baru" 
-            />
-            <OrphanCard 
-              name="Siti Aminah" 
-              age={8} 
-              gender="Perempuan" 
-              status="Aktif" 
-            />
-            <OrphanCard 
-              name="Budi Santoso" 
-              age={12} 
-              gender="Laki-laki" 
-              status="Aktif" 
-            />
-            <OrphanCard 
-              name="Laila Sari" 
-              age={9} 
-              gender="Perempuan" 
-              status="Aktif" 
-            />
-          </div>
-        </section>
+        },
+        {
+          id: "2",
 
-        {/* Call to action for Broadcast */}
-        <div className="bg-red-primary/5 rounded-[40px] p-8 md:p-12 border border-red-primary/10 flex flex-col items-center text-center gap-6 relative overflow-hidden">
-           <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-20 bg-red-primary/10 rounded-full blur-3xl" />
-           
-          <div className="space-y-2 relative z-10">
-            <Txt variant="h3" weight="bold" className="text-gray-900">
-              Ingin Mengirim Kabar ke Donatur?
-            </Txt>
-            <Txt variant="body" className="text-gray-500 max-w-2xl">
-              Gunakan fitur Broadcast WhatsApp untuk mengirimkan laporan kegiatan atau ucapan terima kasih secara massal dengan satu klik.
-            </Txt>
-          </div>
-          <Btn variant="red" size="lg" shape="circle" className="px-12 shadow-xl shadow-red-primary/20 relative z-10">
-            Buka Menu Broadcast
-          </Btn>
-        </div>
-      </div>
-    </DashboardTemplate>
+        },
+        {
+          id: "3",
+
+        },
+        {
+          id: "4",
+
+        },
+        {
+          id: "5",
+
+        },
+        {
+          id: "7",
+
+        }
+      ]}
+      stokBarang={[
+        {
+          id: "1",
+          jumlah: 10,
+        },
+        {
+          id: "2",
+          jumlah: 2000,
+        },
+        {
+          id: "3",
+          jumlah: 3000,
+        },
+        {
+          id: "4",
+          jumlah: 4000,
+        }
+      ]}
+      user={{
+        name: "Admin Yamuti",
+        role: "Super Administrator"
+      }}
+      headerTitle="Dashboard Utama" />
+
+
   );
 }

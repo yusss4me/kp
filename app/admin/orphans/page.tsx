@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { DashboardTemplate } from '@/app/ui/templates/DashboardTemplate';
+import { DashboardTemplate } from '@/app/ui/organisms/DashboardHeader';
 import { OrphanFilter } from '@/app/ui/organisms/OrphanFilter';
 import { OrphanCard } from '@/app/ui/molecules/OrphanCard';
 import { Txt } from '@/app/ui/atoms/text';
@@ -19,8 +19,8 @@ const MOCK_ORPHANS = [
 
 export default function OrphansPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  
-  const filteredOrphans = MOCK_ORPHANS.filter(orphan => 
+
+  const filteredOrphans = MOCK_ORPHANS.filter(orphan =>
     orphan.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -36,16 +36,16 @@ export default function OrphansPage() {
         </div>
 
         {/* Filter & Search */}
-        <OrphanFilter 
-          onSearch={(q) => setSearchQuery(q)} 
-          onAddClick={() => alert('Fitur Tambah Anak akan segera hadir!')} 
+        <OrphanFilter
+          onSearch={(q) => setSearchQuery(q)}
+          onAddClick={() => alert('Fitur Tambah Anak akan segera hadir!')}
         />
 
         {/* Orphans Grid */}
         {filteredOrphans.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredOrphans.map((orphan) => (
-              <OrphanCard 
+              <OrphanCard
                 key={orphan.id}
                 name={orphan.name}
                 age={orphan.age}
@@ -57,7 +57,7 @@ export default function OrphansPage() {
         ) : (
           <div className="py-24 flex flex-col items-center justify-center bg-white rounded-[40px] border border-dashed border-gray-200">
             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-               <Txt className="text-4xl">🔎</Txt>
+              <Txt className="text-4xl">🔎</Txt>
             </div>
             <Txt variant="body" className="text-gray-400 font-medium italic">
               Tidak ada data anak asuh yang ditemukan dengan nama "{searchQuery}"

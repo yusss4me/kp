@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardTemplate } from '@/app/ui/templates/DashboardTemplate';
+import { DashboardTemplate } from '@/app/ui/organisms/DashboardHeader';
 import { StatCard } from '@/app/ui/molecules/StatCard';
 import { InventoryTable } from '@/app/ui/organisms/InventoryTable';
 import { Txt } from '@/app/ui/atoms/text';
@@ -26,23 +26,23 @@ export default function InventoryPage() {
 
         {/* Inventory Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard 
-            label="Total Jenis Barang" 
-            value="152 Item" 
-            icon={Package} 
-            color="primary" 
+          <StatCard
+            label="Total Jenis Barang"
+            value="152 Item"
+            icon={Package}
+            color="primary"
           />
-          <StatCard 
-            label="Barang Keluar (Minggu Ini)" 
-            value="42 Item" 
-            icon={Inbox} 
-            color="info" 
+          <StatCard
+            label="Barang Keluar (Minggu Ini)"
+            value="42 Item"
+            icon={Inbox}
+            color="info"
           />
-          <StatCard 
-            label="Stok Menipis" 
-            value="5 Item" 
-            icon={AlertTriangle} 
-            color="danger" 
+          <StatCard
+            label="Stok Menipis"
+            value="5 Item"
+            icon={AlertTriangle}
+            color="danger"
           />
         </div>
 
@@ -50,7 +50,7 @@ export default function InventoryPage() {
         <div className="bg-white p-4 rounded-[32px] border border-gray-100 shadow-sm flex flex-col md:flex-row items-center gap-4">
           <div className="relative flex-1 w-full">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-            <input 
+            <input
               type="text"
               placeholder="Cari nama barang atau kategori..."
               className="w-full h-12 pl-12 pr-4 rounded-2xl bg-gray-50 border-none focus:ring-2 focus:ring-red-primary/20 text-sm font-medium transition-all"

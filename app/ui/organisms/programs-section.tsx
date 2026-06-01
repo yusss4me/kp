@@ -28,37 +28,37 @@ export interface ProgramsSectionProps {
  * @param {ProgramsSectionProps} props - Properti komponen
  * @returns {JSX.Element} Komponen ProgramsSection
  */
-export const ProgramsSection = ({items}: ProgramsSectionProps) => {
-    return (
-        <Container id="programs" className="py-16 md:py-24 flex flex-col">
-          <Container className="max-w-7xl mx-auto px-6 flex flex-col">
-            <Container className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
-              <Container className="space-y-4 flex flex-col">
-                <Badge
-                  icon={CheckCircle2}
-                  color="success"
-                  
-                >
-                  <Txt color="current">
+export const ProgramsSection = ({ items }: ProgramsSectionProps) => {
+  return (
+    <Container id="programs" className="py-16 md:py-24 flex flex-col">
+      <Container padding="lg" className="  flex flex-col">
+        <Container className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+          <Container className="flex flex-col">
+            <Badge
+              icon={CheckCircle2}
+              color="success"
 
-                  program terverifikasi
-                  </Txt>
-                </Badge>
-                <Txt variant="h2" weight="bold" className="text-lightdark-tertiary text-2xl md:text-3xl">Program Kebaikan Pilihan</Txt>
-                <Txt variant="body" className="text-lightdark-neutral max-w-xl text-sm md:text-base">
-                  Pilih program yang paling menyentuh hati Anda dan jadilah bagian dari perubahan besar bagi mereka.
-                </Txt>
-              </Container>
-              <Link href="/home/donasi/program" className="w-full md:w-auto">
-                <Btn variant="light" shape="circle" className="w-full md:w-auto gap-2 text-sm">
-                  Lihat Semua Program
-                  <ArrowRight size={16} />
-                </Btn>
-              </Link>
-            </Container>
- 
-            <DiscoverSection items={items} />
+            >
+              <Txt color="current">
+
+                program terverifikasi
+              </Txt>
+            </Badge>
+            <Txt variant="h2" weight="bold" className="text-lightdark-tertiary text-2xl md:text-3xl">Program Kebaikan Pilihan</Txt>
+            <Txt variant="body" className="text-lightdark-neutral max-w-xl text-sm md:text-base">
+              Pilih program yang paling menyentuh hati Anda dan jadilah bagian dari perubahan besar bagi mereka.
+            </Txt>
           </Container>
+          <Link href="/home/donasi/program" className="w-full md:w-auto">
+            <Btn variant="light" shape="circle" className="w-full md:w-auto gap-2 text-sm">
+              Lihat Semua Program
+              <ArrowRight size={16} />
+            </Btn>
+          </Link>
         </Container>
-    )
+
+        <DiscoverSection items={items} />
+      </Container>
+    </Container>
+  )
 }

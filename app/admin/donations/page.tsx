@@ -1,5 +1,5 @@
 import React from "react";
-import { DashboardTemplate } from "@/app/ui/templates/DashboardTemplate";
+import { DashboardTemplate } from "@/app/ui/organisms/DashboardHeader";
 import { Txt } from "@/app/ui/atoms/text";
 import { Btn } from "@/app/ui/atoms/button";
 import { StatCard } from "@/app/ui/molecules/StatCard";

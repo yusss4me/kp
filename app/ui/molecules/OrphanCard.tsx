@@ -54,7 +54,7 @@ export const OrphanCard = ({
         className,
       )}
     >
-      <Container display='none' className="relative mb-4">
+      <Container className="relative mb-4">
         <div className="aspect-square rounded-2xl bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100 group-hover:scale-[1.02] transition-transform">
           <Icn icon={User} size={150} color="dark" />
         </div>
@@ -67,7 +67,7 @@ export const OrphanCard = ({
         </Badge>
       </Container>
 
-      <Container display="none" className="space-y-3">
+      <Container className="space-y-3">
         <Txt
           weight="bold"
           className="text-lg leading-tight text-gray-900 line-clamp-1"

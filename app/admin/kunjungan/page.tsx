@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardTemplate } from '@/app/ui/templates/DashboardTemplate';
+import { DashboardTemplate } from '@/app/ui/organisms/DashboardHeader';
 import { BookingList } from '@/app/ui/organisms/BookingList';
 import { StatCard } from '@/app/ui/molecules/StatCard';
 import { Txt } from '@/app/ui/atoms/text';
@@ -26,23 +26,23 @@ export default function BookingPage() {
 
         {/* Booking Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard 
-            label="Kunjungan Bulan Ini" 
-            value="24" 
-            icon={Calendar} 
-            color="primary" 
+          <StatCard
+            label="Kunjungan Bulan Ini"
+            value="24"
+            icon={Calendar}
+            color="primary"
           />
-          <StatCard 
-            label="Menunggu Konfirmasi" 
-            value="5" 
-            icon={Users} 
-            color="secondary" 
+          <StatCard
+            label="Menunggu Konfirmasi"
+            value="5"
+            icon={Users}
+            color="secondary"
           />
-          <StatCard 
-            label="Kunjungan Selesai" 
-            value="18" 
-            icon={CheckCircle} 
-            color="success" 
+          <StatCard
+            label="Kunjungan Selesai"
+            value="18"
+            icon={CheckCircle}
+            color="success"
           />
         </div>
 

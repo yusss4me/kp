@@ -9,6 +9,11 @@ import { Btn } from '../atoms/button';
 import { Textarea } from '../atoms/textarea';
 
 export interface BroadcastEditorProps {
+  templatePesan: {
+
+    nama_template: string;
+    isi: string;
+  }[];
   className?: string;
 }
 
@@ -23,7 +28,7 @@ export interface BroadcastEditorProps {
  * @param {BroadcastEditorProps} props - Properti komponen
  * @returns {JSX.Element} Komponen BroadcastEditor
  */
-export const BroadcastEditor: React.FC<BroadcastEditorProps> = () => {
+export const BroadcastEditor: React.FC<BroadcastEditorProps> = ({ templatePesan }) => {
   const [message, setMessage] = useState('');
 
   const handleSendWhatsApp = () => {
@@ -79,9 +84,9 @@ export const BroadcastEditor: React.FC<BroadcastEditorProps> = () => {
               Gunakan Template
             </Txt>
             <Container className="flex flex-wrap gap-2">
-              {['Laporan Bulanan', 'Ucapan Terima Kasih', 'Undangan Doa'].map((t) => (
+              {templatePesan.map((t) => (
                 <Btn
-                  key={t}
+                  key={t.nama_template}
                   variant="transparent"
                   textColor="dark"
                   borderColor="light"
@@ -89,12 +94,12 @@ export const BroadcastEditor: React.FC<BroadcastEditorProps> = () => {
                   shape="circle"
                   onClick={() =>
                     setMessage(
-                      `Assalamu'alaikum Warahmatullah, Kami dari YAMUTI ingin menginformasikan ${t.toLowerCase()}...`
+                      `Assalamu'alaikum Warahmatullah, Kami dari YAMUTI ingin menginformasikan tentang ${t.isi.toLowerCase()}...`
                     )
                   }
                   className="px-4 py-2 bg-white hover:border-green-500 hover:text-green-600 transition-colors text-xs font-bold text-gray-600"
                 >
-                  {t}
+                  {t.nama_template}
                 </Btn>
               ))}
             </Container>

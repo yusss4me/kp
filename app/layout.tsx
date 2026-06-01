@@ -14,6 +14,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
+  
   title: "Yamuti Foundation",
   description: "Membangun masa depan yang lebih baik melalui pemberdayaan masyarakat, pendidikan, dan aksi sosial yang berkelanjutan.",
 };

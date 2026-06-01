@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/app/lib/utils";
 import { NavLink as NavLinkMolecule } from "@/app/ui/molecules/navlink";
+import { PROFILE_MENU_GROUPS } from "@/app/lib/constants/profile-constants";
 
 /**
  * Navigation link type definition.
@@ -36,6 +37,7 @@ export interface NavLink {
   label: string;
   href: string;
   icon: LucideIcon;
+
   hideOnDesktop?: boolean;
 }
 
@@ -44,7 +46,7 @@ export interface NavLink {
  */
 const DEFAULT_LINKS: NavLink[] = [
   { label: "Beranda", href: "/home", icon: Home },
-  { label: "Aktivitas", href: "/home/donasi", icon: HandCoins },
+  { label: "Aktivitas", href: "/home/aktivitas", icon: HandCoins },
   { label: "Broadcast", href: "/home/broadcast", icon: MessageCircleMore },
   { label: "Profil", href: "/home/profile", icon: User, hideOnDesktop: true },
 ];
@@ -54,7 +56,13 @@ export interface NavbarProps {
   user?: {
     name: string;
     role: string;
+    image: string;
   };
+  amountProgramUser: string;
+  amountVisitUser: string;
+  amountDonatedUser: string;
+  
+  className: string;
 }
 
 /**
@@ -75,7 +83,11 @@ export interface NavbarProps {
  */
 export const Navbar = ({
   links = DEFAULT_LINKS,
-  user = { name: "M. Ardiansyah", role: "Donatur Tetap" },
+  user = { name: "M. Ardiansyah", role: "Donatur Tetap", image: "/logo/yamuti.png" },
+  amountProgramUser,
+  amountVisitUser,
+  amountDonatedUser,
+  className,
 }: NavbarProps) => {
   const pathname = usePathname();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -130,12 +142,12 @@ export const Navbar = ({
         <Container className="pt-6 border-t border-white/10">
           <Container className="flex items-center justify-center p-3">
             <Btn onClick={() => setIsProfileOpen(!isProfileOpen)}
-            variant="transparent"
-            className="text-white hover:bg-white/10 rounded-full p-3">
-            {isProfileOpen
-              ? <Icn icon={X} size={25} color="current" />
-              : <Icn icon={User} size={25} color="current" />}
-          </Btn>
+              variant="transparent"
+              className="text-white hover:bg-white/10 rounded-full p-3">
+              {isProfileOpen
+                ? <Icn icon={X} size={25} color="current" />
+                : <Icn icon={User} size={25} color="current" />}
+            </Btn>
           </Container>
         </Container>
 
@@ -143,12 +155,19 @@ export const Navbar = ({
         {isProfileOpen && (
           <div className="absolute left-full top-0 h-screen w-[400px] bg-black/20 backdrop-blur-sm z-[60] animate-in slide-in-from-left-4 duration-300">
             <div className="h-full " onClick={(e) => e.stopPropagation()}>
-              <ProfileTemplate isFlyout={true} />
+              <ProfileTemplate
+                user={user}
+                amountProgramUser={amountProgramUser}
+                amountVisitUser={amountVisitUser}
+                amountDonatedUser={amountDonatedUser}
+                listMenu={PROFILE_MENU_GROUPS}
+                className={className}
+                isFlyout={true} />
             </div>
             {/* Close trigger for clicking outside the card but within the flyout area */}
             <div
               className="absolute inset-0 -z-10"
-              onClick={() => setIsProfileOpen(false)} 
+              onClick={() => setIsProfileOpen(false)}
             />
           </div>
         )}

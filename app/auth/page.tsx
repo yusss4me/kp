@@ -1,4 +1,8 @@
+import LoginForm from "../ui/templates/login-form"
+
 export default function Page(){
 
-    return <p> Auth</p>
+    return(
+        <LoginForm />
+    )
 }

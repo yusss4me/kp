@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardTemplate } from '@/app/ui/templates/DashboardTemplate';
+import { DashboardTemplate } from '@/app/ui/organisms/DashboardHeader';
 import { StatCard } from '@/app/ui/molecules/StatCard';
 import { TransactionTable } from '@/app/ui/organisms/TransactionTable';
 import { Txt } from '@/app/ui/atoms/text';
@@ -32,25 +32,25 @@ export default function FinancePage() {
 
         {/* Financial Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard 
-            label="Total Pemasukan (Bulan Ini)" 
-            value="Rp 24.500.000" 
-            icon={TrendingUp} 
-            color="success" 
+          <StatCard
+            label="Total Pemasukan (Bulan Ini)"
+            value="Rp 24.500.000"
+            icon={TrendingUp}
+            color="success"
             trend={{ value: 8, isUp: true }}
           />
-          <StatCard 
-            label="Total Pengeluaran (Bulan Ini)" 
-            value="Rp 12.850.000" 
-            icon={TrendingDown} 
-            color="danger" 
+          <StatCard
+            label="Total Pengeluaran (Bulan Ini)"
+            value="Rp 12.850.000"
+            icon={TrendingDown}
+            color="danger"
             trend={{ value: 3, isUp: false }}
           />
-          <StatCard 
-            label="Saldo Kas Saat Ini" 
-            value="Rp 85.200.000" 
-            icon={DollarSign} 
-            color="primary" 
+          <StatCard
+            label="Saldo Kas Saat Ini"
+            value="Rp 85.200.000"
+            icon={DollarSign}
+            color="primary"
           />
         </div>
 

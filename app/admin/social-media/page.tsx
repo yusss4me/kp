@@ -1,5 +1,5 @@
 import React from 'react';
-import { DashboardTemplate } from '@/app/ui/templates/DashboardTemplate';
+import { DashboardTemplate } from '@/app/ui/organisms/DashboardHeader';
 import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';
 import { StatCard } from '@/app/ui/molecules/StatCard';
@@ -42,7 +42,7 @@ export default function SocialMediaPage() {
               <div key={platform.name} className="p-5 rounded-3xl border border-gray-50 flex items-center justify-between hover:bg-gray-50/50 transition-all cursor-pointer group">
                 <div className="flex items-center gap-4">
                   <div className="p-3 rounded-2xl bg-gray-50 group-hover:bg-white transition-colors">
-                     <platform.icon className={platform.color} size={24} />
+                    <platform.icon className={platform.color} size={24} />
                   </div>
                   <Txt weight="bold" className="text-gray-900">{platform.name}</Txt>
                 </div>
@@ -57,27 +57,27 @@ export default function SocialMediaPage() {
           <div className="bg-white p-8 rounded-[40px] border border-gray-100 shadow-sm space-y-6">
             <Txt weight="bold" className="text-xl text-gray-900">Buat Postingan Baru</Txt>
             <div className="space-y-4">
-               <div>
-                 <Txt variant="small" weight="bold" className="mb-2 block text-gray-400 uppercase tracking-widest">Caption Postingan</Txt>
-                 <textarea 
+              <div>
+                <Txt variant="small" weight="bold" className="mb-2 block text-gray-400 uppercase tracking-widest">Caption Postingan</Txt>
+                <textarea
                   className="w-full h-48 p-6 rounded-[32px] border-none bg-gray-50 focus:ring-2 focus:ring-red-primary/10 transition-all resize-none text-sm leading-relaxed"
                   placeholder="Ceritakan kegiatan yayasan hari ini..."
-                 />
-               </div>
-               <div className="border-2 border-dashed border-gray-100 rounded-[32px] p-10 flex flex-col items-center justify-center gap-3 hover:bg-gray-50/50 transition-all cursor-pointer group">
-                  <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-red-primary/10 transition-colors">
-                     <ImageIcon size={32} className="text-gray-300 group-hover:text-red-primary transition-colors" />
-                  </div>
-                  <Txt variant="body" weight="medium" className="text-gray-400 group-hover:text-gray-900">Klik atau seret gambar ke sini</Txt>
-               </div>
+                />
+              </div>
+              <div className="border-2 border-dashed border-gray-100 rounded-[32px] p-10 flex flex-col items-center justify-center gap-3 hover:bg-gray-50/50 transition-all cursor-pointer group">
+                <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-red-primary/10 transition-colors">
+                  <ImageIcon size={32} className="text-gray-300 group-hover:text-red-primary transition-colors" />
+                </div>
+                <Txt variant="body" weight="medium" className="text-gray-400 group-hover:text-gray-900">Klik atau seret gambar ke sini</Txt>
+              </div>
             </div>
           </div>
 
           <div className="bg-white p-8 rounded-[40px] border border-gray-100 shadow-sm space-y-6 flex flex-col">
             <Txt weight="bold" className="text-xl text-gray-900">Preview Postingan</Txt>
             <div className="flex-grow aspect-video bg-gray-50 rounded-[32px] flex flex-col items-center justify-center border border-gray-50 overflow-hidden relative group">
-               <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-               <Txt variant="small" className="text-gray-400 font-medium italic relative z-10">Belum ada media yang diunggah</Txt>
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <Txt variant="small" className="text-gray-400 font-medium italic relative z-10">Belum ada media yang diunggah</Txt>
             </div>
             <div className="flex gap-4">
               <Btn variant="light" shape="rounded" className="flex-1 py-4 font-bold border-gray-100">Simpan Draft</Btn>

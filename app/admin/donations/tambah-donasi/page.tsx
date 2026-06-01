@@ -3,7 +3,7 @@ import React from 'react';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { DashboardTemplate } from '@/app/ui/templates/DashboardTemplate';
+import { DashboardTemplate } from '@/app/ui/organisms/DashboardHeader';
 import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';
 import { Input } from '@/app/ui/atoms/input';
@@ -67,26 +67,26 @@ export default function TambahDonasiPage() {
                   </div>
                   <Txt weight="bold" className="text-lg">Informasi Dasar</Txt>
                 </div>
-                
-                <Input 
-                  label="Judul Program" 
-                  placeholder="Contoh: Beasiswa Pendidikan Anak Yatim" 
+
+                <Input
+                  label="Judul Program"
+                  placeholder="Contoh: Beasiswa Pendidikan Anak Yatim"
                   className="bg-gray-50/50"
                   {...register("title")}
                   error={errors.title?.message}
                 />
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input 
-                    label="Kategori" 
-                    placeholder="Pilih Kategori" 
+                  <Input
+                    label="Kategori"
+                    placeholder="Pilih Kategori"
                     className="bg-gray-50/50"
                     {...register("category")}
                     error={errors.category?.message}
                   />
-                  <Input 
-                    label="Lokasi" 
-                    placeholder="Contoh: Tasikmalaya, Jawa Barat" 
+                  <Input
+                    label="Lokasi"
+                    placeholder="Contoh: Tasikmalaya, Jawa Barat"
                     className="bg-gray-50/50"
                     {...register("location")}
                     error={errors.location?.message}
@@ -111,16 +111,16 @@ export default function TambahDonasiPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input 
-                    label="Target Dana (Rp)" 
-                    placeholder="0" 
+                  <Input
+                    label="Target Dana (Rp)"
+                    placeholder="0"
                     type="number"
                     className="bg-gray-50/50"
                     {...register("targetAmount", { valueAsNumber: true })}
                     error={errors.targetAmount?.message}
                   />
-                  <Input 
-                    label="Batas Waktu" 
+                  <Input
+                    label="Batas Waktu"
                     type="date"
                     className="bg-gray-50/50"
                     {...register("deadline")}
@@ -133,40 +133,40 @@ export default function TambahDonasiPage() {
 
           {/* Sidebar Area (Media & Preview) */}
           <div className="space-y-6">
-             <Container variant="white" radius="2xl" className="p-8 border border-gray-100 shadow-sm space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-orange-50 text-orange-600 rounded-xl">
-                    <ImageIcon size={20} />
-                  </div>
-                  <Txt weight="bold">Media Program</Txt>
+            <Container variant="white" radius="2xl" className="p-8 border border-gray-100 shadow-sm space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-orange-50 text-orange-600 rounded-xl">
+                  <ImageIcon size={20} />
                 </div>
-                
-                <div className="aspect-video w-full rounded-2xl bg-gray-50 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-3 group hover:border-red-primary/30 hover:bg-red-50/10 transition-all cursor-pointer">
-                  <div className="p-3 bg-white rounded-full shadow-sm group-hover:scale-110 transition-transform">
-                    <ImageIcon className="text-gray-400 group-hover:text-red-primary" size={24} />
-                  </div>
-                  <Txt variant="caption" weight="bold" className="text-gray-400 group-hover:text-red-primary">Klik untuk Unggah Foto</Txt>
-                </div>
-                
-                <Txt variant="caption" className="text-gray-400 text-center block">Rekomendasi ukuran: 1200 x 675 px (16:9)</Txt>
-             </Container>
+                <Txt weight="bold">Media Program</Txt>
+              </div>
 
-             <Container variant="red" radius="2xl" className="p-8 shadow-lg shadow-red-primary/20 space-y-4">
-                <Txt weight="bold" className="text-white">Siap untuk Publikasi?</Txt>
-                <Txt variant="caption" className="text-white/80">Program akan langsung muncul di halaman utama setelah disimpan.</Txt>
-                <Btn 
-                  type="submit"
-                  variant="light" 
-                  isLoading={isSubmitting}
-                  className="w-full gap-2 mt-2 bg-white text-red-primary border-none hover:bg-red-50"
-                >
-                   <Save size={18} />
-                   Simpan Program
-                </Btn>
-                <Btn type="button" variant="red" className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20">
-                   Pratinjau Halaman
-                </Btn>
-             </Container>
+              <div className="aspect-video w-full rounded-2xl bg-gray-50 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-3 group hover:border-red-primary/30 hover:bg-red-50/10 transition-all cursor-pointer">
+                <div className="p-3 bg-white rounded-full shadow-sm group-hover:scale-110 transition-transform">
+                  <ImageIcon className="text-gray-400 group-hover:text-red-primary" size={24} />
+                </div>
+                <Txt variant="caption" weight="bold" className="text-gray-400 group-hover:text-red-primary">Klik untuk Unggah Foto</Txt>
+              </div>
+
+              <Txt variant="caption" className="text-gray-400 text-center block">Rekomendasi ukuran: 1200 x 675 px (16:9)</Txt>
+            </Container>
+
+            <Container variant="red" radius="2xl" className="p-8 shadow-lg shadow-red-primary/20 space-y-4">
+              <Txt weight="bold" className="text-white">Siap untuk Publikasi?</Txt>
+              <Txt variant="caption" className="text-white/80">Program akan langsung muncul di halaman utama setelah disimpan.</Txt>
+              <Btn
+                type="submit"
+                variant="light"
+                isLoading={isSubmitting}
+                className="w-full gap-2 mt-2 bg-white text-red-primary border-none hover:bg-red-50"
+              >
+                <Save size={18} />
+                Simpan Program
+              </Btn>
+              <Btn type="button" variant="red" className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20">
+                Pratinjau Halaman
+              </Btn>
+            </Container>
           </div>
         </div>
       </form>

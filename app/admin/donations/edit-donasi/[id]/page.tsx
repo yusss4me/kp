@@ -3,7 +3,7 @@ import React from 'react';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { DashboardTemplate } from '@/app/ui/templates/DashboardTemplate';
+import { DashboardTemplate } from '@/app/ui/organisms/DashboardHeader';
 import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';
 import { Input } from '@/app/ui/atoms/input';
@@ -66,10 +66,10 @@ export default function EditDonasiPage() {
             </div>
             <Txt weight="bold">Kembali ke Daftar</Txt>
           </Link>
-          
+
           <Btn type="button" variant="light" size="sm" className="text-red-primary bg-red-50 hover:bg-red-100 border-none gap-2 px-4">
-             <Trash2 size={18} />
-             Hapus Program
+            <Trash2 size={18} />
+            Hapus Program
           </Btn>
         </div>
 
@@ -90,23 +90,23 @@ export default function EditDonasiPage() {
                   </div>
                   <Txt weight="bold" className="text-lg">Informasi Dasar</Txt>
                 </div>
-                
-                <Input 
-                  label="Judul Program" 
+
+                <Input
+                  label="Judul Program"
                   className="bg-gray-50/50"
                   {...register("title")}
                   error={errors.title?.message}
                 />
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input 
-                    label="Kategori" 
+                  <Input
+                    label="Kategori"
                     className="bg-gray-50/50"
                     {...register("category")}
                     error={errors.category?.message}
                   />
-                  <Input 
-                    label="Lokasi" 
+                  <Input
+                    label="Lokasi"
                     className="bg-gray-50/50"
                     {...register("location")}
                     error={errors.location?.message}
@@ -130,15 +130,15 @@ export default function EditDonasiPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Input 
-                    label="Target Dana (Rp)" 
+                  <Input
+                    label="Target Dana (Rp)"
                     type="number"
                     className="bg-gray-50/50"
                     {...register("targetAmount", { valueAsNumber: true })}
                     error={errors.targetAmount?.message}
                   />
-                  <Input 
-                    label="Batas Waktu" 
+                  <Input
+                    label="Batas Waktu"
                     type="date"
                     className="bg-gray-50/50"
                     {...register("deadline")}
@@ -151,40 +151,40 @@ export default function EditDonasiPage() {
 
           {/* Sidebar Area (Media & Preview) */}
           <div className="space-y-6">
-             <Container variant="white" radius="2xl" className="p-8 border border-gray-100 shadow-sm space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-orange-50 text-orange-600 rounded-xl">
-                    <ImageIcon size={20} />
-                  </div>
-                  <Txt weight="bold">Media Program</Txt>
+            <Container variant="white" radius="2xl" className="p-8 border border-gray-100 shadow-sm space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-orange-50 text-orange-600 rounded-xl">
+                  <ImageIcon size={20} />
                 </div>
-                
-                <div className="relative aspect-video w-full rounded-2xl overflow-hidden group border-2 border-transparent hover:border-red-primary/30 transition-all cursor-pointer">
-                  <img src={programData.image} alt="Preview" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="p-3 bg-white rounded-full shadow-lg">
-                       <ImageIcon className="text-red-primary" size={24} />
-                    </div>
-                    <Txt variant="caption" weight="bold" className="text-white mt-3">Ganti Foto</Txt>
-                  </div>
-                </div>
-                
-                <Txt variant="caption" className="text-gray-400 text-center block">Klik pada gambar untuk mengganti media.</Txt>
-             </Container>
+                <Txt weight="bold">Media Program</Txt>
+              </div>
 
-             <Container variant="red" radius="2xl" className="p-8 shadow-lg shadow-red-primary/20 space-y-4">
-                <Txt weight="bold" className="text-white">Perbarui Program</Txt>
-                <Txt variant="caption" className="text-white/80">Pastikan semua data sudah benar sebelum menyimpan perubahan.</Txt>
-                <Btn 
-                  type="submit"
-                  variant="light" 
-                  isLoading={isSubmitting}
-                  className="w-full gap-2 mt-2 bg-white text-red-primary border-none hover:bg-red-50"
-                >
-                   <Save size={18} />
-                   Simpan Perubahan
-                </Btn>
-             </Container>
+              <div className="relative aspect-video w-full rounded-2xl overflow-hidden group border-2 border-transparent hover:border-red-primary/30 transition-all cursor-pointer">
+                <img src={programData.image} alt="Preview" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="p-3 bg-white rounded-full shadow-lg">
+                    <ImageIcon className="text-red-primary" size={24} />
+                  </div>
+                  <Txt variant="caption" weight="bold" className="text-white mt-3">Ganti Foto</Txt>
+                </div>
+              </div>
+
+              <Txt variant="caption" className="text-gray-400 text-center block">Klik pada gambar untuk mengganti media.</Txt>
+            </Container>
+
+            <Container variant="red" radius="2xl" className="p-8 shadow-lg shadow-red-primary/20 space-y-4">
+              <Txt weight="bold" className="text-white">Perbarui Program</Txt>
+              <Txt variant="caption" className="text-white/80">Pastikan semua data sudah benar sebelum menyimpan perubahan.</Txt>
+              <Btn
+                type="submit"
+                variant="light"
+                isLoading={isSubmitting}
+                className="w-full gap-2 mt-2 bg-white text-red-primary border-none hover:bg-red-50"
+              >
+                <Save size={18} />
+                Simpan Perubahan
+              </Btn>
+            </Container>
           </div>
         </div>
       </form>
