@@ -10,8 +10,12 @@ import { Input } from "../atoms/input";
 import { Btn } from "../atoms/button";
 import { PasswordField } from "../molecules/password-field";
 
+import { apiClient } from "@/app/lib/api/client";
+import { useAuthStore } from "@/app/lib/stores/auth-store";
+import { useRouter } from "next/navigation";
+
 const loginSchema = z.object({
-  username: z.string().min(3, "Nama pengguna minimal 3 karakter"),
+  email: z.string().email("Format email tidak valid"),
   password: z.string().min(6, "Kata sandi minimal 6 karakter"),
 });
 
@@ -33,19 +37,28 @@ export interface LoginFormProps {
  * @returns {JSX.Element} Komponen LoginForm
  */
 export default function LoginForm({}: LoginFormProps) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = async (data: LoginFormValues) => {
-    console.log("Login data:", data);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    alert("Login berhasil (Simulasi)");
+    const { success, error } = await useAuthStore.getState().loginApi(data.email, data.password);
+    if (success) {
+      const role = useAuthStore.getState().user?.role || "admin";
+      if (role === "owner") {
+        router.push("/owner");
+      } else {
+        router.push("/admin");
+      }
+    } else {
+      setError("root", { message: error || "Email atau password salah" });
+    }
   };
 
   return (
@@ -68,12 +81,18 @@ export default function LoginForm({}: LoginFormProps) {
       </Container>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+        {errors.root && (
+          <div className="p-3 bg-red-50 text-red-500 text-sm rounded-lg border border-red-100">
+            {errors.root.message}
+          </div>
+        )}
         <Input
-          label="Nama Pengguna"
-          placeholder="Masukkan Nama Pengguna"
+          label="Alamat Email"
+          type="email"
+          placeholder="admin@yamuti.org"
           className="transition-all focus:ring-2 focus:ring-red-primary/10"
-          {...register("username")}
-          error={errors.username?.message}
+          {...register("email")}
+          error={errors.email?.message}
         />
         <PasswordField 
           label="Kata Sandi" 

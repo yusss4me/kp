@@ -63,7 +63,7 @@ export const UpdateList: React.FC<UpdateListProps> = () => {
       {/* Header */}
       <Container className="bg-red-primary p-8 rounded-b-[40px] shadow-xl flex flex-col">
         <Container className="flex justify-between items-center text-white mb-6">
-          <Txt variant="h5" weight="bold" color="white">Kabar Terbaru</Txt>
+          <Txt variant="h5" weight="bold" color="light">Kabar Terbaru</Txt>
           <Container className="p-2 bg-white/10 rounded-xl">
             <MessageSquare size={20} />
           </Container>
@@ -98,7 +98,7 @@ export const UpdateList: React.FC<UpdateListProps> = () => {
                 )}
                 <Container className="p-6 space-y-3 flex flex-col">
                     <Container className="flex justify-between items-start">
-                        <Txt variant="caption" weight="black" className="px-3 py-1 rounded-full bg-red-50 text-red-primary text-[10px] uppercase">
+                        <Txt variant="caption" weight="bold" className="px-3 py-1 rounded-full bg-red-50 text-red-primary text-[10px] uppercase">
                             {update.category}
                         </Txt>
                         <Btn 

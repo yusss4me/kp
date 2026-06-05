@@ -1,13 +1,37 @@
 'use client';
-import React from 'react';
-import { AdminProfileHeader } from '@/app/ui/organisms/AdminProfileHeader';
-import { AdminProfileMenuGroup } from '@/app/ui/organisms/AdminProfileMenuGroup';
 
-export default function AdminProfilePage() {
+import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { AdminProfileTemplate } from "@/app/ui/templates/admin-profile";
+import { routes } from "@/app/lib/constants/routes";
+
+export default function Page() {
+  const router = useRouter();
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState("Admin Yamuti");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <AdminProfileHeader />
-      <AdminProfileMenuGroup />
-    </div>
+    <AdminProfileTemplate
+      name={name}
+      setName={setName}
+      editing={editing}
+      setEditing={setEditing}
+      onSave={() => {
+        // TODO: Implement save logic
+        setEditing(false);
+        alert("Profil berhasil diupdate!");
+      }}
+      onLogout={() => {
+        // TODO: Implement logout logic
+        router.push("/auth");
+      }}
+      fileInputRef={fileInputRef}
+      onImageUpload={handleImageUpload}
+    />
   );
 }

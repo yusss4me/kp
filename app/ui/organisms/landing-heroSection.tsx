@@ -1,12 +1,13 @@
 import HeroSlider from "./landing-heroSlider"
 import { UsersAvatar } from "@/app/ui/molecules/landing-usersAvatar"
 import { UserContribution } from "@/app/ui/molecules/landing-userContribution"
-import { ArrowRight, Heart } from "lucide-react"
+import { ArrowRight, Heart, Home, MapPin } from "lucide-react"
 import { Btn } from "@/app/ui/atoms/button"
 import { Txt } from "@/app/ui/atoms/text"
 import { Icn } from "@/app/ui/atoms/icon"
 import { Lnk } from "@/app/ui/atoms/link"
 import { Badge } from "@/app/ui/atoms/badge";
+import {routes } from "@/app/lib/constants/routes"
 
 export interface HeroSectionProps {
   usersAvatar: {
@@ -54,10 +55,16 @@ export const HeroSection = ({usersAvatar, userContribution, slide, title, desc }
             </Txt>
           </div>
           <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-            <Lnk href="/auth/daftar" className="w-full sm:w-auto">
+            <Lnk href={routes.visitor.explore()} className="w-full sm:w-auto">
               <Btn variant="red" size="lg" shape="circle" className="w-full sm:w-auto gap-3 px-10 h-14 md:h-16 text-sm md:text-md">
                 Mulai Berdonasi
                 <Icn icon={ArrowRight} size={20} color="current" />
+              </Btn>
+            </Lnk>
+            <Lnk href={routes.visitor.kunjungan()} className="w-full sm:w-auto">
+              <Btn variant="red" size="lg" shape="circle" className="w-full sm:w-auto gap-3 px-10 h-14 md:h-16 text-sm md:text-md">
+                Ingin Berkunjung
+                <Icn icon={MapPin} size={20} color="current" />
               </Btn>
             </Lnk>
             <Lnk href="#programs" className="w-full sm:w-auto">

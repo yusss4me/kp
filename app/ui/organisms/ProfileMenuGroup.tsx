@@ -59,7 +59,7 @@ export const ProfileMenuGroup: React.FC<ProfileMenuGroupProps> = () => {
             <Container className="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-4 border-red-primary" />
           </Container>
           <Container className="space-y-1 flex flex-col">
-            <Txt variant="h5" weight="bold" color="white">
+            <Txt variant="h5" weight="bold" color="light">
               M. Ardiansyah
             </Txt>
             <Container className="flex items-center gap-2 px-2.5 py-1 bg-white/10 rounded-full border border-white/10">
@@ -74,13 +74,13 @@ export const ProfileMenuGroup: React.FC<ProfileMenuGroupProps> = () => {
         <Container className="mt-8 grid grid-cols-2 gap-4">
           <Container className="bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10 flex flex-col">
             <Icn icon={Heart} size={16} color="current" className="text-white/60 mb-2" />
-            <Txt variant="h5" weight="bold" color="white">12</Txt>
-            <Txt variant="caption" weight="bold" color="white" className="opacity-60 uppercase tracking-wider">Program</Txt>
+            <Txt variant="h5" weight="bold" color="light">12</Txt>
+            <Txt variant="caption" weight="bold" color="light" className="opacity-60 uppercase tracking-wider">Program</Txt>
           </Container>
           <Container className="bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10 flex flex-col">
             <Icn icon={Wallet} size={16} color="current" className="text-white/60 mb-2" />
-            <Txt variant="h5" weight="bold" color="white">Rp 2.4jt</Txt>
-            <Txt variant="caption" weight="bold" color="white" className="opacity-60 uppercase tracking-wider">Terdonasi</Txt>
+            <Txt variant="h5" weight="bold" color="light">Rp 2.4jt</Txt>
+            <Txt variant="caption" weight="bold" color="light" className="opacity-60 uppercase tracking-wider">Terdonasi</Txt>
           </Container>
         </Container>
       </Container>

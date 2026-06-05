@@ -10,10 +10,13 @@ import { Img } from "../atoms/image";
 import { Lnk } from "../atoms/link";
 
 export interface OrphanCardProps {
+  id?: number;
   name: string;
   age: number;
   gender: "Laki-laki" | "Perempuan";
   status: "Baru" | "Aktif" | "Alumni";
+  /** Donatur: `/home/aktivitas/anak/{id}` · Admin: `/admin/orphans/{id}/edit` */
+  detailHref?: string;
   className?: string;
 }
 /**
@@ -31,10 +34,12 @@ export interface OrphanCardProps {
  * @returns {JSX.Element} Komponen OrphanCard
  */
 export const OrphanCard = ({
+  id,
   name,
   age,
   gender,
   status,
+  detailHref,
   className,
 }: OrphanCardProps) => {
   const statusColors = {
@@ -90,15 +95,17 @@ export const OrphanCard = ({
           </Container>
         </Container>
 
-        <Btn
-          variant="light"
-          textColor="dark"
-          size="sm"
-          shape="rounded"
-          className="w-full mt-2 py-2.5  text-xs font-bold rounded-xl"
-        >
-          Lihat Profil Lengkap
-        </Btn>
+        {detailHref ? (
+          <Lnk href={detailHref} className="w-full mt-2 block">
+            <Btn variant="light" textColor="dark" size="sm" shape="rounded" className="w-full py-2.5 text-xs font-bold rounded-xl">
+              Lihat Profil Lengkap
+            </Btn>
+          </Lnk>
+        ) : (
+          <Btn variant="light" textColor="dark" size="sm" shape="rounded" className="w-full mt-2 py-2.5 text-xs font-bold rounded-xl">
+            Lihat Profil Lengkap
+          </Btn>
+        )}
       </Container>
     </Container>
   );

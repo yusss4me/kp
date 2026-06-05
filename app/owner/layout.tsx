@@ -1,6 +1,7 @@
 'use client';
 
 import { Navbar, NavLink } from "@/app/ui/organisms/navBar";
+import { useAuthStore } from "@/app/lib/stores/auth-store";
 import { 
   LayoutDashboard, 
   ShieldCheck, 
@@ -17,7 +18,7 @@ import {
 const OWNER_LINKS: NavLink[] = [
   { label: "Dashboard", href: "/owner", icon: LayoutDashboard },
   { label: "Kelola Admin", href: "/owner/admins", icon: ShieldCheck },
-  { label: "Laporan Keuangan", href: "/owner/reports", icon: FilePieChart },
+  { label: "Laporan", href: "/owner/reports", icon: FilePieChart },
   { label: "Profil Yayasan", href: "/owner/foundation", icon: Globe },
   { label: "Log Aktivitas", href: "/owner/donations", icon: Activity },
   { label: "Pengaturan", href: "/owner/settings", icon: Settings },
@@ -32,13 +33,15 @@ export default function OwnerLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const user = useAuthStore((s) => s.user);
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50/50">
       {/* Sidebar Navigasi */}
       <Navbar 
         links={OWNER_LINKS} 
         user={{ 
-          name: "Bpk. Owner Yamuti", 
+          name: user?.name || "Owner Yamuti", 
           role: "Pemilik Yayasan" 
         }} 
       />

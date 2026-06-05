@@ -1,5 +1,5 @@
-import { ActivityDetailTemplate } from "@/app/ui/templates/activity-detail-template";
+import { redirect } from "next/navigation";
 
-export default function AnakDetailFallbackPage() {
-  return <ActivityDetailTemplate type="anak" />;
+export default function Page() {
+  redirect("/home/aktivitas/anak/1");
 }

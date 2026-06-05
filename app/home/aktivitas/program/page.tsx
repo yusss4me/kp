@@ -1,10 +1,5 @@
-import { ActivityDetailTemplate } from "@/app/ui/templates/activity-detail-template";
+import { redirect } from "next/navigation";
 
-export default async function ProgramDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  return <ActivityDetailTemplate type="program" id={id} />;
+export default function Page() {
+  redirect("/home/aktivitas");
 }

@@ -5,6 +5,7 @@ import { Txt } from "../atoms/text"
 import { CategoryList } from "../organisms/categoryList"
 import { DiscoverSection } from "../organisms/discoverSction"
 import { SummaryCard } from "../molecules/summaty-card"
+import { StatCard } from "../molecules/StatCard";
 
 
 
@@ -56,16 +57,16 @@ export default function Home({user, discover}: HomeProps) {
 
                     {/* Impact Stats Card */}
                     <div className="backdrop-blur-md  p-6 rounded-[32px] flex items-center justify-between">
-                        <SummaryCard
-                            title="Total Donasi"
+                        <StatCard
+                            label="Total Donasi"
                             value={`Rp ${user?.totalDonasi}`}
-                            Icon={Wallet}
+                            icon={Wallet}
                         />
                         <div className="w-px h-10 bg-white/10" />
-                        <SummaryCard
-                            title="Program Dibantu"
+                        <StatCard
+                            label="Program Dibantu"
                             value={`${user?.programDibantu} Program`}
-                            Icon={HeartHandshake}
+                            icon={HeartHandshake}
                         />
                     </div>
                 </div>

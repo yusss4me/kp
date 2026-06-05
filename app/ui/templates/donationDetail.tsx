@@ -12,6 +12,7 @@ import {
   ChevronDown,
   Play
 } from 'lucide-react';
+import Image from 'next/image';
 import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';
 import { ProgressBar } from '@/app/ui/atoms/progressBar';
@@ -223,8 +224,8 @@ export const DonationDetailTemplate: React.FC<DonationDetailTemplateProps> = ({
         {/* Gallery */}
         <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
           {gallery.map((img, idx) => (
-            <div key={idx} className="flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden shadow-sm">
-              <img src={img} alt={`Gallery ${idx}`} className="w-full h-full object-cover" />
+            <div key={idx} className="relative flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden shadow-sm">
+              <Image src={img} alt={`Gallery ${idx}`} fill className="object-cover" />
             </div>
           ))}
         </div>

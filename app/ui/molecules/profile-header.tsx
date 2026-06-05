@@ -56,7 +56,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </Container>
         </Container>
       </Container>
-      <Lnk href="/home/profile" className="w-full sm:w-auto">
+      <Lnk href="/home/profil" className="w-full sm:w-auto">
         <Btn
           variant="light"
           size="sm"

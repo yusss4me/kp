@@ -48,7 +48,7 @@ const DEFAULT_LINKS: NavLink[] = [
   { label: "Beranda", href: "/home", icon: Home },
   { label: "Aktivitas", href: "/home/aktivitas", icon: HandCoins },
   { label: "Broadcast", href: "/home/broadcast", icon: MessageCircleMore },
-  { label: "Profil", href: "/home/profile", icon: User, hideOnDesktop: true },
+  { label: "Profil", href: "/home/profil", icon: User, hideOnDesktop: true },
 ];
 
 export interface NavbarProps {
@@ -58,11 +58,10 @@ export interface NavbarProps {
     role: string;
     image: string;
   };
-  amountProgramUser: string;
-  amountVisitUser: string;
-  amountDonatedUser: string;
-  
-  className: string;
+  amountProgramUser?: string;
+  amountVisitUser?: string;
+  amountDonatedUser?: string;
+  className?: string;
 }
 
 /**
@@ -84,10 +83,10 @@ export interface NavbarProps {
 export const Navbar = ({
   links = DEFAULT_LINKS,
   user = { name: "M. Ardiansyah", role: "Donatur Tetap", image: "/logo/yamuti.png" },
-  amountProgramUser,
-  amountVisitUser,
-  amountDonatedUser,
-  className,
+  amountProgramUser = "0",
+  amountVisitUser = "0",
+  amountDonatedUser = "Rp 0",
+  className = "",
 }: NavbarProps) => {
   const pathname = usePathname();
   const [isProfileOpen, setIsProfileOpen] = useState(false);

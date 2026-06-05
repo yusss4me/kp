@@ -1,0 +1,205 @@
+openapi: 3.0.3
+info:
+  title: YAMUTI API
+  description: API Documentation for YAMUTI Backend (Kerja Praktek)
+  version: 1.0.0
+servers:
+  - url: https://yamuti-backend.onrender.com/api
+    description: Production Server
+  - url: http://localhost:8000/api
+    description: Local Development
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /login:
+    post:
+      summary: Login Admin
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: admin@yamuti.org
+                password:
+                  type: string
+                  example: password
+      responses:
+        '200':
+          description: Login Successful
+  /anak-asuh:
+    get:
+      summary: Dapatkan Daftar Anak Asuh
+      tags:
+        - Anak Asuh
+      responses:
+        '200':
+          description: Berhasil
+    post:
+      summary: Tambah Anak Asuh Baru
+      tags:
+        - Anak Asuh
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama:
+                  type: string
+                tanggal_lahir:
+                  type: string
+                  format: date
+                status:
+                  type: string
+                kategori_bayi:
+                  type: boolean
+      responses:
+        '201':
+          description: Created
+  /donasi:
+    post:
+      summary: Buat Donasi Baru (Public)
+      tags:
+        - Donasi
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama_donatur:
+                  type: string
+                no_whatsapp:
+                  type: string
+                gross_amount:
+                  type: integer
+                payment_type:
+                  type: string
+      responses:
+        '201':
+          description: Donasi Created, returns snap_token
+  /kunjungan:
+    post:
+      summary: Request Kunjungan (Public)
+      tags:
+        - Kunjungan
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama_pengunjung:
+                  type: string
+                nomor_telepon:
+                  type: string
+                tujuan_kunjungan:
+                  type: string
+                slot_waktu:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Kunjungan requested
+  /kunjungan/{id}/approve:
+    post:
+      summary: Approve Kunjungan
+      tags:
+        - Kunjungan
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Approved and WhatsApp sent
+  /mutasi-barang:
+    post:
+      summary: Catat Mutasi Barang
+      tags:
+        - Logistik
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                inventaris_id:
+                  type: string
+                tipe:
+                  type: string
+                  enum: [masuk, keluar]
+                jumlah:
+                  type: integer
+                keterangan:
+                  type: string
+      responses:
+        '201':
+          description: Mutasi berhasil
+  /artikel:
+    post:
+      summary: Buat Artikel Baru
+      tags:
+        - CMS
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                judul:
+                  type: string
+                konten:
+                  type: string
+                kategori:
+                  type: string
+                thumbnail:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Artikel dibuat
+  /galeri:
+    post:
+      summary: Unggah Foto Galeri
+      tags:
+        - CMS
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                judul:
+                  type: string
+                deskripsi:
+                  type: string
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Galeri diunggah

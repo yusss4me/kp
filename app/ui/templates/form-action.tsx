@@ -6,26 +6,62 @@
 
 
 
-import React, { FormEvent, ReactNode } from 'react';
+import React, { FormEvent, ReactNode, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes, } from 'react';
 import { Container } from '@/app/ui/atoms/container';
-import { Input } from '@/app/ui/atoms/input';
+import { Input, InputProps } from '@/app/ui/atoms/input';
 import { Textarea } from '@/app/ui/atoms/textarea';
+import { Select } from '@/app/ui/atoms/select';
+import { Img } from '../atoms/image';
 
-export interface FormFieldConfig {
+export interface inputConfigProps extends InputHTMLAttributes<HTMLInputElement>{
     name: string;
     label: string;
-    type: 'text' | 'number' | 'email' | 'password' | 'textarea' | 'select' | 'date';
+    type: 'text' | 'number' | 'email' | 'password' | 'date';
     placeholder?: string;
     required?: boolean;
     options?: { value: string; label: string }[]; // Khusus untuk select
     min?: string | number;
-    rows?: number; // Khusus untuk textarea
+    rows?: number;
+    Props?: InputProps ;
+    error?: string;
+     // Khusus untuk textarea
 }
 
+export interface selectConfigProps extends InputHTMLAttributes<HTMLSelectElement>{
+    name: string;
+    label: string;
+    placeholder?: string;
+    required?: boolean;
+    options?: { value: string; label: string }[]; // Khusus untuk select
+    min?: string | number;
+    rows?: number;
+    Props?: InputProps ;
+    error?: string;
+     // Khusus untuk textarea
+}
+
+export interface textareaConfigProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+    name: string;
+    label: string;
+    placeholder?: string;
+    required?: boolean;
+    options?: { value: string; label: string }[]; // Khusus untuk select
+    min?: string | number;
+    rows?: number;
+    Props?: InputProps ;
+    error?: string;
+     // Khusus untuk textarea
+}
+
+
+
 export interface FormActionTemplateProps {
-    title: string;
-    description?: string;
-    fields?: FormFieldConfig[];
+    // src?: string;
+    // title: string;
+    // description?: string;
+    inputs?: inputConfigProps[];
+    selects?: selectConfigProps[];
+    textareas?: textareaConfigProps[];
     children?: ReactNode;
     actions?: ReactNode;
     onSubmit?: (e: FormEvent<HTMLFormElement>) => void;
@@ -33,52 +69,43 @@ export interface FormActionTemplateProps {
 }
 
 export const FormActionTemplate = ({ 
-    title,
-    description,
-    fields,
+    // src,
+    // title,
+    // description,
+    inputs,
+    selects,
+    textareas,
     children, 
     actions,
     onSubmit,
-    className = ''
+    className = '',
+    ...props
 }: FormActionTemplateProps) => {
     return (
         <Container className={`flex flex-col min-h-screen bg-gray-50 pb-24 ${className}`}>
             <div className="px-4 py-6 bg-white shadow-sm mb-4">
-                <h1 className="text-xl font-bold text-gray-900">{title}</h1>
-                {description && <p className="text-sm text-gray-500 mt-1">{description}</p>}
+                <div className='flex items-center gap-3'>
+                {/* {src ? <Img src={src} alt={title} width={50} height={50} /> : <Img src="/images/no-image.png" alt={title} width={50} height={50} />} */}
+                {/* <h1 className="text-xl font-bold text-gray-900">{title}</h1> */}
+                </div>
+                {/* {description && <p className="text-sm text-gray-500 mt-1">{description}</p>} */}
             </div>
             
             <form onSubmit={onSubmit} className="flex-grow px-4 flex flex-col gap-4">
-                {fields && fields.map((field) => (
+                {inputs && inputs.map((field) => (
                     <div key={field.name}>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             {field.label} {field.required && <span className="text-red-500">*</span>}
                         </label>
-                        {field.type === 'textarea' ? (
-                            <Textarea 
-                                name={field.name}
-                                placeholder={field.placeholder} 
-                                required={field.required}
-                                rows={field.rows || 3}
-                            />
-                        ) : field.type === 'select' ? (
-                            <select 
-                                name={field.name}
-                                required={field.required}
-                                className="w-full border border-gray-300 rounded-md p-2 focus:ring-primary focus:border-primary bg-white text-sm"
-                            >
-                                <option value="">Pilih {field.label}</option>
-                                {field.options?.map(opt => (
-                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                ))}
-                            </select>
-                        ) : (
+                        {(
                             <Input 
                                 type={field.type}
                                 name={field.name}
                                 placeholder={field.placeholder}
                                 required={field.required}
                                 min={field.min}
+                                error={field.error}
+                                {...props}
                             />
                         )}
                     </div>

@@ -9,13 +9,15 @@ import { Container } from "../atoms/container";
 import { Txt } from "../atoms/text";
 import { Input } from "../atoms/input";
 import { Btn } from "../atoms/button";
+import { apiClient } from "@/app/lib/api/client";
 
 const visitSchema = z.object({
   fullName: z.string().min(3, "Nama lengkap minimal 3 karakter"),
+  phone: z.string().min(10, "Nomor telepon tidak valid"),
   institution: z.string().optional(),
   purpose: z.string().min(5, "Keperluan minimal 5 karakter"),
   visitDate: z.string().min(1, "Tanggal harus dipilih"),
-  visitTime: z.string().min(1, "Waktu harus dipilih"),
+  visitTime: z.string().regex(/^\d{2}:00$/, "Waktu kunjungan hanya diperbolehkan tepat per jam (misal: 08:00, 10:00)").min(1, "Waktu harus dipilih"),
   participantCount: z.number({ message: "Jumlah peserta harus angka" }).min(1, "Minimal 1 peserta"),
 });
 
@@ -28,6 +30,7 @@ type VisitFormValues = z.infer<typeof visitSchema>;
  * Mengikuti gaya visual halaman donasi dan beranda klien.
  */
 export interface KunjunganClientTemplateProps {
+  isUser: boolean;
   className?: string;
 }
 
@@ -42,7 +45,7 @@ export interface KunjunganClientTemplateProps {
  * @param {KunjunganClientTemplateProps} props - Properti komponen
  * @returns {JSX.Element} Komponen KunjunganClientTemplate
  */
-export const ActivityKunjungan = ({}: KunjunganClientTemplateProps) => {
+export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
   const {
     register,
     handleSubmit,
@@ -52,10 +55,19 @@ export const ActivityKunjungan = ({}: KunjunganClientTemplateProps) => {
   });
 
   const onSubmit = async (data: VisitFormValues) => {
-    console.log("Visit request data:", data);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    alert("Pengajuan kunjungan berhasil dikirim! (Simulasi)");
+    try {
+      const payload = {
+        nama_pengunjung: data.fullName,
+        nomor_telepon: data.phone,
+        tujuan_kunjungan: data.purpose,
+        slot_waktu: `${data.visitDate}T${data.visitTime}:00Z`,
+      };
+      await apiClient.post("/kunjungan", payload);
+      alert("Pengajuan kunjungan berhasil dikirim!");
+    } catch (error) {
+      console.error("Visit request failed", error);
+      alert("Gagal mengirim pengajuan, silakan coba lagi.");
+    }
   };
 
   return (
@@ -77,6 +89,16 @@ export const ActivityKunjungan = ({}: KunjunganClientTemplateProps) => {
                   className="focus:ring-2 focus:ring-red-primary/10 transition-all"
                   {...register("fullName")}
                   error={errors.fullName?.message}
+                  disabled={isUser}
+                />
+                <Input 
+                  label="No. WhatsApp / Telepon" 
+                  type="tel"
+                  placeholder="081234567890" 
+                  className="focus:ring-2 focus:ring-red-primary/10 transition-all"
+                  {...register("phone")}
+                  error={errors.phone?.message}
+                  disabled={isUser}
                 />
                 <Input 
                   label="Instansi / Perusahaan" 
@@ -103,7 +125,8 @@ export const ActivityKunjungan = ({}: KunjunganClientTemplateProps) => {
                   />
                   <Input 
                     label="Waktu" 
-                    type="time" 
+                    type="time"
+                    step="3600"
                     className="focus:ring-2 focus:ring-red-primary/10 transition-all"
                     {...register("visitTime")}
                     error={errors.visitTime?.message}

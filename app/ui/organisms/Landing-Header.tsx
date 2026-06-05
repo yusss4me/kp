@@ -7,6 +7,7 @@ import { Btn } from "@/app/ui/atoms/button";
 import { X, Menu } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
 import { NavLink } from "@/app/ui/molecules/navlink";
+import {routes } from "@/app/lib/constants/routes";
 
 export interface LandingHeaderProps {
   
@@ -30,7 +31,6 @@ export const LandingHeader: React.FC<LandingHeaderProps> = () => {
   const navLinks = [
     { href: "#programs", label: "Program" },
     { href: "#tentang-kami", label: "Tentang Kami" },
-    { href: "#bantuan", label: "Bantuan" },
   ];
 
   return (
@@ -54,7 +54,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = () => {
 
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex items-center gap-3">
-            <Link href="/auth/masuk">
+            <Link href="/auth/">
               <Btn variant="light" textColor='dark' shape="circle" className="px-6">Masuk</Btn>
             </Link>
             <Link href="/auth/daftar">

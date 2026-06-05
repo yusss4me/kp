@@ -1,10 +1,5 @@
-import { ActivityDetailTemplate } from "@/app/ui/templates/activity-detail-template";
+import { redirect } from "next/navigation";
 
-export default async function BarangDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  return <ActivityDetailTemplate type="barang" id={id} />;
+export default function Page() {
+  redirect("/home/aktivitas");
 }

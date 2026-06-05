@@ -22,6 +22,7 @@ import { Container } from "../atoms/container";
 
 export interface AdminProfileMenuGroupProps {
   className?: string;
+  onLogout?: () => void;
 }
 
 /**
@@ -35,15 +36,15 @@ export interface AdminProfileMenuGroupProps {
  * @param {AdminProfileMenuGroupProps} props - Properti komponen
  * @returns {JSX.Element} Komponen AdminProfileMenuGroup
  */
-export const AdminProfileMenuGroup: React.FC<AdminProfileMenuGroupProps> = () => {
+export const AdminProfileMenuGroup: React.FC<AdminProfileMenuGroupProps> = ({ onLogout }) => {
   return (
     <Container gap="lg" padding='md' className="flex-col pb-24 px-6 mt-8">
       {/* Management Section */}
       <div className="space-y-4">
-        <Txt weight="bold" color="black" className=" ml-2">
+        <Txt weight="bold" color="dark" className=" ml-2">
           Manajemen Yayasan
         </Txt>
-        <Container display="none" variant="light" padding="md" radius="lg" shadow="sm" className="bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
+        <Container variant="light" padding="md" radius="lg" shadow="sm" className="hidden bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
           <ListItem icon={LayoutDashboard} label="Kelola Program" />
           <ListItem icon={FileCheck} label="Verifikasi Donasi" />
           <ListItem icon={Users} label="Kelola Donatur" />
@@ -52,10 +53,10 @@ export const AdminProfileMenuGroup: React.FC<AdminProfileMenuGroupProps> = () =>
 
       {/* Reports & Data Section */}
       <div className="space-y-4">
-        <Txt weight="bold" color="black" className=" ml-2">
+        <Txt weight="bold" color="dark" className=" ml-2">
           Laporan & Data
         </Txt>
-        <Container display="none" variant="light" padding="md" radius="lg" shadow="sm" className="bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
+        <Container variant="light" padding="md" radius="lg" shadow="sm" className="hidden bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
           <ListItem icon={BarChart3} label="Statistik Dampak" />
           <ListItem icon={FileText} label="Laporan Keuangan" />
           <ListItem icon={History} label="Log Aktivitas" />
@@ -64,10 +65,10 @@ export const AdminProfileMenuGroup: React.FC<AdminProfileMenuGroupProps> = () =>
 
       {/* System Section */}
       <div className="space-y-4">
-        <Txt weight="bold" color="black" className=" ml-2">
+        <Txt weight="bold" color="dark" className=" ml-2">
           Sistem
         </Txt>
-        <Container display="none" variant="light" padding="md" radius="lg" shadow="sm" className="bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
+        <Container variant="light" padding="md" radius="lg" shadow="sm" className="hidden bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
           <ListItem icon={Globe} label="Konfigurasi Website" />
           <ListItem icon={Settings} label="Pengaturan Akun" />
           <ListItem icon={Info} label="Bantuan Teknis" />
@@ -80,6 +81,7 @@ export const AdminProfileMenuGroup: React.FC<AdminProfileMenuGroupProps> = () =>
         size="lg"
         shape="rounded"
         className="w-full py-4 rounded-[24px] bg-red-50 text-red-primary font-black text-sm mb-8 gap-2"
+        onClick={onLogout}
       >
         <Icn icon={LogOut} size={18} color="current" />
         Keluar Panel Admin

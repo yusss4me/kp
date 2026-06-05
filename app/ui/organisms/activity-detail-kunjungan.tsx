@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import Image from 'next/image';
 import { ArrowLeft, Calendar, Clock, Users, MapPin, Info, CheckCircle } from 'lucide-react';
 import { Txt } from '../atoms/text';
 import { Btn } from '../atoms/button';
@@ -69,7 +70,7 @@ export const DetailKunjungan = ({ id }: DetailKunjunganProps) => {
         <Container className="flex flex-col min-h-screen bg-gray-50 pb-24">
             {/* Hero */}
             <div className="relative h-[300px] w-full overflow-hidden">
-                <img src={data.image} alt={data.title} className="w-full h-full object-cover" />
+                <Image src={data.image} alt={data.title} fill className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
                 <div className="absolute top-6 left-0 right-0 px-6">

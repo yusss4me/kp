@@ -49,8 +49,8 @@ export const ProgramsSection = ({ items }: ProgramsSectionProps) => {
               Pilih program yang paling menyentuh hati Anda dan jadilah bagian dari perubahan besar bagi mereka.
             </Txt>
           </Container>
-          <Link href="/home/donasi/program" className="w-full md:w-auto">
-            <Btn variant="light" shape="circle" className="w-full md:w-auto gap-2 text-sm">
+          <Link href="/explore" className="w-full md:w-auto">
+            <Btn variant="light" textColor="dark" shape="circle" className="w-full md:w-auto gap-2 text-sm">
               Lihat Semua Program
               <ArrowRight size={16} />
             </Btn>

@@ -3,6 +3,7 @@ import { Btn } from "../atoms/button";
 import { Badge } from "../atoms/badge";
 import { Txt } from "../atoms/text";
 import {Calendar, Clock} from "lucide-react"
+import { Lnk } from "../atoms/link";
 
 interface VisitingCardProps {
     id: number;
@@ -68,6 +69,8 @@ export const VisitingCard= ({
             </Container>
 
             <Container className="pt-2 flex flex-col">
+              <Lnk href={`/admin/kunjungan/${id}/detail`} className="flex-1">
+              
               <Btn 
                 variant="transparent" 
                 textColor="dark"
@@ -77,6 +80,7 @@ export const VisitingCard= ({
               >
                 Detail Kunjungan
               </Btn>
+              </Lnk>
             </Container>
           </Container>
     )

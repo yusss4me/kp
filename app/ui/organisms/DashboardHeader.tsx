@@ -24,7 +24,7 @@ export interface DashboardTemplateProps {
  * @param {DashboardTemplateProps} props - Properti komponen
  * @returns {JSX.Element} Komponen DashboardTemplate
  */
-export const DashboardTemplate = ({
+export const DashboardHeader = ({
   children,
   headerTitle,
   user = { name: "Admin Yayasan", role: "Administrator" },

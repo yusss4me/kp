@@ -6,6 +6,7 @@ export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
   error?: string;
   placeholder?: string;
   isLoading?: boolean;
+  value?: string | number;
 }
 
 /**
@@ -23,7 +24,7 @@ export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
  */
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, error, placeholder, className, isLoading, ...props }, ref) => {
+  ({ label, error, placeholder, className, isLoading, value, ...props }, ref) => {
     return (
       <div className="flex flex-col gap-1.5 w-full">
         {label && (

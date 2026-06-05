@@ -1,6 +1,7 @@
   import { DashboardHeader } from "../organisms/DashboardHeader";
   import { StatCard } from "../molecules/StatCard";
   import { OrphanCard } from "../molecules/OrphanCard";
+  import { Link } from "lucide-react";
   import { Txt } from "../atoms/text";
   import { Btn } from "../atoms/button";
   import { Plus, Wallet, Package, Heart, Users } from "lucide-react";
@@ -53,6 +54,7 @@
                 Platform ini dirancang untuk mempermudah manajemen operasional Yayasan Yamuti secara transparan dan akuntabel.
               </Txt>
             </div>
+
             <Btn variant="red" size="lg" shape="circle" className="gap-2 shrink-0 shadow-xl shadow-red-primary/20 relative z-10 px-8">
               <Plus size={20} />
               Donasi Baru

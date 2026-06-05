@@ -45,13 +45,9 @@ export const ActivityClientTemplate: React.FC<ActivityClientTemplateProps> = ({c
   const renderContent = () => {
     switch (activeActivity) {
       case 'anak':
-        return (
-          <ActivityAnak campaigns={campaigns}/>
-        );
+        return <ActivityAnak />;
       case 'program':
-        return (
-          <ActivityProgram campaigns={campaigns} />
-        );
+        return <ActivityProgram />;
       case 'barang':
         return (
           <ActivityBarangForm />
@@ -59,7 +55,7 @@ export const ActivityClientTemplate: React.FC<ActivityClientTemplateProps> = ({c
 
       case 'kunjungan':
         return (
-          <ActivityKunjungan />
+          <ActivityKunjungan isUser={true} />
         );
 
       default:

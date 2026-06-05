@@ -1,9 +1,8 @@
 
 import React from "react";
-import { Container } from "../atoms/container";
-import { Txt } from "../atoms/text";
-import { Icn } from "../atoms/icon";
-import { Btn } from "../atoms/button";
+import { Container } from "@/app/ui/atoms/container";
+import { Txt } from "@/app/ui/atoms/text";
+import { Icn } from "@/app/ui/atoms/icon";
 import { LucideIcon } from "lucide-react";
 
 export interface StatusCardProps {
