@@ -1,18 +1,19 @@
 
 
-import { HeartHandshake, Wallet } from "lucide-react";
+import { Activity, HeartHandshake, Newspaper, Pencil, Wallet } from "lucide-react";
 import { Txt } from "../atoms/text"
-import { CategoryList } from "../organisms/categoryList"
 import { DiscoverSection } from "../organisms/discoverSction"
-import { SummaryCard } from "../molecules/summaty-card"
 import { StatCard } from "../molecules/StatCard";
-
+import Link from "next/link";
+import { Btn } from "../atoms/button";
+import { DashboardHeader } from "../organisms/DashboardHeader";
 
 
 export interface HomeProps {
   className?: string;
   user: {
     name: string;
+    role: string;
     totalDonasi: number;
     programDibantu: number;
   };
@@ -22,7 +23,7 @@ export interface HomeProps {
     category: string;
     image: string;
   }[];
-
+  headerTitle?: string;
 }
 
 /**
@@ -36,47 +37,77 @@ export interface HomeProps {
  * @param {HomeProps} props - Properti komponen
  * @returns {JSX.Element} Komponen Home
  */
-export default function Home({user, discover}: HomeProps) {
+export default function Home({user, discover, headerTitle = "Beranda"}: HomeProps) {
     return (
-        <div className="flex flex-col gap-10">
-            {/* Hero Section */}
-            <section className="bg-red-primary  p-6 rounded-b-[40px] shadow-2xl relative overflow-hidden">
-                {/* Decorative Circles */}
-                <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/5 rounded-full blur-3xl" />
-                <div className="absolute top-40 -left-20 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
+        <DashboardHeader
+          user={{ name: user.name, role: user.role }}
+          headerTitle={headerTitle}
+          portalLabel="Portal Donatur"
+        >
+            <div className="space-y-10">
+                {/* Welcome Section */}
+                <div className="bg-red-primary/5 rounded-[40px] p-8 md:p-12 border border-red-primary/10 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-red-primary/5 rounded-full blur-3xl" />
+                    <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-red-primary/5 rounded-full blur-3xl" />
 
-                <div className="relative z-10 space-y-8">
-                    <div className="space-y-1">
-                        <Txt variant="caption" className="text-white/60 uppercase tracking-[0.2em] font-bold">
+                    <div className="space-y-3 relative z-10">
+                        <Txt variant="caption" className="text-red-primary/60 uppercase tracking-[0.2em] font-bold">
                             Selamat Datang
                         </Txt>
-                        <Txt variant="h4" weight="bold" color="light">
+                        <Txt variant="h2" weight="bold" className="text-red-primary">
                             Halo, {user?.name}
                         </Txt>
-                    </div>
-
-                    {/* Impact Stats Card */}
-                    <div className="backdrop-blur-md  p-6 rounded-[32px] flex items-center justify-between">
-                        <StatCard
-                            label="Total Donasi"
-                            value={`Rp ${user?.totalDonasi}`}
-                            icon={Wallet}
-                        />
-                        <div className="w-px h-10 bg-white/10" />
-                        <StatCard
-                            label="Program Dibantu"
-                            value={`${user?.programDibantu} Program`}
-                            icon={HeartHandshake}
-                        />
+                        <Txt variant="body" className="text-gray-500 max-w-xl">
+                            Terima kasih telah menjadi bagian dari perjalanan kebaikan Yayasan Yamuti. Pantau dampak donasi Anda dan jelajahi program yang tersedia.
+                        </Txt>
                     </div>
                 </div>
-            </section>
-        
-            {/* Content Section */}
-            <div className="p-4 md:p-6 -mt-10 relative z-20 space-y-8">
-                <CategoryList />
-                <DiscoverSection items={discover} />
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <StatCard
+                        label="Total Donasi"
+                        value={`Rp ${user?.totalDonasi.toLocaleString('id-ID')}`}
+                        icon={Wallet}
+                        color="primary"
+                    />
+                    <StatCard
+                        label="Program Dibantu"
+                        value={`${user?.programDibantu} Program`}
+                        icon={HeartHandshake}
+                        color="success"
+                    />
+                </div>
+
+                {/* Quick Actions */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                    <Link href="/home/aktivitas" className="flex-1">
+                        <Btn variant="red" size="sm" shape="rounded" className="w-full gap-2 text-xs font-bold">
+                            <Activity size={14} /> Aktivitas Donasi
+                        </Btn>
+                    </Link>
+                    <Link href="/home/aktivitas/kunjungan" className="flex-1">
+                        <Btn variant="light" size="sm" shape="rounded" className="w-full gap-2 text-xs font-bold text-red-primary border border-red-primary/20">
+                            <Pencil size={14} /> Ajukan Kunjungan
+                        </Btn>
+                    </Link>
+                    <Link href="/home/berita" className="flex-1">
+                        <Btn variant="light" size="sm" shape="rounded" className="w-full gap-2 text-xs font-bold text-red-primary border border-red-primary/20">
+                            <Newspaper size={14} /> Kabar Yamuti
+                        </Btn>
+                    </Link>
+                </div>
+
+                {/* Discover Section */}
+                <section className="space-y-6">
+                    <div className="flex items-center justify-between px-2">
+                        <Txt variant="h3" weight="bold" className="text-gray-900 tracking-tight">
+                            Program Pilihan
+                        </Txt>
+                    </div>
+                    <DiscoverSection items={discover} />
+                </section>
             </div>
-        </div>
+        </DashboardHeader>
     )
 }

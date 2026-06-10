@@ -1,6 +1,19 @@
+"use client";
+
 import { DonorBroadcastTemplate } from "@/app/ui/templates/donor-broadcast";
-import { MOCK_BROADCAST_TEMPLATES } from "@/app/constants/mockData";
+import { useAuthStore } from "@/app/lib/stores/auth-store";
 
 export default function Page() {
-  return <DonorBroadcastTemplate templatePesan={MOCK_BROADCAST_TEMPLATES} />;
+  const authUser = useAuthStore((s) => s.user);
+
+  // API: GET /broadcast/templates — route belum tersedia di backend (404)
+  // const { data: templatePesan } = useQuery({ queryKey: ['broadcast-templates'], queryFn: fetchBroadcastTemplates });
+  const templatePesan: { nama_template: string; isi: string }[] = [];
+
+  return (
+    <DonorBroadcastTemplate
+      templatePesan={templatePesan}
+      user={{ name: authUser?.name || "Donatur Yamuti", role: "Donatur" }}
+    />
+  );
 }

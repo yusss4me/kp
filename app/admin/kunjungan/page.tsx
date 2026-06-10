@@ -1,16 +1,19 @@
 "use client";
 
 import { AdminKunjunganTemplate } from "@/app/ui/templates/admin-kunjungan";
-import { MOCK_ADMIN_KUNJUNGAN_STATS } from "@/app/constants/mockData";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
+import { buildKunjunganStats } from "@/app/lib/utils/dashboard-stats";
 
 export default function BookingPage() {
   const bookings = useYamutiStore((s) => s.bookings);
   const deleteBooking = useYamutiStore((s) => s.deleteBooking);
 
+  // API: GET /kunjungan — route belum tersedia; stats dihitung dari data store lokal
+  const stats = buildKunjunganStats(bookings);
+
   return (
     <AdminKunjunganTemplate
-      stats={MOCK_ADMIN_KUNJUNGAN_STATS}
+      stats={stats}
       bookings={bookings}
       onDeleteBooking={deleteBooking}
     />

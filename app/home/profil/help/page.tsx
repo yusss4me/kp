@@ -1,6 +1,9 @@
 import { ProfileHelpTemplate } from "@/app/ui/templates/profile-help";
-import { MOCK_FAQS } from "@/app/constants/mockData";
 
 export default function Page() {
-  return <ProfileHelpTemplate faqs={MOCK_FAQS} />;
+  // API: GET /faq — route belum tersedia di backend (404)
+  // const faqs = await fetchFaqs();
+  const faqs: { q: string; a: string }[] = [];
+
+  return <ProfileHelpTemplate faqs={faqs} />;
 }

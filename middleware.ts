@@ -15,7 +15,10 @@ export function middleware(request: NextRequest) {
 
   const isAdminRoute = pathname.startsWith('/admin');
   const isOwnerRoute = pathname.startsWith('/owner');
+  // const isUserRoute = pathname.startsWith('/user') || pathname.startsWith('/donatur');
+  
   const isProtectedRoute = isAdminRoute || isOwnerRoute;
+  // const isProtectedRoute = isAdminRoute || isOwnerRoute || isUserRoute;
 
   // Jika bukan rute yang dilindungi, lanjutkan
   if (!isProtectedRoute) {
@@ -28,20 +31,31 @@ export function middleware(request: NextRequest) {
   }
 
   // Jika belum login, redirect ke halaman auth
-  if (!token) {
-    const loginUrl = new URL('/auth', request.url);
-    loginUrl.searchParams.set('redirect', pathname);
-    return NextResponse.redirect(loginUrl);
-  }
+  // if (!token) {
+  //   const loginUrl = new URL('/auth', request.url);
+  //   loginUrl.searchParams.set('redirect', pathname);
+  //   return NextResponse.redirect(loginUrl);
+  // }
 
   // RBAC: Admin hanya bisa akses /admin
-  if (isAdminRoute && role !== 'admin') {
-    return NextResponse.redirect(new URL('/auth', request.url));
-  }
+  // if (isAdminRoute && role !== 'admin') {
+  //   return NextResponse.redirect(new URL('/auth', request.url));
+  // }
+
+  // RBAC: Owner hanya bisa akses /owner
+  // if (isOwnerRoute && role !== 'owner') {
+  //   return NextResponse.redirect(new URL('/auth', request.url));
+  // }
+
+  // RBAC: User/Donatur hanya bisa akses rute mereka
+  // if (isUserRoute && role !== 'user' && role !== 'donatur') {
+  //   return NextResponse.redirect(new URL('/auth', request.url));
+  // }
 
   return NextResponse.next();
 }
 
 export const config = {
   matcher: ['/admin/:path*', '/owner/:path*'],
+  // matcher: ['/admin/:path*', '/owner/:path*', '/user/:path*', '/donatur/:path*'],
 };

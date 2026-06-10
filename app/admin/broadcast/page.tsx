@@ -1,6 +1,14 @@
+"use client";
+
 import { AdminBroadcastTemplate } from "@/app/ui/templates/admin-broadcast";
-import { MOCK_ADMIN_BROADCAST_STATS, MOCK_ADMIN_BROADCAST_TEMPLATES } from "@/app/constants/mockData";
+import { buildBroadcastStats } from "@/app/lib/utils/dashboard-stats";
 
 export default function Page() {
-  return <AdminBroadcastTemplate stats={MOCK_ADMIN_BROADCAST_STATS} templates={MOCK_ADMIN_BROADCAST_TEMPLATES} />;
+  // API: GET /broadcast/templates — route belum tersedia di backend (404)
+  // const { data: templates } = useQuery({ queryKey: ['broadcast-templates'], queryFn: fetchBroadcastTemplates });
+  const templates: { nama_template: string; isi: string }[] = [];
+
+  const stats = buildBroadcastStats();
+
+  return <AdminBroadcastTemplate stats={stats} templates={templates} />;
 }

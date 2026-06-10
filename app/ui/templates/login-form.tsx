@@ -53,8 +53,10 @@ export default function LoginForm({}: LoginFormProps) {
       const role = useAuthStore.getState().user?.role || "admin";
       if (role === "owner") {
         router.push("/owner");
-      } else {
+      } else if(role == "admin"){
         router.push("/admin");
+      } else if(role == "donatur"){
+        router.push("/home");
       }
     } else {
       setError("root", { message: error || "Email atau password salah" });

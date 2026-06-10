@@ -30,10 +30,11 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Clear token and logout if unauthorized
-      useAuthStore.getState().logout();
-      if (typeof window !== "undefined") {
-        window.location.href = "/auth/login";
-      }
+      // useAuthStore.getState().logout();
+      // if (typeof window !== "undefined") {
+      //   window.location.href = "/auth";
+      // }
+      console.warn("Bypass 401 redirect for development");
     }
     return Promise.reject(error);
   }

@@ -27,6 +27,8 @@ export interface ProfileTemplateProps {
      * (misal: di sidebar desktop) atau sebagai halaman penuh. 
      */
     isFlyout?: boolean;
+    /** Sembunyikan header halaman saat dibungkus DashboardHeader */
+    embedded?: boolean;
 }
 
 /**
@@ -46,12 +48,13 @@ export const ProfileTemplate = ({
     amountDonatedUser,
     listMenu,
     className = "",
-    isFlyout = false
+    isFlyout = false,
+    embedded = false,
 }: ProfileTemplateProps) => {
     return (
-        <div className={`h-full w-full ${isFlyout ? 'max-w-md bg-white shadow-2xl' : 'max-w-4xl mx-auto'} overflow-hidden flex flex-col transition-all duration-500 ${className}`}>
+        <div className={`h-full w-full ${isFlyout ? 'max-w-md bg-white shadow-2xl' : 'w-full'} overflow-hidden flex flex-col transition-all duration-500 ${className}`}>
             {/* Header for Page Mode */}
-            {!isFlyout && (
+            {!isFlyout && !embedded && (
                 <div className="p-8 md:p-12 pb-0 flex items-center justify-between">
                     <div className="animate-in slide-in-from-left-4 duration-500">
                         <Txt variant="h2" weight="bold" className="text-3xl text-gray-900">Profil Saya</Txt>

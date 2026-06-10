@@ -7,20 +7,22 @@ import { Btn } from "@/app/ui/atoms/button";
 import { DashboardHeader } from "@/app/ui/organisms/DashboardHeader";
 import { FileText, Download } from "lucide-react";
 import { Input } from "@/app/ui/atoms/input";
-
-// Import Compiler PDF & Data Mock Asli dari Proyek Kamu
 import { pdf } from "@react-pdf/renderer";
 import BaseReportDocument from "@/app/ui/templates/reportDocument";
-import { MOCK_ADMIN_ORPHANS, MOCK_ADMIN_DONATIONS } from "@/app/constants/mockData"; 
+import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
+import { useAuthStore } from "@/app/lib/stores/auth-store";
 
 export default function ReportsPage() {
   const [isGenerating, setIsGenerating] = useState(false);
-  
-  // State Input Form Laporan
   const [reportType, setReportType] = useState("");
   const [exportFormat, setExportFormat] = useState("pdf");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+
+  const orphans = useYamutiStore((s) => s.orphans);
+  const pendingDonations = useYamutiStore((s) => s.pendingDonations);
+  const inventory = useYamutiStore((s) => s.inventory);
+  const authUser = useAuthStore((s) => s.user);
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,12 +30,12 @@ export default function ReportsPage() {
 
     try {
       let title = "Laporan Operasional Yayasan";
-      let headers: any[] = [];
-      let sourceData: any[] = [];
+      let headers: { label: string; key: string; width: string }[] = [];
+      let sourceData: Record<string, string | number>[] = [];
 
-      // Memetakan Pilihan Dropdown Form ke Variabel Array Data Riil Proyek Kamu
       switch (reportType) {
         case "anak_asuh":
+          // API: GET /anak-asuh — data dari store (diisi via fetchOrphans)
           title = "Laporan Data Registrasi Anak Asuh";
           headers = [
             { label: "ID", key: "id", width: "15%" },
@@ -41,10 +43,16 @@ export default function ReportsPage() {
             { label: "Gender", key: "gender", width: "25%" },
             { label: "Status", key: "status", width: "20%" },
           ];
-          sourceData = MOCK_ADMIN_ORPHANS; // Sinkron dengan array objek di mockData.ts
+          sourceData = orphans.map((o) => ({
+            id: o.id,
+            name: o.name,
+            gender: o.gender,
+            status: o.status,
+          }));
           break;
 
         case "donasi":
+          // API: GET /donasi — route belum tersedia; data dari store lokal
           title = "Laporan Rekapitulasi Kas Masuk Donasi";
           headers = [
             { label: "ID Transaksi", key: "id", width: "15%" },
@@ -52,40 +60,42 @@ export default function ReportsPage() {
             { label: "Metode", key: "tipe", width: "25%" },
             { label: "Jumlah", key: "jumlah", width: "20%" },
           ];
-          sourceData = MOCK_ADMIN_DONATIONS; // Sinkron dengan data rekap donasi di mockData.ts
+          sourceData = pendingDonations.map((d) => ({
+            id: d.id,
+            nama: d.nama,
+            tipe: d.tipe,
+            jumlah: d.jumlah,
+          }));
           break;
 
         case "inventaris":
+          // API: GET /inventaris — route belum tersedia; data dari store lokal
           title = "Laporan Mutasi Barang & Inventaris Logistik";
           headers = [
             { label: "Kode Logistik", key: "id", width: "30%" },
             { label: "Volume Stok", key: "jumlah", width: "70%" },
           ];
-          // Mengambil array penampung stok dari berkas mockData kamu
-          sourceData = [
-            { id: "STK-001 (Beras)", jumlah: "10 Karung" },
-            { id: "STK-002 (Minyak)", jumlah: "2000 Liter" },
-            { id: "STK-003 (Susu Bayi)", jumlah: "3000 Kotak" }
-          ];
+          sourceData = inventory.map((i) => ({
+            id: `${i.id} (${i.name})`,
+            jumlah: i.stock,
+          }));
           break;
 
         default:
           title = `Laporan Aktivitas Rutin (${reportType})`;
           headers = [{ label: "Deskripsi Operasional", key: "info", width: "100%" }];
-          sourceData = [{ info: `Dokumen rekapitulasi data ${reportType} siap dikoneksikan ke Laravel.` }];
+          sourceData = [{ info: `Dokumen rekapitulasi data ${reportType} siap dikoneksikan ke backend.` }];
           break;
       }
 
-      // Validasi jika pengguna memilih format selain PDF (Misalnya Excel/CSV)
       if (exportFormat !== "pdf") {
         alert(`Format .${exportFormat} sedang dikembangkan oleh tim Backend. Silakan pilih format PDF.`);
         setIsGenerating(false);
         return;
       }
 
-      // Kompilasi Data komponen ke bentuk Blob Binary data
       const blob = await pdf(
-        <BaseReportDocument 
+        <BaseReportDocument
           title={title}
           startDate={startDate}
           endDate={endDate}
@@ -94,18 +104,14 @@ export default function ReportsPage() {
         />
       ).toBlob();
 
-      // Trigger Unduhan Otomatis di Browser PC Owner
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
       link.download = `YAMUTI_LAPORAN_${reportType.toUpperCase()}_${startDate}.pdf`;
       document.body.appendChild(link);
       link.click();
-      
-      // Bersihkan Element Memori Browser setelah Berhasil Mengunduh
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-
     } catch (error) {
       console.error("Gagal memproses file PDF laporan:", error);
     } finally {
@@ -114,7 +120,10 @@ export default function ReportsPage() {
   };
 
   return (
-    <DashboardHeader headerTitle="Laporan" user={{ name: "Bpk. Owner Yamuti", role: "Pemilik Yayasan" }}>
+    <DashboardHeader
+      headerTitle="Laporan"
+      user={{ name: authUser?.name || "Owner Yamuti", role: "Pemilik Yayasan" }}
+    >
       <div className="flex flex-col gap-6">
         <Container className="bg-white p-8 rounded-[32px] border border-gray-100 shadow-xl shadow-black/5">
           <div className="flex items-center gap-4 mb-8">
@@ -131,10 +140,10 @@ export default function ReportsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex flex-col gap-2">
                 <Txt variant="small" weight="bold" className="text-gray-700">Jenis Laporan</Txt>
-                <select 
+                <select
                   value={reportType}
                   onChange={(e) => setReportType(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-primary/20 transition-all text-sm" 
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-primary/20 transition-all text-sm"
                   required
                 >
                   <option value="">Pilih Jenis Laporan</option>
@@ -147,10 +156,10 @@ export default function ReportsPage() {
 
               <div className="flex flex-col gap-2">
                 <Txt variant="small" weight="bold" className="text-gray-700">Format Ekspor</Txt>
-                <select 
+                <select
                   value={exportFormat}
                   onChange={(e) => setExportFormat(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-primary/20 transition-all text-sm" 
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-primary/20 transition-all text-sm"
                   required
                 >
                   <option value="pdf">PDF Document (.pdf)</option>
@@ -159,19 +168,19 @@ export default function ReportsPage() {
                 </select>
               </div>
 
-              <Input 
-                label="Tanggal Mulai" 
-                type="date" 
+              <Input
+                label="Tanggal Mulai"
+                type="date"
                 value={startDate}
-                onChange={(e: any) => setStartDate(e.target.value)}
-                required 
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStartDate(e.target.value)}
+                required
               />
-              <Input 
-                label="Tanggal Akhir" 
-                type="date" 
+              <Input
+                label="Tanggal Akhir"
+                type="date"
                 value={endDate}
-                onChange={(e: any) => setEndDate(e.target.value)}
-                required 
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEndDate(e.target.value)}
+                required
               />
             </div>
 

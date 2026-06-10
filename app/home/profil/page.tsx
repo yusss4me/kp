@@ -1,19 +1,38 @@
+"use client";
+
 import { ProfileTemplate } from "@/app/ui/templates/profile";
-import { Container } from "@/app/ui/atoms/container";
+import { DashboardHeader } from "@/app/ui/organisms/DashboardHeader";
 import { PROFILE_MENU_GROUPS } from "@/app/lib/constants/profile-constants";
-import { MOCK_PROFILE_USER } from "@/app/constants/mockData";
+import { useAuthStore } from "@/app/lib/stores/auth-store";
+import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 
 export default function Page() {
+  const authUser = useAuthStore((s) => s.user);
+  const programs = useYamutiStore((s) => s.programs);
+  const bookings = useYamutiStore((s) => s.bookings);
+
+  // API: GET /donatur/profile — route belum tersedia; gunakan auth store
+  const user = {
+    name: authUser?.name || "Donatur Yamuti",
+    role: "Donatur",
+    image: "/logo/yamuti.png",
+  };
+
   return (
-    <Container className="min-h-screen bg-gray-50/50 md:py-10">
+    <DashboardHeader
+      user={{ name: user.name, role: user.role }}
+      headerTitle="Profil Saya"
+      portalLabel="Portal Donatur"
+    >
       <ProfileTemplate
-        user={MOCK_PROFILE_USER}
-        amountProgramUser="10"
-        amountVisitUser="10"
-        amountDonatedUser="10"
+        user={user}
+        amountProgramUser={String(programs.length)}
+        amountVisitUser={String(bookings.length)}
+        amountDonatedUser="—"
         listMenu={PROFILE_MENU_GROUPS}
         isFlyout={false}
+        embedded
       />
-    </Container>
+    </DashboardHeader>
   );
 }

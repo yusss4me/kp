@@ -1,18 +1,21 @@
 "use client";
 
 import { AdminInventoryTemplate } from "@/app/ui/templates/admin-inventory";
-import { MOCK_ADMIN_INVENTORY_STATS } from "@/app/constants/mockData";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
+import { buildInventoryStats } from "@/app/lib/utils/dashboard-stats";
 
 export default function InventoryPage() {
-  const inventory = useYamutiStore((s) => s.inventory);
-  const deleteInventory = useYamutiStore((s) => s.deleteInventory);
+  const items = useYamutiStore((s) => s.inventory);
+  const deleteItem = useYamutiStore((s) => s.deleteInventory);
+
+  // API: GET /inventaris — route belum tersedia; stats dihitung dari data store lokal
+  const stats = buildInventoryStats(items);
 
   return (
     <AdminInventoryTemplate
-      stats={MOCK_ADMIN_INVENTORY_STATS}
-      items={inventory}
-      onDeleteItem={deleteInventory}
+      stats={stats}
+      items={items}
+      onDeleteItem={deleteItem}
     />
   );
 }

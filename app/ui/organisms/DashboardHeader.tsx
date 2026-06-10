@@ -6,6 +6,7 @@ import { Bell, Search, User } from "lucide-react";
 export interface DashboardTemplateProps {
   children: React.ReactNode;
   headerTitle: string;
+  portalLabel?: string;
   user?: {
     name: string;
     role: string;
@@ -27,6 +28,7 @@ export interface DashboardTemplateProps {
 export const DashboardHeader = ({
   children,
   headerTitle,
+  portalLabel = "Portal Manajemen",
   user = { name: "Admin Yayasan", role: "Administrator" },
 }: DashboardTemplateProps) => {
   return (
@@ -39,7 +41,7 @@ export const DashboardHeader = ({
               variant="caption"
               className="text-gray-400 font-bold uppercase tracking-widest"
             >
-              Portal Manajemen
+              {portalLabel}
             </Txt>
             <Txt variant="h4" weight="bold" className="text-gray-900">
               {headerTitle}

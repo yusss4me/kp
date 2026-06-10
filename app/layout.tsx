@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Roboto } from "next/font/google";
 import "@/app/ui/globals.css";
 import { ToastProvider } from "@/app/ui/providers/toast-provider";
+import { QueryProvider } from "@/app/ui/providers/query-provider";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
@@ -31,11 +32,13 @@ export default function RootLayout({
       className={`${plusJakartaSans.variable} ${roboto.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col selection:bg-red-tertiary selection:text-white">
-        <ToastProvider>
-          <div className="flex-grow">
-            {children}
-          </div>
-        </ToastProvider>
+        <QueryProvider>
+          <ToastProvider>
+            <div className="flex-grow">
+              {children}
+            </div>
+          </ToastProvider>
+        </QueryProvider>
       </body>
     </html>
   );

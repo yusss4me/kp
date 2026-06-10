@@ -12,6 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { apiClient } from "@/app/lib/api/client";
 import { FormActionTemplate } from "@/app/ui/templates/form-action";
+import { useToast } from "@/app/ui/providers/toast-provider";
+import { useRouter } from "next/navigation";
 
 const donasiSchema = z.object({
   nama_donatur: z.string().min(3, "Nama minimal 3 karakter"),
@@ -27,13 +29,33 @@ export default function Page() {
     resolver: zodResolver(donasiSchema),
   });
 
+  const { addToast } = useToast();
+  const router = useRouter();
+
   const onSubmit = async (data: DonasiFormValues) => {
     try {
       const response = await apiClient.post("/donasi", data);
-      alert("Donasi berhasil dibuat! Token Snap: " + (response.data?.snap_token || "Simulasi Token"));
+      const snapToken = response.data?.snap_token || "Simulasi-Token-123";
+      
+      addToast({
+        variant: "success",
+        message: "Donasi berhasil dibuat!",
+      });
+
+      // Redirect to success page with query params
+      const params = new URLSearchParams({
+        name: data.nama_donatur,
+        amount: data.gross_amount.toString(),
+        method: data.payment_type,
+        token: snapToken,
+      });
+      router.push(`/donasi/${params.toString() ? `success?${params.toString()}` : "success"}`);
     } catch (error) {
       console.error("Gagal mengirim donasi", error);
-      alert("Gagal mengirim donasi, silakan coba lagi.");
+      addToast({
+        variant: "error",
+        message: "Gagal mengirim donasi, silakan coba lagi.",
+      });
     }
   };
 

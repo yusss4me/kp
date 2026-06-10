@@ -31,7 +31,7 @@ export default function Layout({
   const user = useAuthStore((s) => s.user);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50/50">
       <Navbar 
         links={ADMIN_LINKS} 
         user={{ 

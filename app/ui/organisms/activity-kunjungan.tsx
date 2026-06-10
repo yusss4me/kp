@@ -9,7 +9,7 @@ import { Container } from "../atoms/container";
 import { Txt } from "../atoms/text";
 import { Input } from "../atoms/input";
 import { Btn } from "../atoms/button";
-import { apiClient } from "@/app/lib/api/client";
+import { createKunjungan } from "@/app/lib/api/services/kunjungan";
 
 const visitSchema = z.object({
   fullName: z.string().min(3, "Nama lengkap minimal 3 karakter"),
@@ -62,7 +62,8 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
         tujuan_kunjungan: data.purpose,
         slot_waktu: `${data.visitDate}T${data.visitTime}:00Z`,
       };
-      await apiClient.post("/kunjungan", payload);
+      // API: POST /kunjungan
+      await createKunjungan(payload);
       alert("Pengajuan kunjungan berhasil dikirim!");
     } catch (error) {
       console.error("Visit request failed", error);

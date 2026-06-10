@@ -1,13 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { fetchAnakAsuh } from "@/app/lib/api/services/anak-asuh";
+import { createDonasi } from "@/app/lib/api/services/donasi";
+import { approveKunjungan, createKunjungan } from "@/app/lib/api/services/kunjungan";
+import { fetchPrograms } from "@/app/lib/api/services/programs";
 import { apiClient } from "@/app/lib/api/client";
-import {
-  MOCK_ADMIN_PROGRAMS,
-  MOCK_ADMIN_DONATIONS,
-  MOCK_ADMIN_DONATUR,
-  MOCK_ADMIN_ORPHANS,
-  MOCK_OWNER_APPROVAL_REQUESTS,
-} from "@/app/constants/mockData";
 import type {
   ApprovalRequest,
   DonaturSummary,
@@ -29,48 +26,6 @@ import {
   programToListItem,
 } from "@/app/lib/utils/crud-helpers";
 
-const SEED_PROGRAMS: Program[] = MOCK_ADMIN_PROGRAMS.map((p, i) => ({
-  id: p.id,
-  title: p.title,
-  category: i === 0 ? "Bencana" : i === 1 ? "Pendidikan" : "Sosial",
-  location: "Tasikmalaya, Jawa Barat",
-  description: `Deskripsi program ${p.title}`,
-  targetAmount: [500_000_000, 150_000_000, 200_000_000][i] ?? 100_000_000,
-  collectedAmount: [325_000_000, 142_500_000, 75_000_000][i] ?? 0,
-  deadline: "2026-12-31",
-  image:
-    "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop",
-  ...programToListItem({
-    title: p.title,
-    targetAmount: [500_000_000, 150_000_000, 200_000_000][i] ?? 100_000_000,
-    collectedAmount: [325_000_000, 142_500_000, 75_000_000][i] ?? 0,
-  }),
-}));
-
-const SEED_INVENTORY: InventoryItem[] = [
-  { id: 1, name: "Beras Medium", category: "Logistik Pangan", stock: "250 Kg", status: "Cukup" },
-  { id: 2, name: "Minyak Goreng", category: "Logistik Pangan", stock: "12 Liter", status: "Menipis" },
-  { id: 3, name: "Seragam Sekolah SMA", category: "Pakaian", stock: "15 Stel", status: "Cukup" },
-  { id: 4, name: "Buku Tulis A5", category: "Alat Tulis", stock: "5 Pack", status: "Menipis" },
-];
-
-const SEED_BOOKINGS: VisitBooking[] = [
-  { id: 1, visitor: "Bpk. Ahmad Fauzi", date: "28 Apr 2026", time: "10:00", type: "Personal", status: "Dikonfirmasi" },
-  { id: 2, visitor: "Komunitas Berbagi", date: "30 Apr 2026", time: "14:00", type: "Grup", status: "Menunggu" },
-  { id: 3, visitor: "Ibu Ratnasari", date: "02 Mei 2026", time: "09:00", type: "Personal", status: "Dikonfirmasi" },
-];
-
-const SEED_TRANSACTIONS: FinanceTransaction[] = [
-  { id: 1, type: "Income", category: "Donasi Umum", amount: "Rp 2.500.000", amountRaw: 2_500_000, date: "25 Apr 2026", status: "Selesai" },
-  { id: 2, type: "Expense", category: "Listrik & Air", amount: "Rp 850.000", amountRaw: 850_000, date: "24 Apr 2026", status: "Selesai" },
-  { id: 3, type: "Income", category: "Donasi Pendidikan", amount: "Rp 5.000.000", amountRaw: 5_000_000, date: "22 Apr 2026", status: "Selesai" },
-];
-
-const SEED_ADMINS: OwnerAdmin[] = [
-  { id: "1", name: "Ahmad Budi", role: "Admin Keuangan", email: "ahmad@yamuti.org", status: "Aktif" },
-  { id: "2", name: "Siti Rahayu", role: "Admin Program", email: "siti@yamuti.org", status: "Aktif" },
-];
-
 interface YamutiStore {
   programs: Program[];
   pendingDonations: PendingDonation[];
@@ -82,6 +37,7 @@ interface YamutiStore {
   admins: OwnerAdmin[];
   approvalRequests: ApprovalRequest[];
 
+  fetchPrograms: () => Promise<void>;
   fetchOrphans: () => Promise<void>;
 
   getProgramById: (id: string) => Program | undefined;
@@ -138,46 +94,35 @@ function buildProgram(
 export const useYamutiStore = create<YamutiStore>()(
   persist(
     (set, get) => ({
-      programs: SEED_PROGRAMS,
-      pendingDonations: [...MOCK_ADMIN_DONATIONS],
-      donatur: [...MOCK_ADMIN_DONATUR],
-      orphans: [...MOCK_ADMIN_ORPHANS],
-      inventory: SEED_INVENTORY,
-      transactions: SEED_TRANSACTIONS,
-      bookings: SEED_BOOKINGS,
-      admins: SEED_ADMINS,
-      approvalRequests: MOCK_OWNER_APPROVAL_REQUESTS.map((r, i) => ({
-        id: `req-${i + 1}`,
-        ...r,
-      })),
+      programs: [],
+      pendingDonations: [],
+      donatur: [],
+      orphans: [],
+      inventory: [],
+      transactions: [],
+      bookings: [],
+      admins: [],
+      approvalRequests: [],
 
-      fetchOrphans: async () => {
+      /** GET /programs — route belum tersedia, mengembalikan array kosong */
+      fetchPrograms: async () => {
         try {
-          const res = await apiClient.get("/anak-asuh");
-          if (res.data && Array.isArray(res.data.data)) {
-            // Mapping dari API ke format entitas lokal
-            const apiOrphans = res.data.data.map((item: import('@/app/lib/types/api-types').ApiOrphanResponse) => {
-              const birthYear = item.birth_date ? new Date(item.birth_date).getFullYear() : new Date().getFullYear() - 10;
-              const currentYear = new Date().getFullYear();
-              
-              return {
-                id: item.id,
-                name: item.name || (item as any).nama,
-                age: currentYear - birthYear,
-                gender: item.gender || "Laki-laki", 
-                status: item.status,
-                notes: item.address || "Di-fetch dari backend"
-              };
-            });
-            if (apiOrphans.length > 0) {
-              set({ orphans: apiOrphans });
-            } else {
-              set({ orphans: [...MOCK_ADMIN_ORPHANS] });
-            }
+          const programs = await fetchPrograms();
+          if (programs.length > 0) {
+            set({ programs });
           }
         } catch (error) {
-          console.error("Gagal mengambil data anak asuh dari API, menggunakan data mock", error);
-          set({ orphans: [...MOCK_ADMIN_ORPHANS] });
+          console.error("Gagal mengambil data program dari API:", error);
+        }
+      },
+
+      /** GET /anak-asuh */
+      fetchOrphans: async () => {
+        try {
+          const orphans = await fetchAnakAsuh();
+          set({ orphans });
+        } catch (error) {
+          console.error("Gagal mengambil data anak asuh dari API:", error);
         }
       },
 
@@ -215,54 +160,47 @@ export const useYamutiStore = create<YamutiStore>()(
         }));
       },
 
+      /** POST /donasi */
       addPendingDonation: async (donation) => {
+        const cleanAmount = parseInt(donation.jumlah.replace(/[^0-9]/g, "")) || 0;
         try {
-          // Note: parse string "Rp 150.000" to number for gross_amount
-          const cleanAmount = parseInt(donation.jumlah.replace(/[^0-9]/g, "")) || 0;
-          await apiClient.post("/donasi", {
+          await createDonasi({
             nama_donatur: donation.nama,
-            no_whatsapp: "081234567890", // Mock if not in UI
+            no_whatsapp: "081234567890",
             gross_amount: cleanAmount,
-            payment_type: donation.tipe.toLowerCase()
+            payment_type: donation.tipe.toLowerCase(),
           });
-          
-          set((s) => ({
-            pendingDonations: [
-              { ...donation, id: generateId("don-") },
-              ...s.pendingDonations,
-            ],
-          }));
         } catch (error) {
           console.error("Gagal menambah donasi via API:", error);
-          set((s) => ({
-            pendingDonations: [
-              { ...donation, id: generateId("don-") },
-              ...s.pendingDonations,
-            ],
-          }));
         }
+
+        set((s) => ({
+          pendingDonations: [
+            { ...donation, id: generateId("don-") },
+            ...s.pendingDonations,
+          ],
+        }));
       },
 
       getOrphanById: (id) => get().orphans.find((o) => o.id === id),
 
+      /** POST /anak-asuh */
       addOrphan: async (data) => {
         const id = generateNumericId(get().orphans);
-        
+
         try {
           await apiClient.post("/anak-asuh", {
             nama: data.name,
-            tanggal_lahir: "2015-01-01", // Placeholder
+            tanggal_lahir: "2015-01-01",
             status: data.status,
-            kategori_bayi: data.age <= 2
+            kategori_bayi: data.age <= 2,
           });
-          // Jika sukses, tambahkan ke state lokal
           set((s) => ({ orphans: [{ ...data, id }, ...s.orphans] }));
         } catch (error) {
-          console.error("Gagal menambah anak asuh via API, menyimpan ke lokal (fallback):", error);
-          // Fallback lokal
+          console.error("Gagal menambah anak asuh via API:", error);
           set((s) => ({ orphans: [{ ...data, id }, ...s.orphans] }));
         }
-        
+
         return id;
       },
 
@@ -278,19 +216,20 @@ export const useYamutiStore = create<YamutiStore>()(
 
       getInventoryById: (id) => get().inventory.find((i) => i.id === id),
 
+      /** POST /mutasi-barang */
       addInventory: async (data) => {
         const id = generateNumericId(get().inventory);
-        
+
         try {
           await apiClient.post("/mutasi-barang", {
             inventaris_id: id.toString(),
-            tipe: "masuk", // Assuming adding inventory is always "masuk" based on swagger enum [masuk, keluar]
+            tipe: "masuk",
             jumlah: parseInt(data.stock) || 1,
-            keterangan: "Penambahan inventory"
+            keterangan: "Penambahan inventory",
           });
           set((s) => ({ inventory: [...s.inventory, { ...data, id }] }));
         } catch (error) {
-          console.error("Gagal menambah inventory:", error);
+          console.error("Gagal menambah inventory via API:", error);
           set((s) => ({ inventory: [...s.inventory, { ...data, id }] }));
         }
 
@@ -324,23 +263,23 @@ export const useYamutiStore = create<YamutiStore>()(
 
       getBookingById: (id) => get().bookings.find((b) => b.id === id),
 
+      /** POST /kunjungan */
       addBooking: async (data) => {
         const id = generateNumericId(get().bookings);
-        
+
         try {
-          await apiClient.post("/kunjungan", {
+          await createKunjungan({
             nama_pengunjung: data.visitor,
-            nomor_telepon: "08123456789", // Mock
+            nomor_telepon: "08123456789",
             tujuan_kunjungan: data.type,
-            slot_waktu: new Date(data.date).toISOString() // Mock format
+            slot_waktu: new Date(data.date).toISOString(),
           });
           set((s) => ({ bookings: [...s.bookings, { ...data, id }] }));
         } catch (error) {
-          console.error("Gagal menambah kunjungan:", error);
-          // Fallback lokal
+          console.error("Gagal menambah kunjungan via API:", error);
           set((s) => ({ bookings: [...s.bookings, { ...data, id }] }));
         }
-        
+
         return id;
       },
 
@@ -372,19 +311,16 @@ export const useYamutiStore = create<YamutiStore>()(
         set((s) => ({ admins: s.admins.filter((a) => a.id !== id) }));
       },
 
+      /** POST /kunjungan/{id}/approve */
       approveRequest: async (id) => {
         try {
-          await apiClient.post(`/kunjungan/${id}/approve`);
-          set((s) => ({
-            approvalRequests: s.approvalRequests.filter((r) => r.id !== id),
-          }));
+          await approveKunjungan(id);
         } catch (error) {
-          console.error("Gagal approve kunjungan:", error);
-          // Fallback lokal jika error
-          set((s) => ({
-            approvalRequests: s.approvalRequests.filter((r) => r.id !== id),
-          }));
+          console.error("Gagal approve kunjungan via API:", error);
         }
+        set((s) => ({
+          approvalRequests: s.approvalRequests.filter((r) => r.id !== id),
+        }));
       },
 
       rejectRequest: (id) => {
@@ -393,7 +329,7 @@ export const useYamutiStore = create<YamutiStore>()(
         }));
       },
     }),
-    { name: "yamuti-mock-crud" }
+    { name: "yamuti-crud" }
   )
 );
 
