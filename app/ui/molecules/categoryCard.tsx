@@ -2,7 +2,7 @@
 
 import { Btn } from "@/app/ui/atoms/button";
 import { Txt } from "@/app/ui/atoms/text";
-import { Icn } from "@/app/ui/atoms/icon";
+import { Icn } from "@/app/ui/atoms/Icn";
 import { LucideIcon } from 'lucide-react';
 
 // Definisi interface untuk type-safety

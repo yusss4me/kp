@@ -33,12 +33,10 @@ export default function Page() {
   const anak = orphans.map((o) => ({
     id: String(o.id),
     nama: o.name,
-    
-    // jenisKelamin: o.gender,
-    // umur: o.age,
+    jenisKelamin: "Laki-laki" as const,
+    umur: 0,
     status: o.status,
-
-    // image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1a?auto=format&fit=crop&w=1170&q=80",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1a?auto=format&fit=crop&w=1170&q=80",
   }));
 
   const donasi = pendingDonations.map((d) => ({

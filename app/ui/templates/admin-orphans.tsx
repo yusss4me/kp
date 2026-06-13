@@ -50,8 +50,8 @@ export function AdminOrphansTemplate({ orphans, onDelete, addUrl, editUrl }: Adm
                 <OrphanCard
                   id={orphan.id}
                   name={orphan.name}
-                  age={orphan.age}
-                  gender={orphan.gender}
+                  age={0}
+                  gender={orphan.kategori_bayi ? "Laki-laki" : "Laki-laki"}
                   status={orphan.status}
                   detailHref={editUrl(orphan.id)}
                 />

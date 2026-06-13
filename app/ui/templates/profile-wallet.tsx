@@ -58,7 +58,7 @@ export function ProfileWalletTemplate({ balance, transactions }: ProfileWalletTe
         </div>
         <div className="grid gap-4">
           {transactions.map((tx) => (
-            <Container key={tx.id} variant="white" radius="2xl" padding="lg" shadow="sm" className="border border-gray-100 hover:shadow-md transition-all">
+            <Container key={tx.id} variant="light" radius="2xl" padding="lg" shadow="sm" className="border border-gray-100 hover:shadow-md transition-all">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${tx.type === "in" ? "bg-green-50 text-green-600" : "bg-red-50 text-red-primary"}`}>

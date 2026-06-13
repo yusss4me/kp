@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/app/lib/utils";
-import { Icn } from "@/app/ui/atoms/icon";
+import { Icn } from "@/app/ui/atoms/Icn";
 
 export interface BadgeProps {
     children?: ReactNode;

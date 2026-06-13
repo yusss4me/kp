@@ -3,7 +3,7 @@ import React from 'react';
 import { BrandLight } from "@/app/ui/molecules/brand";
 import { Txt } from "@/app/ui/atoms/text";
 import { Lnk } from "@/app/ui/atoms/link";
-import { Icn } from "@/app/ui/atoms/icon";
+import { Icn } from "@/app/ui/atoms/Icn";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 export interface LandingFooterProps {

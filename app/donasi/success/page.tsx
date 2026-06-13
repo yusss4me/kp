@@ -66,7 +66,7 @@ function SuccessContent() {
 
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Link href="/donasi" className="w-full sm:w-auto">
-          <Btn variant="outline" className="w-full px-8 py-3">
+          <Btn variant="transparent" border="border" borderColor="dark" className="w-full px-8 py-3">
             Donasi Lainnya
           </Btn>
         </Link>

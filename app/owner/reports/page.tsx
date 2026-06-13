@@ -46,7 +46,7 @@ export default function ReportsPage() {
           sourceData = orphans.map((o) => ({
             id: o.id,
             name: o.name,
-            gender: o.gender,
+            gender: o.kategori_bayi ? "Bayi" : "Anak",
             status: o.status,
           }));
           break;

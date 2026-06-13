@@ -35,7 +35,8 @@ export default function OwnerLayout({
         links={OWNER_LINKS} 
         user={{ 
           name: user?.name || "Owner Yamuti", 
-          role: "Pemilik Yayasan" 
+          role: "Pemilik Yayasan",
+          image: user?.image || ""
         }} 
       />
       

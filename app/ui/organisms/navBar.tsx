@@ -5,7 +5,7 @@ import { Container } from "@/app/ui/atoms/container";
 import { useState } from "react";
 import { Btn } from "@/app/ui/atoms/button";
 import { Img } from "@/app/ui/atoms/image";
-import { Icn } from "@/app/ui/atoms/icon";
+import { Icn } from "@/app/ui/atoms/Icn";
 import { Txt } from "@/app/ui/atoms/text";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

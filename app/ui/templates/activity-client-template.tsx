@@ -4,7 +4,7 @@ import { ArrowDownWideNarrow } from 'lucide-react';
 import { ActivitySwitcher, ActivityType } from '../molecules/activitySwitcher';
 import { Txt } from '../atoms/text';
 import { Btn } from '../atoms/button';
-import { Icn } from '../atoms/icon';
+import { Icn } from '../atoms/Icn';
 import { SearchGroup } from '../molecules/search-group';
 import { ActivityProgram } from '../organisms/activity-program';
 import { ActivityKunjungan } from '../organisms/activity-kunjungan';

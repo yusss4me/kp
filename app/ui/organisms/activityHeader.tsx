@@ -7,7 +7,7 @@ import { DonationCard } from "../molecules/donationCard";
 import { Container } from "../atoms/container";
 import { Input } from "../atoms/input"; 
 import { Package, ArrowLeft, Plus, ArrowDownWideNarrow } from "lucide-react";
-import { Icn } from "../atoms/icon";
+import { Icn } from "../atoms/Icn";
 import { SearchGroup } from "../molecules/search-group";
 
 export const ActivityHeader = ()=> {
@@ -15,6 +15,7 @@ export const ActivityHeader = ()=> {
 
     const campaigns = [
     {
+      id: "prog-1",
       name: "Beasiswa Anak Yatim Piatu",
       categoryTag: "EDU",
       description: "Bantu biaya sekolah untuk 50 anak yatim di Tasikmalaya.",
@@ -23,6 +24,7 @@ export const ActivityHeader = ()=> {
       raised: 32500000
     },
     {
+      id: "prog-2",
       name: "Sembako Jum'at Berkah",
       categoryTag: "SOC",
       description: "Program berbagi pangan untuk lansia dhuafa setiap pekan.",
@@ -31,6 +33,7 @@ export const ActivityHeader = ()=> {
       raised: 7800000
     },
     {
+      id: "prog-3",
       name: "Pembangunan Masjid Al-Ikhlas",
       categoryTag: "BLD",
       description: "Renovasi atap dan tempat wudhu masjid di pelosok desa.",

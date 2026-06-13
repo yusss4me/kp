@@ -3,7 +3,7 @@ import { User, Calendar, Heart } from "lucide-react";
 import { Container } from "../atoms/container";
 import { Txt } from "../atoms/text";
 import { Badge } from "../atoms/badge";
-import { Icn } from "../atoms/icon";
+import { Icn } from "../atoms/Icn";
 import { Btn } from "../atoms/button";
 import { cn } from "@/app/lib/utils";
 import { Img } from "../atoms/image";

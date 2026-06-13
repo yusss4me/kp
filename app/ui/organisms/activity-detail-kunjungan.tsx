@@ -11,9 +11,19 @@ import { Btn } from '../atoms/button';
 import { Container } from '../atoms/container';
 import { Input } from '../atoms/input';
 
+export interface DetailKunjunganData {
+    image: string;
+    title: string;
+    address: string;
+    jamOperasional: string;
+    description: string;
+    ketentuanList: string[];
+}
+
 export interface DetailKunjunganProps {
     id?: string;
     url: string;
+    data?: DetailKunjunganData;
 }
 
 const kunjunganSchema = z.object({
@@ -29,8 +39,17 @@ type KunjunganFormValues = z.infer<typeof kunjunganSchema>;
 
 
 
-export const DetailKunjungan = ({ id, url }: DetailKunjunganProps) => {
+export const DetailKunjungan = ({ id, url, data }: DetailKunjunganProps) => {
     const router = useRouter();
+
+    const defaultData: DetailKunjunganData = data ?? {
+        image: '/images/hero.png',
+        title: 'Kunjungan Silaturahmi',
+        address: 'Yayasan Yamuti, Tasikmalaya',
+        jamOperasional: 'Senin - Sabtu, 08:00 - 17:00',
+        description: 'Silaturahmi ke Yayasan Yamuti untuk melihat langsung aktivitas anak-anak asuh.',
+        ketentuanList: ['Harus membuat janji temu terlebih dahulu', 'Jumlah peserta minimal 1 orang', 'Menjaga ketertiban dan kebersihan'],
+    };
     
 
     const {
@@ -49,7 +68,7 @@ export const DetailKunjungan = ({ id, url }: DetailKunjunganProps) => {
         <Container className="flex flex-col min-h-screen bg-gray-50 pb-24">
             {/* Hero */}
             <div className="relative h-[300px] w-full overflow-hidden">
-                <Image src={data.image} alt={data.title} fill className="object-cover" />
+                <Image src={defaultData.image} alt={defaultData.title} fill className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
                 <div className="absolute top-6 left-0 right-0 px-6">
@@ -68,10 +87,10 @@ export const DetailKunjungan = ({ id, url }: DetailKunjunganProps) => {
                             Kunjungan Silaturahmi
                         </Txt>
                     </div>
-                    <Txt variant="h3" color="light" weight="bold" className="leading-tight">{data.title}</Txt>
+                    <Txt variant="h3" color="light" weight="bold" className="leading-tight">{defaultData.title}</Txt>
                     <div className="flex items-center gap-2 text-white/70">
                         <MapPin size={14} />
-                        <Txt variant="caption" color="light" className="opacity-70">{data.address}</Txt>
+                        <Txt variant="caption" color="light" className="opacity-70">{defaultData.address}</Txt>
                     </div>
                 </div>
             </div>
@@ -85,14 +104,14 @@ export const DetailKunjungan = ({ id, url }: DetailKunjunganProps) => {
                     </div>
                     <div>
                         <Txt variant="caption" className="text-gray-500">Jam Operasional</Txt>
-                        <Txt variant="body" weight="bold" className="text-red-600">{data.jamOperasional}</Txt>
+                        <Txt variant="body" weight="bold" className="text-red-600">{defaultData.jamOperasional}</Txt>
                     </div>
                 </div>
 
                 {/* Description */}
                 <div className="space-y-2">
                     <Txt color="grey" variant="h6" weight="bold">Tentang Kunjungan</Txt>
-                    <Txt className="text-gray-400 text-sm leading-relaxed">{data.description}</Txt>
+                    <Txt className="text-gray-400 text-sm leading-relaxed">{defaultData.description}</Txt>
                 </div>
 
                 {/* Ketentuan */}
@@ -102,7 +121,7 @@ export const DetailKunjungan = ({ id, url }: DetailKunjunganProps) => {
                         <Txt variant="body" weight="bold" className="text-gray-700">Ketentuan Kunjungan</Txt>
                     </div>
                     <ul className="space-y-2">
-                        {data.ketentuanList.map((item, idx) => (
+                        {defaultData.ketentuanList.map((item, idx) => (
                             <li key={idx} className="flex items-start gap-2.5 text-sm text-gray-500">
                                 <CheckCircle size={16} className="text-green-500 flex-shrink-0 mt-0.5" />
                                 {item}

@@ -17,7 +17,7 @@ import {
 import { ListItem } from "../molecules/ListItem";
 import { Txt } from "../atoms/text";
 import { Img } from "../atoms/image";
-import { Icn } from "../atoms/icon";
+import { Icn } from "../atoms/Icn";
 import { Btn } from "../atoms/button";
 
 import { Container } from "../atoms/container";

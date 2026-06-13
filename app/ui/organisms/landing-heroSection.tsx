@@ -4,7 +4,7 @@ import { UserContribution } from "@/app/ui/molecules/landing-userContribution"
 import { ArrowRight, Heart, Home, MapPin } from "lucide-react"
 import { Btn } from "@/app/ui/atoms/button"
 import { Txt } from "@/app/ui/atoms/text"
-import { Icn } from "@/app/ui/atoms/icon"
+import { Icn } from "@/app/ui/atoms/Icn"
 import { Lnk } from "@/app/ui/atoms/link"
 import { Badge } from "@/app/ui/atoms/badge";
 import {routes } from "@/app/lib/constants/routes"

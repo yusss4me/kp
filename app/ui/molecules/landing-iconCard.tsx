@@ -2,7 +2,7 @@
 import React from "react";
 import { Container } from "@/app/ui/atoms/container";
 import { Txt } from "@/app/ui/atoms/text";
-import { Icn } from "@/app/ui/atoms/icon";
+import { Icn } from "@/app/ui/atoms/Icn";
 import { LucideIcon } from "lucide-react";
 
 export interface StatusCardProps {

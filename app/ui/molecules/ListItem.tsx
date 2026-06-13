@@ -1,7 +1,7 @@
 // components/molecules/ProfileListItem.tsx
 
 'use client';
-import { Icn } from '../atoms/icon';
+import { Icn } from '../atoms/Icn';
 import { Lnk } from '../atoms/link';
 import { Container } from '../atoms/container';
 

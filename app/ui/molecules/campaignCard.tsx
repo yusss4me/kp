@@ -4,7 +4,7 @@ import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';
 import { Container } from '@/app/ui/atoms/container';
 import { Avatar } from '@/app/ui/atoms/avatar';
-import { Icn } from '@/app/ui/atoms/icon';
+import { Icn } from '@/app/ui/atoms/Icn';
 import { Plus, CheckCircle2 } from 'lucide-react';
 
 export interface CampaignerCardProps {
@@ -39,10 +39,10 @@ export const CampaignerCard: React.FC<CampaignerCardProps> = ({ name, avatar, ti
     >
       <Container className="flex items-center gap-3">
         <Avatar src={avatar} alt={name}  />
-        <Container display='none'>
+        <Container>
           <Container className="flex items-center gap-1">
             <Txt variant="h4" weight="bold" color="default" >{name}</Txt>
-            <Container display='none' radius='full' variant='info'>
+            <Container radius='full' variant='info'>
             {isVerified && <Icn icon={CheckCircle2} color='light' />}
             </Container>
           </Container>

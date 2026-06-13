@@ -45,12 +45,12 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           <Container variant="success"  className="absolute bottom-0 right-0 w-4 h-4 border-2 rounded-full" />
         </div>
         <Container className="flex flex-col gap-0.5">
-          <Txt variant="h4" weight="bold" color="white" font="jakarta" className="text-xl">
+          <Txt variant="h4" weight="bold" color="light" font="jakarta" className="text-xl">
             {name}
           </Txt>
           <Container className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
-            <Txt variant="small" color="white" font="jakarta" className="opacity-80">
+            <Txt variant="small" color="light" font="jakarta" className="opacity-80">
               {role}
             </Txt>
           </Container>

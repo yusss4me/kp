@@ -1,6 +1,6 @@
 'use client';
 import { Container } from '../atoms/container';
-import { Icn } from '../atoms/icon';
+import { Icn } from '../atoms/Icn';
 import { Txt } from '../atoms/text';
 import React from 'react';
 import { Users, ChevronDown } from 'lucide-react';
@@ -28,7 +28,7 @@ export const RecipientSelector: React.FC<RecipientSelectorProps> = ({ selectedGr
         <Container className="p-2 bg-red-primary rounded-lg text-white">
           <Users size={20} />
         </Container>
-        <Container gap='default' display="grid">
+        <Container gap='default' className="grid">
           <Txt className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Kirim Ke</Txt>
           <Txt className="font-bold text-gray-900">{selectedGroup}</Txt>
         </Container>

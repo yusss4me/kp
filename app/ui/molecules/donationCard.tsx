@@ -5,7 +5,7 @@ import { Img } from '@/app/ui/atoms/image';
 import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';
 import { Badge } from '@/app/ui/atoms/badge';
-import { Icn } from '@/app/ui/atoms/icon';
+import { Icn } from '@/app/ui/atoms/Icn';
 import { ProgressBar } from '@/app/ui/atoms/progressBar';
 import { Container } from '@/app/ui/atoms/container';
 

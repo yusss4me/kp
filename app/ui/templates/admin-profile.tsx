@@ -8,7 +8,7 @@ export interface AdminProfileTemplateProps {
   setEditing?: (editing: boolean) => void;
   onSave?: () => void;
   onLogout?: () => void;
-  fileInputRef?: React.RefObject<HTMLInputElement>;
+  fileInputRef?: React.RefObject<HTMLInputElement | null>;
   onImageUpload?: () => void;
 }
 

@@ -28,7 +28,7 @@ export function ProfileSettingsHubTemplate({ sections }: ProfileSettingsHubTempl
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {sections.map((section, index) => (
           <Link key={index} href={section.href} className="block">
-            <Container variant="white" radius="xl" padding="lg" shadow="sm" className="h-full border border-gray-100 hover:border-red-primary/20 hover:shadow-md transition-all cursor-pointer group">
+            <Container variant="light" radius="xl" padding="lg" shadow="sm" className="h-full border border-gray-100 hover:border-red-primary/20 hover:shadow-md transition-all cursor-pointer group">
               <div className="flex items-start gap-5">
                 <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-red-50 group-hover:text-red-primary transition-colors">
                   <section.icon size={24} />

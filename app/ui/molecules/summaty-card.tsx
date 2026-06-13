@@ -1,6 +1,6 @@
 import { Container } from "../atoms/container";
 import { Txt } from "../atoms/text";
-import { Icn } from "../atoms/icon";
+import { Icn } from "../atoms/Icn";
 import { LucideIcon } from "lucide-react";
 
 export interface SummaryCardProps {

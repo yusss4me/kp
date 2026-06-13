@@ -78,7 +78,9 @@ export default function FoundationProfilePage() {
             </div>
           </div>
           <Btn
-            variant={isPreview ? "outline" : "red"}
+            variant={isPreview ? "transparent" : "red"}
+            border={isPreview ? "border" : "none"}
+            borderColor={isPreview ? "dark" : "red"}
             size="md"
             shape="rounded"
             className="gap-2"

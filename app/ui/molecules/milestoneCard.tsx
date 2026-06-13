@@ -23,12 +23,12 @@ export interface MilestoneCardProps {
  * @returns {JSX.Element} Komponen MilestoneCard
  */
 export const MilestoneCard: React.FC<MilestoneCardProps> = ({ title, range, image }) => (
-  <Container gap="xl" display='flex' variant="transparent" className="p-5 rounded-3xl items-center text-center w-full">
+  <Container gap="xl" variant="transparent" className="flex p-5 rounded-3xl items-center text-center w-full">
     <Avatar size={100} src={image} alt={title} />
     <Container className="flex-col">
 
-    <Txt variant="h4" color='white' className="font-bold text-sm leading-tight">{title}</Txt>
-    <Txt variant="caption" color='white' className="text-[10px] mt-1">{range}</Txt>
+    <Txt variant="h4" color='light' className="font-bold text-sm leading-tight">{title}</Txt>
+    <Txt variant="caption" color='light' className="text-[10px] mt-1">{range}</Txt>
     </Container>
   </Container>
 );

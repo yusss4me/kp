@@ -56,14 +56,11 @@ export function AdminOrphanFormTemplate({
 
         <Container radius="2xl" className="p-8 border border-gray-100 shadow-sm space-y-6">
           <Input label="Nama Lengkap" {...register("name")} error={errors.name?.message} className="bg-gray-50/50" />
-          <Input label="Usia" type="number" {...register("age", { valueAsNumber: true })} error={errors.age?.message} className="bg-gray-50/50" />
+          <Input label="Tanggal Lahir" type="date" {...register("birthDate")} error={errors.birthDate?.message} className="bg-gray-50/50" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-gray-700">Jenis Kelamin</label>
-              <select {...register("gender")} className="w-full h-12 px-4 rounded-2xl bg-gray-50 border-none text-sm font-medium">
-                <option value="Laki-laki">Laki-laki</option>
-                <option value="Perempuan">Perempuan</option>
-              </select>
+            <div className="flex items-center gap-3 p-4 rounded-2xl bg-gray-50">
+              <input type="checkbox" {...register("kategori_bayi")} className="h-5 w-5 rounded" />
+              <label className="text-sm font-bold text-gray-700">Kategori Bayi</label>
             </div>
             <div className="space-y-2">
               <label className="text-sm font-bold text-gray-700">Status</label>

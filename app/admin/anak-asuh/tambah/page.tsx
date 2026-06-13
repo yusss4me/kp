@@ -10,8 +10,8 @@ import { routes } from "@/app/lib/constants/routes";
 
 const schema = z.object({
   name: z.string().min(2, "Nama minimal 2 karakter"),
-  age: z.number().min(1).max(25),
-  gender: z.enum(["Laki-laki", "Perempuan"]),
+  birthDate: z.string().min(1, "Tanggal lahir wajib diisi"),
+  kategori_bayi: z.boolean(),
   status: z.enum(["Baru", "Aktif", "Alumni"]),
   notes: z.string().optional(),
 });

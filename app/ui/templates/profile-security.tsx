@@ -16,7 +16,7 @@ export function ProfileSecurityTemplate() {
       maxWidth="3xl"
     >
       <div className="space-y-6">
-        <Container variant="white" radius="2xl" padding="xl" shadow="sm" className="border border-gray-100 space-y-6">
+        <Container variant="light" radius="2xl" padding="xl" shadow="sm" className="border border-gray-100 space-y-6">
           <Txt variant="h4" weight="bold">
             Ubah Kata Sandi
           </Txt>
@@ -32,7 +32,7 @@ export function ProfileSecurityTemplate() {
           </div>
         </Container>
 
-        <Container variant="white" radius="2xl" padding="lg" shadow="sm" className="border border-gray-100 flex items-center justify-between">
+        <Container variant="light" radius="2xl" padding="lg" shadow="sm" className="border border-gray-100 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
               <ShieldCheck size={24} />
@@ -47,7 +47,7 @@ export function ProfileSecurityTemplate() {
           </Btn>
         </Container>
 
-        <Container variant="white" radius="2xl" padding="lg" shadow="sm" className="border border-gray-100 flex items-center justify-between">
+        <Container variant="light" radius="2xl" padding="lg" shadow="sm" className="border border-gray-100 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-gray-50 text-gray-400 flex items-center justify-center">
               <Smartphone size={24} />

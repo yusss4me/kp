@@ -25,7 +25,7 @@ export default function Layout({
       <Navbar 
         links={ADMIN_LINKS} 
         user={{ 
-          image: user?.image,
+          image: user?.image || "",
           name: user?.name || "Admin Yamuti", 
           role: "Administrator" 
         }} 

@@ -426,8 +426,8 @@ export function programFormToEntity(
 
 export type OrphanFormInput = {
   name: string;
-  age: number;
-  gender: OrphanGender;
+  birthDate: string;
+  kategori_bayi: boolean;
   status: OrphanStatus;
   notes?: string;
 };

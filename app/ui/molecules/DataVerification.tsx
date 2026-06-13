@@ -5,7 +5,7 @@ import { cn } from '@/app/lib/utils';
 import { Container } from '../atoms/container';
 import { Txt } from '../atoms/text';
 import { Btn } from '../atoms/button';
-import { Icn } from '@/app/ui/atoms/icon';
+import { Icn } from '@/app/ui/atoms/Icn';
 
 export type ValidationStatus = 'pending' | 'verified' | 'rejected' | 'warning' | 'dark' | 'light' ;
 

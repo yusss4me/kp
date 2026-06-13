@@ -2,7 +2,7 @@ import React from "react";
 import { LucideIcon, TrendingUp, TrendingDown } from "lucide-react";
 import { Container } from "../atoms/container";
 import { Txt } from "../atoms/text";
-import { Icn } from "../atoms/icon";
+import { Icn } from "../atoms/Icn";
 import { cn } from "@/app/lib/utils";
 
 export interface StatCardProps {

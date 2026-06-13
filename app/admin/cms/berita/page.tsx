@@ -7,8 +7,8 @@ import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { DashboardHeader } from "@/app/ui/organisms/DashboardHeader";
 import { Txt } from "@/app/ui/atoms/text";
 import { Btn } from "@/app/ui/atoms/button";
-import { InputBox } from "@/app/ui/atoms/input";
-import { TextAreaBox } from "@/app/ui/atoms/textarea";
+import { Input } from "@/app/ui/atoms/input";
+import { Textarea } from "@/app/ui/atoms/textarea";
 import { Plus, Newspaper, Trash2, Edit2 } from "lucide-react";
 import { useState } from "react";
 import { News } from "@/app/lib/types/entities";
@@ -100,7 +100,7 @@ export default function AdminNewsPage() {
             </div>
           </div>
           <Btn
-            variant="primary"
+            variant="red"
             size="md"
             shape="rounded"
             className="gap-2 bg-blue-600 hover:bg-blue-700 text-white border-none"
@@ -120,34 +120,34 @@ export default function AdminNewsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Txt variant="body" weight="bold">Judul Berita</Txt>
-                <InputBox {...register("title")} placeholder="Masukkan judul..." error={errors.title?.message} />
+                <Input {...register("title")} placeholder="Masukkan judul..." error={errors.title?.message} />
               </div>
               <div className="space-y-2">
                 <Txt variant="body" weight="bold">Penulis</Txt>
-                <InputBox {...register("author")} placeholder="Nama penulis" error={errors.author?.message} />
+                <Input {...register("author")} placeholder="Nama penulis" error={errors.author?.message} />
               </div>
             </div>
 
             <div className="space-y-2">
               <Txt variant="body" weight="bold">URL Gambar Header</Txt>
-              <InputBox {...register("imageUrl")} placeholder="https://..." error={errors.imageUrl?.message} />
+              <Input {...register("imageUrl")} placeholder="https://..." error={errors.imageUrl?.message} />
             </div>
 
             <div className="space-y-2">
               <Txt variant="body" weight="bold">Ringkasan (Max 150 karakter)</Txt>
-              <TextAreaBox {...register("summary")} placeholder="Singkat, padat, jelas..." rows={2} error={errors.summary?.message} />
+              <Textarea {...register("summary")} placeholder="Singkat, padat, jelas..." rows={2} error={errors.summary?.message} />
             </div>
 
             <div className="space-y-2">
               <Txt variant="body" weight="bold">Konten Lengkap</Txt>
-              <TextAreaBox {...register("content")} placeholder="Isi berita..." rows={8} error={errors.content?.message} />
+              <Textarea {...register("content")} placeholder="Isi berita..." rows={8} error={errors.content?.message} />
             </div>
 
             <div className="pt-4 flex justify-end gap-3">
-              <Btn type="button" variant="outline" size="md" shape="rounded" onClick={() => setIsFormOpen(false)}>
+              <Btn type="button" variant="transparent" size="md" shape="rounded" border="border" borderColor="dark" onClick={() => setIsFormOpen(false)}>
                 Batal
               </Btn>
-              <Btn type="submit" variant="primary" size="md" shape="rounded" className="bg-blue-600 hover:bg-blue-700 text-white border-none">
+              <Btn type="submit" variant="red" size="md" shape="rounded" className="bg-blue-600 hover:bg-blue-700 text-white border-none">
                 {editingId ? "Simpan Perubahan" : "Publikasikan"}
               </Btn>
             </div>
@@ -183,14 +183,18 @@ export default function AdminNewsPage() {
                   </Txt>
                   <div className="pt-4 flex gap-2 border-t border-gray-50 mt-4">
                     <Btn 
-                      variant="outline" 
+                      variant="transparent" 
+                      border="border"
+                      borderColor="dark"
                       className="flex-1 gap-2 text-blue-600 border-blue-200 hover:bg-blue-50" 
                       onClick={() => handleEdit(item)}
                     >
                       <Edit2 size={16} /> Edit
                     </Btn>
                     <Btn 
-                      variant="outline" 
+                      variant="transparent" 
+                      border="border"
+                      borderColor="dark"
                       className="flex-1 gap-2 text-red-600 border-red-200 hover:bg-red-50" 
                       onClick={() => {
                         if (confirm("Hapus berita ini?")) deleteNews(item.id);

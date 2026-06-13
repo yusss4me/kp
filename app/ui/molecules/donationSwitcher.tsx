@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Icn } from "../atoms/icon";
+import { Icn } from "../atoms/Icn";
 import { Txt } from "../atoms/text";
 import { Container } from "../atoms/container";
 import { Btn } from '../atoms/button';

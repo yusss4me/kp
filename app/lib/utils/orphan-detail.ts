@@ -10,9 +10,9 @@ export function orphanToDetailView(orphan: Orphan) {
   return {
     image: DEFAULT_IMAGE,
     name: orphan.name,
-    age: orphan.age,
+    age: 0,
     location: "Rumah Yatim YAMUTI",
-    description: `${orphan.name} adalah anak asuh YAMUTI (${orphan.gender}, status: ${orphan.status}). Dana donasi digunakan untuk kebutuhan pendidikan, kesehatan, dan asuh harian.${orphan.notes ? ` ${orphan.notes}` : ""}`,
+    description: `${orphan.name} adalah anak asuh YAMUTI (status: ${orphan.status}). Dana donasi digunakan untuk kebutuhan pendidikan, kesehatan, dan asuh harian.`,
     target,
     raised,
     donorsCount: 20 + orphan.id * 3,
@@ -28,7 +28,7 @@ export function orphanToDetailView(orphan: Orphan) {
 export const DEFAULT_ANAK_DETAIL = orphanToDetailView({
   id: 0,
   name: "Ahmad Syaifuddin",
-  age: 10,
-  gender: "Laki-laki",
+  birthDate: "2015-01-01",
+  kategori_bayi: false,
   status: "Aktif",
 });

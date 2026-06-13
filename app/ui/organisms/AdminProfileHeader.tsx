@@ -4,7 +4,7 @@ import { ShieldCheck, LayoutDashboard, Clock, Wallet } from 'lucide-react';
 import { Txt } from '../atoms/text';
 import { Container } from '../atoms/container';
 import { Img } from '../atoms/image';
-import { Icn } from '../atoms/icon';
+import { Icn } from '../atoms/Icn';
 import { Btn } from '../atoms/button';
 import { Badge } from '../atoms/badge';
 import { MilestoneCard } from '../molecules/milestoneCard';
