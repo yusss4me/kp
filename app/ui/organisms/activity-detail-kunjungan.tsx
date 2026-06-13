@@ -13,6 +13,7 @@ import { Input } from '../atoms/input';
 
 export interface DetailKunjunganProps {
     id?: string;
+    url: string;
 }
 
 const kunjunganSchema = z.object({
@@ -26,33 +27,11 @@ const kunjunganSchema = z.object({
 
 type KunjunganFormValues = z.infer<typeof kunjunganSchema>;
 
-const mockKunjunganData: Record<string, {
-    image: string;
-    title: string;
-    address: string;
-    description: string;
-    jamOperasional: string;
-    ketentuanList: string[];
-}> = {
-    default: {
-        image: 'https://images.unsplash.com/photo-1560252829-804f1aedf1be?q=80&w=2070&auto=format&fit=crop',
-        title: 'Kunjungan ke Yayasan YAMUTI',
-        address: 'Jl. Raya Yamuti No. 12, Jakarta Selatan',
-        description: 'Kami mengundang para donatur, relawan, dan masyarakat umum untuk berkunjung langsung ke yayasan kami. Kunjungan ini bertujuan untuk mempererat silaturahmi dan memberikan gambaran nyata tentang program-program yang sedang berjalan.',
-        jamOperasional: 'Senin – Jumat, 08.00 – 16.00 WIB',
-        ketentuanList: [
-            'Daftarkan kunjungan minimal 2 hari sebelumnya',
-            'Bawa kartu identitas yang berlaku (KTP/SIM)',
-            'Konfirmasi akan dikirim via WhatsApp/Email',
-            'Kunjungan grup maksimal 30 orang',
-            'Dress code: berpakaian sopan dan rapi',
-        ],
-    },
-};
 
-export const DetailKunjungan = ({ id }: DetailKunjunganProps) => {
+
+export const DetailKunjungan = ({ id, url }: DetailKunjunganProps) => {
     const router = useRouter();
-    const data = (id && mockKunjunganData[id]) ? mockKunjunganData[id] : mockKunjunganData['default'];
+    
 
     const {
         register,

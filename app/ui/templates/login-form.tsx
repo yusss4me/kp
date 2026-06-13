@@ -13,6 +13,7 @@ import { PasswordField } from "../molecules/password-field";
 import { apiClient } from "@/app/lib/api/client";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
 import { useRouter } from "next/navigation";
+import { routes } from "@/app/lib/constants/routes";
 
 const loginSchema = z.object({
   email: z.string().email("Format email tidak valid"),
@@ -52,11 +53,11 @@ export default function LoginForm({}: LoginFormProps) {
     if (success) {
       const role = useAuthStore.getState().user?.role || "admin";
       if (role === "owner") {
-        router.push("/owner");
+        router.push(routes.owner.root());
       } else if(role == "admin"){
-        router.push("/admin");
+        router.push(routes.admin.root());
       } else if(role == "donatur"){
-        router.push("/home");
+        router.push(routes.user.root());
       }
     } else {
       setError("root", { message: error || "Email atau password salah" });

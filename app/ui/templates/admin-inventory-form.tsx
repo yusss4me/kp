@@ -24,6 +24,7 @@ interface AdminInventoryFormTemplateProps {
   form: UseFormReturn<InventoryFormInput>;
   onSubmit: (data: InventoryFormInput) => void;
   onDelete?: () => void;
+  backUrl: string;
 }
 
 export function AdminInventoryFormTemplate({
@@ -33,6 +34,7 @@ export function AdminInventoryFormTemplate({
   form,
   onSubmit,
   onDelete,
+  backUrl,
 }: AdminInventoryFormTemplateProps) {
   const { register, formState: { errors, isSubmitting } } = form;
 
@@ -40,7 +42,7 @@ export function AdminInventoryFormTemplate({
     <DashboardHeader headerTitle={isEdit ? `Edit: ${title}` : "Barang Baru"}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-2xl mx-auto space-y-8 pb-20">
         <div className="flex justify-between items-center">
-          <Link href="/admin/inventory" className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary transition-colors group">
+          <Link href={backUrl} className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary transition-colors group">
             <div className="p-2 rounded-xl bg-gray-100 group-hover:bg-red-50 transition-colors">
               <ChevronLeft size={20} />
             </div>

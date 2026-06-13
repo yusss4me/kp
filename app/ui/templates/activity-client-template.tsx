@@ -6,9 +6,7 @@ import { Txt } from '../atoms/text';
 import { Btn } from '../atoms/button';
 import { Icn } from '../atoms/icon';
 import { SearchGroup } from '../molecules/search-group';
-import { ActivityAnak } from '../organisms/activity-anak';
 import { ActivityProgram } from '../organisms/activity-program';
-import { ActivityBarangForm } from '../organisms/activity-barangForm';
 import { ActivityKunjungan } from '../organisms/activity-kunjungan';
 import { DashboardHeader } from '../organisms/DashboardHeader';
 
@@ -26,6 +24,8 @@ export interface ActivityClientTemplateProps {
     name: string;
     role: string;
   };
+  detailUrl: (id: string) => string;
+  donasiUrl: (id: string) => string;
   className?: string;
 }
 
@@ -33,8 +33,8 @@ export interface ActivityClientTemplateProps {
  * ActivityClientTemplate
  * 
  * Komponen utama untuk menampilkan daftar donasi dan aktivitas yayasan.
- * Memungkinkan pengguna beralih antara melihat program donasi, donasi anak asuh, 
- * pengajuan sumbangan barang, hingga penjadwalan kunjungan.
+ * Memungkinkan pengguna beralih antara melihat program donasi, 
+ * hingga penjadwalan kunjungan.
  * 
  * @param {string} className - Class tambahan Tailwind CSS
  * @param {ActivityClientTemplateProps} props - Properti komponen
@@ -43,17 +43,15 @@ export interface ActivityClientTemplateProps {
 export const ActivityClientTemplate: React.FC<ActivityClientTemplateProps> = ({
   campaigns,
   user = { name: "Donatur Yamuti", role: "Donatur" },
+  detailUrl,
+  donasiUrl
 }) => {
   const [activeActivity, setActiveActivity] = useState<ActivityType>('program');
 
   const renderContent = () => {
     switch (activeActivity) {
-      case 'anak':
-        return <ActivityAnak />;
       case 'program':
-        return <ActivityProgram />;
-      case 'barang':
-        return <ActivityBarangForm />;
+        return <ActivityProgram detailUrl={detailUrl} donasiUrl={donasiUrl} />;
       case 'kunjungan':
         return <ActivityKunjungan isUser={true} />;
       default:
@@ -74,7 +72,7 @@ export const ActivityClientTemplate: React.FC<ActivityClientTemplateProps> = ({
               Pilih Jenis Aktivitas
             </Txt>
             <Txt variant="body" className="text-gray-500">
-              Kelola donasi program, anak asuh, sumbangan barang, atau jadwal kunjungan Anda.
+              Kelola donasi program atau jadwal kunjungan Anda.
             </Txt>
           </div>
 
@@ -83,7 +81,7 @@ export const ActivityClientTemplate: React.FC<ActivityClientTemplateProps> = ({
             onActivityChange={setActiveActivity}
           />
 
-          {(activeActivity === 'anak' || activeActivity === 'program') && (
+          {(activeActivity === 'program') && (
             <div className="flex items-center gap-3">
               <SearchGroup placeholder="Cari program..." />
               <Btn variant="light" size="sm" shape="rounded" className="p-3.5 shrink-0">

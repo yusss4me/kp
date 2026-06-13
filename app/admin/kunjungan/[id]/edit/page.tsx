@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { AdminBookingFormTemplate, BookingFormInput } from "@/app/ui/templates/admin-booking-form";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
+import { routes } from "@/app/lib/constants/routes";
 
 const schema = z.object({
   visitor: z.string().min(2),
@@ -36,13 +37,13 @@ export default function EditKunjunganPage() {
 
   const onSubmit = (data: BookingFormInput) => {
     updateBooking(id, data);
-    router.push("/admin/kunjungan");
+    router.push(routes.admin.kunjungan.root());
   };
 
   const onDelete = () => {
     if (confirm("Hapus jadwal kunjungan ini?")) {
       deleteBooking(id);
-      router.push("/admin/kunjungan");
+      router.push(routes.admin.kunjungan.root());
     }
   };
 
@@ -53,6 +54,7 @@ export default function EditKunjunganPage() {
       form={form}
       onSubmit={onSubmit}
       onDelete={onDelete}
+      backUrl={routes.admin.kunjungan.root()}
     />
   );
 }

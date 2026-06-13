@@ -8,7 +8,9 @@ import { Btn } from "@/app/ui/atoms/button";
 import { Input } from "@/app/ui/atoms/input";
 import { Container } from "@/app/ui/atoms/container";
 import { ChevronLeft, Save, Trash2 } from "lucide-react";
+import { format } from "date-fns";
 import type { VisitBooking } from "@/app/lib/types/entities";
+import { InteractiveCalendar } from "@/app/ui/organisms/interactive-calendar";
 
 export type BookingFormInput = {
   visitor: string;
@@ -24,6 +26,7 @@ interface AdminBookingFormTemplateProps {
   form: UseFormReturn<BookingFormInput>;
   onSubmit: (data: BookingFormInput) => void;
   onDelete?: () => void;
+  backUrl: string;
 }
 
 export function AdminBookingFormTemplate({
@@ -32,14 +35,17 @@ export function AdminBookingFormTemplate({
   form,
   onSubmit,
   onDelete,
+  backUrl,
 }: AdminBookingFormTemplateProps) {
-  const { register, formState: { isSubmitting } } = form;
+  const { register, setValue, watch, formState: { isSubmitting, errors } } = form;
+  const visitDate = watch("date");
+  const visitTime = watch("time");
 
   return (
     <DashboardHeader headerTitle={isEdit ? `Edit: ${title}` : "Booking Kunjungan Baru"}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-2xl mx-auto space-y-8 pb-20">
         <div className="flex justify-between items-center">
-          <Link href="/admin/kunjungan" className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary group">
+          <Link href={backUrl} className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary group">
             <div className="p-2 rounded-xl bg-gray-100 group-hover:bg-red-50"><ChevronLeft size={20} /></div>
             <Txt weight="bold">Kembali</Txt>
           </Link>
@@ -52,9 +58,23 @@ export function AdminBookingFormTemplate({
 
         <Container radius="2xl" className="p-8 border border-gray-100 shadow-sm space-y-6">
           <Input label="Nama Pengunjung" {...register("visitor")} className="bg-gray-50/50" />
-          <div className="grid grid-cols-2 gap-4">
-            <Input label="Tanggal" type="date" {...register("date")} className="bg-gray-50/50" />
-            <Input label="Waktu" type="time" {...register("time")} className="bg-gray-50/50" />
+          <div className="flex flex-col gap-2">
+            <Txt variant="body" weight="bold" className="text-gray-700">Pilih Jadwal Kunjungan</Txt>
+            <InteractiveCalendar 
+              selectedDate={visitDate ? new Date(visitDate) : null}
+              onSelectDate={(date) => {
+                setValue("date", format(date, "yyyy-MM-dd"), { shouldValidate: true });
+              }}
+              selectedTime={visitTime || null}
+              onSelectTime={(time) => {
+                setValue("time", time, { shouldValidate: true });
+              }}
+            />
+            {(errors.date || errors.time) && (
+              <Txt variant="caption" className="text-red-500 mt-1">
+                {errors.date?.message || errors.time?.message}
+              </Txt>
+            )}
           </div>
           <Input label="Tipe Kunjungan" placeholder="Personal / Grup" {...register("type")} className="bg-gray-50/50" />
           <div className="space-y-2">

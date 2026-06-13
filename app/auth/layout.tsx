@@ -16,7 +16,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           slide={[
             {
               id: '1',
-              src: 'https://images.unsplash.com/photo-1576091160550-217363541116?q=80&w=2070&auto=format&fit=crop', alt: 'Modern Tech Office'
+              src: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2070&auto=format&fit=crop', alt: 'Modern Tech Office'
             },
             {
               id: '2',

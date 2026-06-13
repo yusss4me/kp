@@ -29,6 +29,7 @@ import {
 import { cn } from "@/app/lib/utils";
 import { NavLink as NavLinkMolecule } from "@/app/ui/molecules/navlink";
 import { PROFILE_MENU_GROUPS } from "@/app/lib/constants/profile-constants";
+import { routes } from "@/app/lib/constants/routes";
 
 /**
  * Navigation link type definition.
@@ -45,10 +46,10 @@ export interface NavLink {
  * Default navigation links for donors.
  */
 const DEFAULT_LINKS: NavLink[] = [
-  { label: "Beranda", href: "/home", icon: Home },
-  { label: "Aktivitas", href: "/home/aktivitas", icon: HandCoins },
-  { label: "Broadcast", href: "/home/broadcast", icon: MessageCircleMore },
-  { label: "Profil", href: "/home/profil", icon: User, hideOnDesktop: true },
+  { label: "Beranda", href: routes.user.root(), icon: Home },
+  { label: "Aktivitas", href: routes.user.aktivitas.root(), icon: HandCoins },
+  { label: "Broadcast", href: routes.user.aktivitas.broadcast.root(), icon: MessageCircleMore },
+  { label: "Profil", href: routes.user.aktivitas.profile.root(), icon: User, hideOnDesktop: true },
 ];
 
 export interface NavbarProps {

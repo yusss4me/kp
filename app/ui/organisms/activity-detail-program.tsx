@@ -16,13 +16,14 @@ import { routes } from '@/app/lib/constants/routes';
 
 export interface DetailProgramProps {
   id?: string;
+  url: string;
 }
 
 const FALLBACK_GALLERY = [
   'https://images.unsplash.com/photo-1508817628294-5a453fa0b8fb?q=80&w=2070&auto=format&fit=crop',
 ];
 
-export const DetailProgram = ({ id }: DetailProgramProps) => {
+export const DetailProgram = ({ id, url }: DetailProgramProps) => {
   const router = useRouter();
   const [isDescExpanded, setIsDescExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<'donasi' | 'volunteer'>('donasi');
@@ -32,7 +33,7 @@ export const DetailProgram = ({ id }: DetailProgramProps) => {
     return (
       <Container className="p-10 text-center">
         <Txt className="text-gray-500">Program tidak ditemukan.</Txt>
-        <Link href={routes.explore()} className="text-red-primary font-bold mt-4 inline-block">
+        <Link href={url} className="text-red-primary font-bold mt-4 inline-block">
           Jelajahi Program
         </Link>
       </Container>
@@ -73,7 +74,7 @@ export const DetailProgram = ({ id }: DetailProgramProps) => {
       .replace('IDR', 'Rp');
 
   const progress = Math.min((data.raised / data.target) * 100, 100);
-  const donasiHref = id ? routes.donasi(id) : routes.explore();
+  const donasiHref = id ? routes.visitor.donasi(id) : routes.explore();
 
   return (
     <Container className="flex flex-col min-h-screen bg-gray-50 pb-24">
@@ -189,10 +190,8 @@ export const DetailProgram = ({ id }: DetailProgramProps) => {
       </div>
 
       <div className="bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-4 flex items-center gap-4">
-        <Btn color="light" className="w-14 h-14 flex items-center justify-center rounded-2xl bg-gray-50 border border-gray-100 text-gray-400">
-          <MapPin size={24} />
-        </Btn>
-        <Link href={donasiHref} className="flex-grow">
+        
+        <Link href={url} className="flex-grow">
           <Btn color="red" textColor="light" className="w-full h-14 font-bold rounded-2xl flex items-center justify-center transition-colors">
             DONASI SEKARANG
           </Btn>

@@ -4,11 +4,13 @@ import { Navbar, NavLink } from "@/app/ui/organisms/navBar";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
 import { Home, HandCoins, MessageCircleMore, User } from "lucide-react";
 
+import { routes } from "@/app/lib/constants/routes";
+
 const HOME_LINKS: NavLink[] = [
-  { label: "Beranda", href: "/home", icon: Home },
-  { label: "Aktivitas", href: "/home/aktivitas", icon: HandCoins },
-  { label: "Broadcast", href: "/home/broadcast", icon: MessageCircleMore },
-  { label: "Profil", href: "/home/profil", icon: User, hideOnDesktop: true },
+  { label: "Beranda", href: routes.user.root(), icon: Home },
+  { label: "Aktivitas", href: routes.user.aktivitas.root(), icon: HandCoins },
+  { label: "Broadcast", href: routes.user.aktivitas.broadcast.root(), icon: MessageCircleMore },
+  { label: "Profil", href: routes.user.aktivitas.profile.root(), icon: User, hideOnDesktop: true },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {

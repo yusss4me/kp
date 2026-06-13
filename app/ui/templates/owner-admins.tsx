@@ -12,9 +12,11 @@ import type { OwnerAdmin } from "@/app/lib/types/entities";
 interface OwnerAdminsTemplateProps {
   admins: OwnerAdmin[];
   onDelete: (id: string) => void;
+  addUrl?: string;
+  editUrl?: (id: string) => string;
 }
 
-export function OwnerAdminsTemplate({ admins, onDelete }: OwnerAdminsTemplateProps) {
+export function OwnerAdminsTemplate({ admins, onDelete, addUrl, editUrl }: OwnerAdminsTemplateProps) {
   return (
     <DashboardHeader headerTitle="Manajemen Administrator">
       <div className="space-y-6">
@@ -28,12 +30,14 @@ export function OwnerAdminsTemplate({ admins, onDelete }: OwnerAdminsTemplatePro
               <Txt variant="caption" className="text-gray-400">Kelola hak akses tim yayasan</Txt>
             </div>
           </div>
-          <Link href="/owner/admins/tambah">
-            <Btn variant="red" size="md" shape="rounded" className="gap-2">
-              <Plus size={18} />
-              Tambah Admin
-            </Btn>
-          </Link>
+          {addUrl && (
+            <Link href={addUrl}>
+              <Btn variant="red" size="md" shape="rounded" className="gap-2">
+                <Plus size={18} />
+                Tambah Admin
+              </Btn>
+            </Link>
+          )}
         </div>
 
         <div className="grid gap-4">
@@ -47,11 +51,13 @@ export function OwnerAdminsTemplate({ admins, onDelete }: OwnerAdminsTemplatePro
                 <Badge color={admin.status === "Aktif" ? "success" : "secondary"} variant="solid">
                   {admin.status}
                 </Badge>
-                <Link href={`/owner/admins/${admin.id}/edit`}>
-                  <Btn variant="light" size="sm" className="gap-1">
-                    <Pencil size={16} /> Edit
-                  </Btn>
-                </Link>
+                {editUrl && (
+                  <Link href={editUrl(admin.id)}>
+                    <Btn variant="light" size="sm" className="gap-1">
+                      <Pencil size={16} /> Edit
+                    </Btn>
+                  </Link>
+                )}
                 <Btn
                   variant="light"
                   size="sm"

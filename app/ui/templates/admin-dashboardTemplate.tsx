@@ -99,19 +99,25 @@
               <Btn variant="light" size="sm" shape="rounded" className="text-red-primary font-bold">Lihat Semua</Btn>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {
-                anak.slice(0, 4).map((item: any) => (
-                  <OrphanCard
-                    key={item.id}
-                    name={item.nama}
-                    age={item.umur}
-                    gender={item.jenisKelamin}
-                    status={item.status}
-                  />
-                ))
-              }
-            </div>
+            {anak.length === 0 ? (
+              <div className="w-full py-8 text-center text-gray-500">
+                <Txt variant="body">Belum ada data anak asuh.</Txt>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {
+                  anak.slice(0, 4).map((item: any) => (
+                    <OrphanCard
+                      key={item.id}
+                      name={item.nama}
+                      age={item.umur}
+                      gender={item.jenisKelamin}
+                      status={item.status}
+                    />
+                  ))
+                }
+              </div>
+            )}
           </section>
 
           {/* Call to action for Broadcast */}

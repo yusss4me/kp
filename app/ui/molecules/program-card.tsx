@@ -13,20 +13,23 @@ interface ProgramCardProps {
     progress: number;
   };
   onDelete?: (id: string) => void;
+  editUrl?: (id: string) => string;
 }
 
-export const ProgramCard = ({ program, onDelete }: ProgramCardProps) => {
+export const ProgramCard = ({ program, onDelete, editUrl }: ProgramCardProps) => {
     return (
         <div
                 key={program.id}
                 className="bg-white p-8 rounded-[40px] border border-gray-100 shadow-sm space-y-6 hover:shadow-lg transition-all duration-300 relative group"
               >
                 <div className="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Link href={`/admin/donations/edit-donasi/${program.id}`}>
-                    <button className="p-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-colors">
-                      <Edit2 size={16} />
-                    </button>
-                  </Link>
+                  {editUrl && (
+                    <Link href={editUrl(program.id)}>
+                      <button className="p-2 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-colors">
+                        <Edit2 size={16} />
+                      </button>
+                    </Link>
+                  )}
                   <button
                     type="button"
                     onClick={() => onDelete?.(program.id)}
@@ -91,19 +94,23 @@ export const ProgramCard = ({ program, onDelete }: ProgramCardProps) => {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <Link
-                    href={`/admin/donations/edit-donasi/${program.id}`}
-                    className="w-full"
-                  >
-                    <Btn
-                      variant="light"
-                      size="sm"
-                      shape="rounded"
-                      className="w-full py-3 bg-gray-50 border-none text-gray-600 hover:text-red-primary"
+                  {editUrl ? (
+                    <Link
+                      href={editUrl(program.id)}
+                      className="w-full"
                     >
-                      Edit
-                    </Btn>
-                  </Link>
+                      <Btn
+                        variant="light"
+                        size="sm"
+                        shape="rounded"
+                        className="w-full py-3 bg-gray-50 border-none text-gray-600 hover:text-red-primary"
+                      >
+                        Edit
+                      </Btn>
+                    </Link>
+                  ) : (
+                    <div className="w-full" />
+                  )}
                   <Btn
                     type="button"
                     variant="light"

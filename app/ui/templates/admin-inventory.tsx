@@ -21,9 +21,11 @@ interface AdminInventoryTemplateProps {
   stats: InventoryStat[];
   items: InventoryItem[];
   onDeleteItem?: (id: number) => void;
+  addUrl?: string;
+  editUrl?: (id: number) => string;
 }
 
-export function AdminInventoryTemplate({ stats, items, onDeleteItem }: AdminInventoryTemplateProps) {
+export function AdminInventoryTemplate({ stats, items, onDeleteItem, addUrl, editUrl }: AdminInventoryTemplateProps) {
   return (
     <DashboardHeader headerTitle="Manajemen Inventaris">
       <div className="space-y-10">
@@ -35,12 +37,14 @@ export function AdminInventoryTemplate({ stats, items, onDeleteItem }: AdminInve
               Pantau stok logistik, pakaian, dan perlengkapan panti asuhan secara efisien.
             </Txt>
           </div>
-          <Link href="/admin/inventory/tambah">
-            <Btn variant="red" shape="circle" className="gap-2 px-8 shadow-lg shadow-red-primary/20">
-              <Plus size={20} />
-              Tambah Barang
-            </Btn>
-          </Link>
+          {addUrl && (
+            <Link href={addUrl}>
+              <Btn variant="red" shape="circle" className="gap-2 px-8 shadow-lg shadow-red-primary/20">
+                <Plus size={20} />
+                Tambah Barang
+              </Btn>
+            </Link>
+          )}
         </div>
 
         {/* Inventory Stats Grid */}
@@ -71,7 +75,7 @@ export function AdminInventoryTemplate({ stats, items, onDeleteItem }: AdminInve
         </div>
 
         {/* Inventory List */}
-        <InventoryTable items={items} onDelete={onDeleteItem} />
+        <InventoryTable items={items} onDelete={onDeleteItem} editUrl={editUrl} />
       </div>
     </DashboardHeader>
   );

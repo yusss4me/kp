@@ -9,8 +9,16 @@ export interface CreateDonasiPayload {
 
 /** POST /donasi — buat donasi baru (public, tanpa auth) */
 export async function createDonasi(payload: CreateDonasiPayload) {
-  const res = await apiClient.post("/donasi", payload);
-  return res.data;
+  try {
+    const res = await apiClient.post("/donasi", payload);
+    return res.data;
+  } catch (e: any) {
+    // Re-throw 401/403 so the global interceptor handles auth redirect
+    if (e.response?.status === 401 || e.response?.status === 403) {
+      throw e;
+    }
+    throw e;
+  }
 }
 
 // GET /donasi — route belum tersedia di backend

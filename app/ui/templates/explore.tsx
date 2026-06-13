@@ -36,16 +36,22 @@ export function ExploreTemplate({ campaigns, className = "" }: ExploreTemplatePr
           <Txt className="text-xs text-red-primary font-bold">Filter</Txt>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          {campaigns.map((camp) => (
-            <DonationCard
-              key={camp.id}
-              {...camp}
-              detailHref={routes.visitor.donasiDetail(camp.id)}
-              donateHref={routes.visitor.donasi(camp.id)}
-            />
-          ))}
-        </div>
+        {campaigns.length === 0 ? (
+          <div className="col-span-full py-12 text-center text-gray-500">
+            <Txt variant="body" className="mb-2">Tidak ada program yang tersedia saat ini.</Txt>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {campaigns.map((camp) => (
+              <DonationCard
+                key={camp.id}
+                {...camp}
+                detailHref={routes.visitor.donasiDetail(camp.id)}
+                donateHref={routes.visitor.donasi(camp.id)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

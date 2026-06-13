@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { OwnerAdminFormTemplate, OwnerAdminFormInput } from "@/app/ui/templates/owner-admin-form";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
+import { routes } from "@/app/lib/constants/routes";
 
 const schema = z.object({
   name: z.string().min(2),
@@ -33,17 +34,24 @@ export default function EditAdminPage() {
 
   const onSubmit = (data: OwnerAdminFormInput) => {
     updateAdmin(id, data);
-    router.push("/owner/admins");
+    router.push(routes.owner.admins.root());
   };
 
   const onDelete = () => {
     if (confirm(`Hapus admin ${admin.name}?`)) {
       deleteAdmin(id);
-      router.push("/owner/admins");
+      router.push(routes.owner.admins.root());
     }
   };
 
   return (
-    <OwnerAdminFormTemplate title={admin.name} isEdit form={form} onSubmit={onSubmit} onDelete={onDelete} />
+    <OwnerAdminFormTemplate 
+      title={admin.name} 
+      isEdit 
+      form={form} 
+      onSubmit={onSubmit} 
+      onDelete={onDelete} 
+      backUrl={routes.owner.admins.root()}
+    />
   );
 }

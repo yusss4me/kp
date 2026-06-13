@@ -16,9 +16,11 @@ export type { Orphan as OrphanData };
 interface AdminOrphansTemplateProps {
   orphans: Orphan[];
   onDelete?: (id: number) => void;
+  addUrl: string;
+  editUrl: (id: string | number) => string;
 }
 
-export function AdminOrphansTemplate({ orphans, onDelete }: AdminOrphansTemplateProps) {
+export function AdminOrphansTemplate({ orphans, onDelete, addUrl, editUrl }: AdminOrphansTemplateProps) {
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredOrphans = orphans.filter((orphan) =>
@@ -38,7 +40,7 @@ export function AdminOrphansTemplate({ orphans, onDelete }: AdminOrphansTemplate
         <OrphanFilter
           onSearch={(q) => setSearchQuery(q)}
           onAddClick={() => {}}
-          addHref="/admin/anak-asuh/tambah"
+          addHref={addUrl}
         />
 
         {filteredOrphans.length > 0 ? (
@@ -51,10 +53,10 @@ export function AdminOrphansTemplate({ orphans, onDelete }: AdminOrphansTemplate
                   age={orphan.age}
                   gender={orphan.gender}
                   status={orphan.status}
-                  detailHref={`/admin/anak-asuh/${orphan.id}/edit`}
+                  detailHref={editUrl(orphan.id)}
                 />
                 <div className="flex gap-2 mt-3">
-                  <Link href={`/admin/anak-asuh/${orphan.id}/edit`} className="flex-1">
+                  <Link href={editUrl(orphan.id)} className="flex-1">
                     <Btn variant="light" size="sm" shape="rounded" className="w-full gap-1 text-xs font-bold">
                       <Pencil size={14} /> Edit
                     </Btn>

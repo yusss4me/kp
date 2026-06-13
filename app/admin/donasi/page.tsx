@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AdminProgramTemplate } from "@/app/ui/templates/admin-program";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
+import { routes } from "@/app/lib/constants/routes";
 
 export default function DonationsPage() {
   const programs = useYamutiStore((s) => s.programs);
@@ -43,6 +44,8 @@ export default function DonationsPage() {
         onVerifyDonation={verifyDonation}
         onRejectDonation={rejectDonation}
         onDeleteProgram={handleDeleteProgramClick}
+        addUrl={routes.admin.donasi.add()}
+        editUrl={(id) => routes.admin.donasi.edit(id)}
       />
       <ConfirmationModal
         isOpen={isModalOpen}

@@ -3,6 +3,7 @@
 import { AdminFinanceTemplate } from "@/app/ui/templates/admin-finance";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { buildFinanceStats } from "@/app/lib/utils/dashboard-stats";
+import { routes } from "@/app/lib/constants/routes";
 
 export default function FinancePage() {
   const transactions = useYamutiStore((s) => s.transactions);
@@ -16,6 +17,7 @@ export default function FinancePage() {
       stats={stats}
       transactions={transactions}
       onDeleteTransaction={deleteTransaction}
+      addUrl={routes.admin.keuangan.add()}
     />
   );
 }

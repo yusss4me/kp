@@ -3,24 +3,14 @@ import { Navbar, NavLink } from "@/app/ui/organisms/navBar";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
 import { 
   LayoutDashboard, 
-  Users, 
-  Heart, 
-  Package, 
-  Wallet, 
-  Calendar, 
-  Share2, 
-  MessageSquareText 
+  Compass
 } from "lucide-react";
+import { routes } from "@/app/lib/constants/routes";
+import image from "next/image";
 
 const ADMIN_LINKS: NavLink[] = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Anak Asuh", href: "/admin/anak-asuh", icon: Users },
-  { label: "Donasi", href: "/admin/donasi", icon: Heart },
-  { label: "Broadcast", href: "/admin/broadcast", icon: MessageSquareText },
-  { label: "Keuangan", href: "/admin/keuangan", icon: Wallet },
-  { label: "Inventaris", href: "/admin/inventaris", icon: Package },
-  { label: "Kunjungan", href: "/admin/kunjungan", icon: Calendar },
-  { label: "CMS", href: "/admin/cms", icon: Share2 },
+  { label: "Dashboard", href: routes.admin.root(), icon: LayoutDashboard },
+  { label: "Akses Cepat", href: routes.admin.quickAccess.root(), icon: Compass },
 ];
 
 export default function Layout({
@@ -35,6 +25,7 @@ export default function Layout({
       <Navbar 
         links={ADMIN_LINKS} 
         user={{ 
+          image: user?.image,
           name: user?.name || "Admin Yamuti", 
           role: "Administrator" 
         }} 

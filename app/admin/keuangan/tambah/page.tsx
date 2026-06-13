@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { AdminTransactionFormTemplate, TransactionFormInput } from "@/app/ui/templates/admin-transaction-form";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
+import { routes } from "@/app/lib/constants/routes";
 
 const schema = z.object({
   type: z.enum(["Income", "Expense"]),
@@ -24,8 +25,8 @@ export default function TambahTransaksiPage() {
 
   const onSubmit = (data: TransactionFormInput) => {
     addTransaction({ ...data, status: "Selesai" });
-    router.push("/admin/finance");
+    router.push(routes.admin.keuangan.root());
   };
 
-  return <AdminTransactionFormTemplate form={form} onSubmit={onSubmit} />;
+  return <AdminTransactionFormTemplate form={form} onSubmit={onSubmit} backUrl={routes.admin.keuangan.root()} />;
 }

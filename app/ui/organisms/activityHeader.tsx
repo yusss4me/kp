@@ -42,22 +42,6 @@ export const ActivityHeader = ()=> {
 
     const renderContent = () => {
         switch (activeActivity) {
-          case 'anak':
-            return (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="flex justify-between items-center">
-                  <Txt weight="bold" className="text-gray-900">Donasi Anak Asuh</Txt>
-                  <Btn variant="transparent" textColor="red" size="sm" shape="rounded" className="text-xs text-red-primary font-bold hover:underline">
-                    Lihat semua
-                  </Btn>
-                </div>
-                <div className="space-y-4">
-                  {campaigns.filter(c => c.categoryTag === "EDU").map((camp, i) => (
-                    <DonationCard key={i} {...camp} />
-                  ))}
-                </div>
-              </div>
-            );
           case 'program':
             return (
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -74,37 +58,6 @@ export const ActivityHeader = ()=> {
                 </div>
               </div>
             );
-          case 'barang':
-            return (
-              <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <Container className="p-6 border border-gray-100 shadow-sm space-y-6 rounded-2xl bg-white">
-                  <div className="flex items-center gap-4 text-red-primary">
-                    <div className="p-3 bg-red-50 rounded-2xl text-red-primary">
-                      <Icn icon={Package} size={24} color="current" />
-                    </div>
-                    <div>
-                      <Txt weight="bold" className="text-gray-900">Sumbangan Barang</Txt>
-                      <Txt variant="caption" className="text-gray-500">Kirimkan barang layak pakai untuk yang membutuhkan</Txt>
-                    </div>
-                  </div>
-    
-                  <div className="space-y-4 pt-2">
-                    <Input label="Jenis Barang" placeholder="Contoh: Pakaian, Buku, Sembako" />
-                    <Input label="Estimasi Berat/Jumlah" placeholder="Contoh: 5 kg / 2 Dus" />
-                    <Input label="Alamat Penjemputan" placeholder="Masukkan alamat lengkap" />
-                    <Btn variant="red" size="lg" className="w-full mt-4">Ajukan Penjemputan</Btn>
-                  </div>
-                </Container>
-    
-                <div className="bg-red-secondary p-4 rounded-2xl border border-red-primary/10 flex gap-3">
-                  <div className="text-red-primary pt-1">ℹ️</div>
-                  <Txt variant="caption" className="text-red-primary/90 font-medium">
-                    Barang akan kami salurkan ke panti asuhan dan keluarga dhuafa binaan YAMUTI.
-                  </Txt>
-                </div>
-              </div>
-            );
-    
           default:
             return null;
         }
@@ -124,7 +77,7 @@ export const ActivityHeader = ()=> {
                 />
         
                 {/* Filter/Sort Area (Only for donations) */}
-                {(activeActivity === 'anak' || activeActivity === 'program') && (
+                {(activeActivity === 'program') && (
                   <div className="flex items-center gap-3 ">
                     <SearchGroup placeholder='Cari program...'/>
                     <Btn variant="transparent" size="sm" shape="rounded" className="p-3.5 bg-white/10 text-white backdrop-blur-sm">

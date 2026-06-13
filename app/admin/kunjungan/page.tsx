@@ -3,6 +3,7 @@
 import { AdminKunjunganTemplate } from "@/app/ui/templates/admin-kunjungan";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { buildKunjunganStats } from "@/app/lib/utils/dashboard-stats";
+import { routes } from "@/app/lib/constants/routes";
 
 export default function BookingPage() {
   const bookings = useYamutiStore((s) => s.bookings);
@@ -16,6 +17,8 @@ export default function BookingPage() {
       stats={stats}
       bookings={bookings}
       onDeleteBooking={deleteBooking}
+      addUrl={routes.admin.kunjungan.add()}
+      editUrl={(id) => routes.admin.kunjungan.edit(id)}
     />
   );
 }

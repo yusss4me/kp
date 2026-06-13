@@ -4,10 +4,12 @@ export type OrphanGender = "Laki-laki" | "Perempuan";
 export interface Orphan {
   id: number;
   name: string;
-  age: number;
-  gender: OrphanGender;
+  // age: number;
+  birthDate: string;
+  kategori_bayi: boolean;
+  // gender: OrphanGender;
   status: OrphanStatus;
-  notes?: string;
+  // notes?: string;
 }
 
 export interface Program {
@@ -82,4 +84,39 @@ export interface DonaturSummary {
   total: string;
   lastDonation: string;
   status: string;
+}
+
+export interface FoundationProfile {
+  name: string;
+  vision: string;
+  mission: string;
+  aboutUs: string;
+  address: string;
+  phone: string;
+  email: string;
+  logoUrl?: string;
+}
+
+export interface News {
+  id: string;
+  title: string;
+  content: string;
+  summary: string;
+  author: string;
+  date: string;
+  imageUrl: string;
+}
+
+export interface GalleryPhoto {
+  id: string;
+  judul: string;
+  deskripsi: string;
+  file: File;
+}
+
+export interface MutasiBarang {
+  inventaris_id: string;
+  tipe: "masuk" | "keluar";
+  jumlah: number;
+  keterangan: string;
 }

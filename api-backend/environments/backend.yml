@@ -1,0 +1,4 @@
+name: backend
+variables:
+  - name: base_url
+    value: https://yamuti-backend.onrender.com/api

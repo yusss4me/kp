@@ -7,7 +7,12 @@ import { Btn } from "../atoms/button";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { routes } from "@/app/lib/constants/routes";
 
-export const ActivityProgram = () => {
+export interface ActivityProgramProps {
+  detailUrl: (id: string) => string;
+  donasiUrl: (id: string) => string;
+}
+
+export const ActivityProgram = ({ detailUrl, donasiUrl }: ActivityProgramProps) => {
   const programs = useYamutiStore((s) => s.programs);
 
   return (
@@ -33,8 +38,8 @@ export const ActivityProgram = () => {
             image={program.image ?? "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070"}
             target={program.targetAmount}
             raised={program.collectedAmount}
-            detailHref={routes.aktivitas.program.detail(program.id)}
-            donateHref={routes.donasi(program.id)}
+            detailHref={detailUrl(program.id)}
+            donateHref={donasiUrl(program.id)}
           />
         ))}
       </div>

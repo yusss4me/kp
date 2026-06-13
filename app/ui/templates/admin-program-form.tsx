@@ -29,6 +29,7 @@ interface AdminProgramFormTemplateProps {
   onSubmit: (data: AdminProgramFormValues) => void;
   programImage?: string;
   onDelete?: () => void;
+  backUrl: string;
 }
 
 export function AdminProgramFormTemplate({
@@ -39,6 +40,7 @@ export function AdminProgramFormTemplate({
   onSubmit,
   programImage,
   onDelete,
+  backUrl,
 }: AdminProgramFormTemplateProps) {
   const { register, formState: { errors, isSubmitting } } = form;
 
@@ -47,7 +49,7 @@ export function AdminProgramFormTemplate({
       <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-4xl mx-auto space-y-8 pb-20">
         {/* Navigation */}
         <div className="flex justify-between items-center">
-          <Link href="/admin/donations" className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary transition-colors group">
+          <Link href={backUrl} className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary transition-colors group">
             <div className="p-2 rounded-xl bg-gray-100 group-hover:bg-red-50 transition-colors">
               <ChevronLeft size={20} />
             </div>

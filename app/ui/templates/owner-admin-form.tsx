@@ -23,6 +23,7 @@ interface OwnerAdminFormTemplateProps {
   form: UseFormReturn<OwnerAdminFormInput>;
   onSubmit: (data: OwnerAdminFormInput) => void;
   onDelete?: () => void;
+  backUrl: string;
 }
 
 export function OwnerAdminFormTemplate({
@@ -31,6 +32,7 @@ export function OwnerAdminFormTemplate({
   form,
   onSubmit,
   onDelete,
+  backUrl,
 }: OwnerAdminFormTemplateProps) {
   const { register, formState: { isSubmitting } } = form;
 
@@ -38,7 +40,7 @@ export function OwnerAdminFormTemplate({
     <DashboardHeader headerTitle={isEdit ? `Edit: ${title}` : "Admin Baru"}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-2xl mx-auto space-y-8 pb-20">
         <div className="flex justify-between items-center">
-          <Link href="/owner/admins" className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary group">
+          <Link href={backUrl} className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary group">
             <div className="p-2 rounded-xl bg-gray-100 group-hover:bg-red-50"><ChevronLeft size={20} /></div>
             <Txt weight="bold">Kembali</Txt>
           </Link>

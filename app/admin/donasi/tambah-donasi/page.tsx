@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { AdminProgramFormTemplate } from "@/app/ui/templates/admin-program-form";
 import { programFormToEntity, useYamutiStore } from "@/app/lib/stores/yamuti-store";
+import { routes } from "@/app/lib/constants/routes";
 
 const programSchema = z.object({
   title: z.string().min(10, "Judul minimal 10 karakter"),
@@ -28,7 +29,7 @@ export default function TambahDonasiPage() {
 
   const onSubmit = async (data: ProgramFormValues) => {
     addProgram(programFormToEntity(data));
-    router.push("/admin/donasi");
+    router.push(routes.admin.donasi.root());
   };
 
   return (
@@ -37,6 +38,7 @@ export default function TambahDonasiPage() {
       subtitle="Isi detail program di bawah ini untuk memulai penggalangan dana baru."
       form={form}
       onSubmit={onSubmit}
+      backUrl={routes.admin.donasi.root()}
     />
   );
 }

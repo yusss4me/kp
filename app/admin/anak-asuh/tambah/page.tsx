@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { AdminOrphanFormTemplate } from "@/app/ui/templates/admin-orphan-form";
 import { useYamutiStore, type OrphanFormInput } from "@/app/lib/stores/yamuti-store";
+import { routes } from "@/app/lib/constants/routes";
 
 const schema = z.object({
   name: z.string().min(2, "Nama minimal 2 karakter"),
@@ -23,11 +24,11 @@ export default function TambahOrphanPage() {
   const onSubmit = async (data: OrphanFormInput) => {
     try {
       await addOrphan(data);
-      router.push("/admin/anak-asuh");
+      router.push(routes.admin.anakAsuh.root());
     } catch (e) {
       console.error(e);
       // fallback handled in store
-      router.push("/admin/anak-asuh");
+      router.push(routes.admin.anakAsuh.root());
     }
   };
 
@@ -37,6 +38,7 @@ export default function TambahOrphanPage() {
       subtitle="Lengkapi data profil anak asuh baru."
       form={form}
       onSubmit={onSubmit}
+      backUrl={routes.admin.anakAsuh.root()}
     />
   );
 }

@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { AdminOrphanFormTemplate } from "@/app/ui/templates/admin-orphan-form";
 import { useYamutiStore, type OrphanFormInput } from "@/app/lib/stores/yamuti-store";
+import { routes } from "@/app/lib/constants/routes";
 
 const schema = z.object({
   name: z.string().min(2),
@@ -36,13 +37,13 @@ export default function EditOrphanPage() {
 
   const onSubmit = (data: OrphanFormInput) => {
     updateOrphan(id, data);
-    router.push("/admin/orphans");
+    router.push(routes.admin.anakAsuh.root());
   };
 
   const onDelete = () => {
     if (confirm(`Hapus data ${orphan.name}?`)) {
       deleteOrphan(id);
-      router.push("/admin/orphans");
+      router.push(routes.admin.anakAsuh.root());
     }
   };
 
@@ -54,6 +55,7 @@ export default function EditOrphanPage() {
       form={form}
       onSubmit={onSubmit}
       onDelete={onDelete}
+      backUrl={routes.admin.anakAsuh.root()}
     />
   );
 }

@@ -4,24 +4,17 @@ import { Navbar, NavLink } from "@/app/ui/organisms/navBar";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
 import { 
   LayoutDashboard, 
-  ShieldCheck, 
-  FilePieChart, 
-  Globe, 
-  Settings,
-  Activity
+  Compass
 } from "lucide-react";
+import { routes } from "@/app/lib/constants/routes";
 
 /**
  * OWNER_LINKS
  * Definisi navigasi khusus untuk role Owner.
  */
 const OWNER_LINKS: NavLink[] = [
-  { label: "Dashboard", href: "/owner", icon: LayoutDashboard },
-  { label: "Kelola Admin", href: "/owner/admins", icon: ShieldCheck },
-  { label: "Laporan", href: "/owner/reports", icon: FilePieChart },
-  { label: "Profil Yayasan", href: "/owner/foundation", icon: Globe },
-  { label: "Log Aktivitas", href: "/owner/donations", icon: Activity },
-  { label: "Pengaturan", href: "/owner/settings", icon: Settings },
+  { label: "Dashboard", href: routes.owner.root(), icon: LayoutDashboard },
+  { label: "Akses Cepat", href: routes.owner.quickAccess.root(), icon: Compass },
 ];
 
 /**

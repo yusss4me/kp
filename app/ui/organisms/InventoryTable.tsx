@@ -10,9 +10,10 @@ export interface InventoryTableProps {
   items: InventoryItem[];
   onDelete?: (id: number) => void;
   className?: string;
+  editUrl?: (id: number) => string;
 }
 
-export const InventoryTable = ({ items, onDelete }: InventoryTableProps) => {
+export const InventoryTable = ({ items, onDelete, editUrl }: InventoryTableProps) => {
   const statusColor = (status: InventoryItem["status"]) => {
     if (status === "Cukup") return "success" as const;
     if (status === "Menipis") return "warning" as const;
@@ -50,11 +51,13 @@ export const InventoryTable = ({ items, onDelete }: InventoryTableProps) => {
                 </TD>
                 <TD>
                   <div className="flex justify-end gap-2">
-                    <Link href={`/admin/inventaris/${item.id}/edit`}>
-                      <Btn variant="light" size="sm" className="gap-1">
-                        <Pencil size={14} /> Edit
-                      </Btn>
-                    </Link>
+                    {editUrl && (
+                      <Link href={editUrl(item.id)}>
+                        <Btn variant="light" size="sm" className="gap-1">
+                          <Pencil size={14} /> Edit
+                        </Btn>
+                      </Link>
+                    )}
                     {onDelete && (
                       <Btn
                         type="button"

@@ -6,6 +6,8 @@ import { ProgramsSection } from "@/app/ui/organisms/programs-section";
 import { Container } from "@/app/ui/atoms/container";
 import { WhyUsSection } from "@/app/ui/organisms/why-us-section";
 import { CTASection } from "@/app/ui/organisms/cta-section";
+import { LandingFoundationProfile } from "@/app/ui/organisms/landing-foundation-profile";
+import { LandingNewsSection } from "@/app/ui/organisms/landing-news";
 import { LucideIcon } from "lucide-react";
 
 export interface LandingTemplateProps {
@@ -48,7 +50,9 @@ export function LandingTemplate({
           title={title}
           desc={desc}
         />
+        <LandingFoundationProfile />
         <ImpactStats {...impact} />
+        <LandingNewsSection />
         {/* <ProgramsSection items={programs} /> */}
         <WhyUsSection
           benefit={benefits}

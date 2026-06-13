@@ -1,23 +1,21 @@
-import { DetailAnak } from "../organisms/activity-detail-anak";
 import { DetailProgram } from "../organisms/activity-detail-program";
-import { DetailBarang } from "../organisms/activity-detail-barang";
 import { DetailKunjungan } from "../organisms/activity-detail-kunjungan";
+import { DetailAnak } from "../organisms/activity-detail-anak";
 
 export interface ActivityDetailTemplateProps {
-    type: 'anak' | 'program' | 'barang' | 'kunjungan';
+    type: 'program' | 'kunjungan' | 'anak';
     id?: string;
+    url: string;
 }
 
-export const ActivityDetailTemplate = ({ type, id }: ActivityDetailTemplateProps) => {
+export const ActivityDetailTemplate = ({ type, url, id }: ActivityDetailTemplateProps) => {
     switch (type) {
-        case 'anak':
-            return <DetailAnak id={id} />;
         case 'program':
-            return <DetailProgram id={id} />;
-        case 'barang':
-            return <DetailBarang id={id} />;
+            return <DetailProgram url={url} id={id} />;
         case 'kunjungan':
-            return <DetailKunjungan id={id} />;
+            return <DetailKunjungan url={url} id={id} />;
+        case 'anak':
+            return <DetailAnak url={url} id={id} />;
         default:
             return null;
     }

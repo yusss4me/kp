@@ -20,9 +20,10 @@ interface AdminFinanceTemplateProps {
   stats: FinanceStat[];
   transactions: FinanceTransaction[];
   onDeleteTransaction?: (id: number) => void;
+  addUrl?: string;
 }
 
-export function AdminFinanceTemplate({ stats, transactions, onDeleteTransaction }: AdminFinanceTemplateProps) {
+export function AdminFinanceTemplate({ stats, transactions, onDeleteTransaction, addUrl }: AdminFinanceTemplateProps) {
   return (
     <DashboardHeader headerTitle="Manajemen Keuangan">
       <div className="space-y-10">
@@ -39,12 +40,14 @@ export function AdminFinanceTemplate({ stats, transactions, onDeleteTransaction 
               <Download size={20} />
               Ekspor PDF
             </Btn>
-            <Link href="/admin/finance/tambah">
-              <Btn variant="red" shape="circle" className="gap-2 px-8 shadow-lg shadow-red-primary/20">
-                <Plus size={20} />
-                Tambah Transaksi
-              </Btn>
-            </Link>
+            {addUrl && (
+              <Link href={addUrl}>
+                <Btn variant="red" shape="circle" className="gap-2 px-8 shadow-lg shadow-red-primary/20">
+                  <Plus size={20} />
+                  Tambah Transaksi
+                </Btn>
+              </Link>
+            )}
           </div>
         </div>
 

@@ -1,4 +1,4 @@
-import { AlertCircle, RefreshCcw } from 'lucide-react';
+import { AlertCircle, RefreshCcw, LogIn } from 'lucide-react';
 import { Btn } from '../atoms/button';
 import { Txt } from '../atoms/text';
 import { Container } from '../atoms/container';
@@ -8,6 +8,8 @@ export interface ErrorDisplayProps {
   title?: string;
   message?: string;
   onRetry?: () => void;
+  actionLabel?: string;
+  onAction?: () => void;
   fullPage?: boolean;
   className?: string;
 }
@@ -30,6 +32,8 @@ export const ErrorDisplay = ({
   title = 'Oops! Terjadi Kesalahan',
   message = 'Mohon maaf, sistem sedang mengalami kendala. Silakan coba beberapa saat lagi.',
   onRetry,
+  actionLabel,
+  onAction,
   fullPage = false,
   className,
 }: ErrorDisplayProps) => {
@@ -54,16 +58,31 @@ export const ErrorDisplay = ({
         </Txt>
       </div>
 
-      {onRetry && (
-        <Btn 
-          variant="red" 
-          size="md" 
-          onClick={onRetry}
-          className="gap-2 px-8"
-        >
-          <RefreshCcw className="w-4 h-4" />
-          Coba Lagi
-        </Btn>
+      {(onRetry || onAction) && (
+        <div className="flex flex-col sm:flex-row gap-3">
+          {onRetry && (
+            <Btn 
+              variant="red" 
+              size="md" 
+              onClick={onRetry}
+              className="gap-2 px-8"
+            >
+              <RefreshCcw className="w-4 h-4" />
+              Coba Lagi
+            </Btn>
+          )}
+          {onAction && (
+            <Btn 
+              variant="light" 
+              size="md" 
+              onClick={onAction}
+              className="gap-2 px-8"
+            >
+              <LogIn className="w-4 h-4" />
+              {actionLabel || 'Login'}
+            </Btn>
+          )}
+        </div>
       )}
     </Container>
   );

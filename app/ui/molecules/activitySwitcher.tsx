@@ -2,7 +2,7 @@
 import React from 'react';
 import { Btn } from '../atoms/button';
 
-export type ActivityType = 'anak' | 'program' | 'barang' | 'kunjungan';
+export type ActivityType = 'program' | 'kunjungan';
 
 export interface ActivitySwitcherProps {
   activeActivity: ActivityType;
@@ -12,7 +12,7 @@ export interface ActivitySwitcherProps {
 /**
  * ActivitySwitcher
  * 
- * Komponen navigasi tab untuk beralih antar jenis aktivitas (Anak, Program, Barang, Kunjungan).
+ * Komponen navigasi tab untuk beralih antar jenis aktivitas (Program, Kunjungan).
  * 
  * @param {ActivityType} activeActivity - Jenis aktivitas yang sedang aktif/terpilih
  * @param {(activity: ActivityType) => void} onActivityChange - Handler saat aktivitas diubah
@@ -25,9 +25,8 @@ export const ActivitySwitcher: React.FC<ActivitySwitcherProps> = ({
   onActivityChange 
 }) => {
   const activities: { id: ActivityType; label: string }[] = [
-    { id: 'anak', label: 'Donasi Anak' },
     { id: 'program', label: 'Donasi Program' },
-    { id: 'barang', label: 'Barang' },
+    { id: 'kunjungan', label: 'Kunjungan' },
   ];
 
   return (

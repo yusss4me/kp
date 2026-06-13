@@ -20,9 +20,11 @@ interface AdminKunjunganTemplateProps {
   stats: KunjunganStat[];
   bookings: VisitBooking[];
   onDeleteBooking?: (id: number) => void;
+  addUrl?: string;
+  editUrl?: (id: number) => string;
 }
 
-export function AdminKunjunganTemplate({ stats, bookings, onDeleteBooking }: AdminKunjunganTemplateProps) {
+export function AdminKunjunganTemplate({ stats, bookings, onDeleteBooking, addUrl, editUrl }: AdminKunjunganTemplateProps) {
   return (
     <DashboardHeader headerTitle="Manajemen Kunjungan">
       <div className="space-y-10">
@@ -34,12 +36,14 @@ export function AdminKunjunganTemplate({ stats, bookings, onDeleteBooking }: Adm
               Atur dan pantau jadwal kunjungan donatur atau tamu institusi secara terorganisir.
             </Txt>
           </div>
-          <Link href="/admin/kunjungan/tambah">
-            <Btn variant="red" shape="circle" className="gap-2 px-8 shadow-lg shadow-red-primary/20">
-              <Plus size={20} />
-              Booking Baru
-            </Btn>
-          </Link>
+          {addUrl && (
+            <Link href={addUrl}>
+              <Btn variant="red" shape="circle" className="gap-2 px-8 shadow-lg shadow-red-primary/20">
+                <Plus size={20} />
+                Booking Baru
+              </Btn>
+            </Link>
+          )}
         </div>
 
         {/* Booking Stats */}
@@ -57,7 +61,7 @@ export function AdminKunjunganTemplate({ stats, bookings, onDeleteBooking }: Adm
         </div>
 
         {/* Booking List Section */}
-        <BookingList bookings={bookings} onDelete={onDeleteBooking} />
+        <BookingList bookings={bookings} onDelete={onDeleteBooking} editUrl={editUrl} />
       </div>
     </DashboardHeader>
   );

@@ -5,11 +5,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { ChevronLeft } from "lucide-react";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 import { Container } from "../atoms/container";
 import { Txt } from "../atoms/text";
 import { Input } from "../atoms/input";
 import { Btn } from "../atoms/button";
 import { createKunjungan } from "@/app/lib/api/services/kunjungan";
+import { InteractiveCalendar } from "./interactive-calendar";
 
 const visitSchema = z.object({
   fullName: z.string().min(3, "Nama lengkap minimal 3 karakter"),
@@ -46,13 +49,19 @@ export interface KunjunganClientTemplateProps {
  * @returns {JSX.Element} Komponen KunjunganClientTemplate
  */
 export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<VisitFormValues>({
     resolver: zodResolver(visitSchema),
   });
+
+  const visitDate = watch("visitDate");
+  const visitTime = watch("visitTime");
 
   const onSubmit = async (data: VisitFormValues) => {
     try {
@@ -63,8 +72,16 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
         slot_waktu: `${data.visitDate}T${data.visitTime}:00Z`,
       };
       // API: POST /kunjungan
-      await createKunjungan(payload);
-      alert("Pengajuan kunjungan berhasil dikirim!");
+      const response = await createKunjungan(payload);
+      
+      // Redirect to the detail page (which acts as pending initially)
+      if (response && response.data && response.data.id) {
+        router.push(`/kunjungan/${response.data.id}`);
+      } else {
+        // Fallback if no ID is returned
+        alert("Pengajuan kunjungan berhasil dikirim!");
+        router.push("/");
+      }
     } catch (error) {
       console.error("Visit request failed", error);
       alert("Gagal mengirim pengajuan, silakan coba lagi.");
@@ -116,22 +133,23 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
                   error={errors.purpose?.message}
                 />
                 
-                <div className="grid grid-cols-2 gap-4">
-                  <Input 
-                    label="Tanggal Kunjungan" 
-                    type="date" 
-                    className="focus:ring-2 focus:ring-red-primary/10 transition-all"
-                    {...register("visitDate")}
-                    error={errors.visitDate?.message}
+                <div className="flex flex-col gap-2">
+                  <Txt variant="body" weight="bold" className="text-gray-700">Pilih Jadwal Kunjungan</Txt>
+                  <InteractiveCalendar 
+                    selectedDate={visitDate ? new Date(visitDate) : null}
+                    onSelectDate={(date) => {
+                      setValue("visitDate", format(date, "yyyy-MM-dd"), { shouldValidate: true });
+                    }}
+                    selectedTime={visitTime || null}
+                    onSelectTime={(time) => {
+                      setValue("visitTime", time, { shouldValidate: true });
+                    }}
                   />
-                  <Input 
-                    label="Waktu" 
-                    type="time"
-                    step="3600"
-                    className="focus:ring-2 focus:ring-red-primary/10 transition-all"
-                    {...register("visitTime")}
-                    error={errors.visitTime?.message}
-                  />
+                  {(errors.visitDate || errors.visitTime) && (
+                    <Txt variant="caption" className="text-red-500 mt-1">
+                      {errors.visitDate?.message || errors.visitTime?.message}
+                    </Txt>
+                  )}
                 </div>
                 
                 <Input 

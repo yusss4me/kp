@@ -40,6 +40,8 @@ interface AdminProgramTemplateExtendedProps extends AdminProgramTemplateProps {
     onVerifyDonation?: (id: string) => void;
     onRejectDonation?: (id: string) => void;
     onDeleteProgram?: (id: string) => void;
+    addUrl?: string;
+    editUrl?: (id: string) => string;
 }
 
 export const AdminProgramTemplate = ({
@@ -49,6 +51,8 @@ export const AdminProgramTemplate = ({
     onVerifyDonation,
     onRejectDonation,
     onDeleteProgram,
+    addUrl,
+    editUrl,
 }: AdminProgramTemplateExtendedProps) => {
     return (
         <DashboardHeader headerTitle="Manajemen Donasi">
@@ -68,16 +72,18 @@ export const AdminProgramTemplate = ({
                       setia.
                     </Txt>
                   </div>
-                  <Lnk href="/admin/donasi/tambah-donasi">
-                    <Btn
-                      variant="red"
-                      shape="circle"
-                      className="gap-2 px-8 shadow-lg shadow-red-primary/20"
-                    >
-                      <Plus size={20} />
-                      Program Baru
-                    </Btn>
-                  </Lnk>
+                  {addUrl && (
+                    <Lnk href={addUrl}>
+                      <Btn
+                        variant="red"
+                        shape="circle"
+                        className="gap-2 px-8 shadow-lg shadow-red-primary/20"
+                      >
+                        <Plus size={20} />
+                        Program Baru
+                      </Btn>
+                    </Lnk>
+                  )}
                 </div>
         
                 {/* Stats */}
@@ -119,7 +125,7 @@ export const AdminProgramTemplate = ({
                 />
         
                 {/* Programs Section */}
-                <ProgramSectionAdmin programs={programs} onDeleteProgram={onDeleteProgram} />
+                <ProgramSectionAdmin programs={programs} onDeleteProgram={onDeleteProgram} editUrl={editUrl} />
         
                 {/* Donors List Table */}
                 <ProgramTableAdmin donatur={donatur} />

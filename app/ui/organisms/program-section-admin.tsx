@@ -14,9 +14,10 @@ interface ProgramSectionAdminProps {
         progress: number;
     }[];
     onDeleteProgram?: (id: string) => void;
+    editUrl?: (id: string) => string;
 }
 
-export const ProgramSectionAdmin = ({ programs, onDeleteProgram }: ProgramSectionAdminProps) => {
+export const ProgramSectionAdmin = ({ programs, onDeleteProgram, editUrl }: ProgramSectionAdminProps) => {
     return (
         <section className="space-y-6">
                   <div className="flex items-center justify-between px-2">
@@ -32,7 +33,7 @@ export const ProgramSectionAdmin = ({ programs, onDeleteProgram }: ProgramSectio
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {programs.map((program) => (
-                      <ProgramCard key={program.id} program={program} onDelete={onDeleteProgram} />
+                      <ProgramCard key={program.id} program={program} onDelete={onDeleteProgram} editUrl={editUrl} />
                     ))}
                   </div>
                 </section>

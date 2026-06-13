@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
+import { routes } from "@/app/lib/constants/routes";
 
 export default function Page() {
-  redirect("/home/aktivitas");
+  redirect(routes.user.aktivitas.root());
 }

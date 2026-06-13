@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { AdminOrphansTemplate } from "@/app/ui/templates/admin-orphans";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
+import { routes } from "@/app/lib/constants/routes";
 
 export default function Page() {
   const orphans = useYamutiStore((s) => s.orphans);
@@ -14,5 +15,12 @@ export default function Page() {
     fetchOrphans();
   }, [fetchOrphans]);
 
-  return <AdminOrphansTemplate orphans={orphans} onDelete={deleteOrphan} />;
+  return (
+    <AdminOrphansTemplate 
+      orphans={orphans} 
+      onDelete={deleteOrphan} 
+      addUrl={routes.admin.anakAsuh.add()}
+      editUrl={(id) => routes.admin.anakAsuh.edit(id)}
+    />
+  );
 }

@@ -11,9 +11,10 @@ export interface BookingListProps {
   bookings: VisitBooking[];
   onDelete?: (id: number) => void;
   className?: string;
+  editUrl?: (id: number) => string;
 }
 
-export const BookingList = ({ bookings, onDelete }: BookingListProps) => {
+export const BookingList = ({ bookings, onDelete, editUrl }: BookingListProps) => {
   return (
     <Container className="space-y-6 flex flex-col">
       <Txt variant="h4" weight="bold" className="px-2">
@@ -31,11 +32,13 @@ export const BookingList = ({ bookings, onDelete }: BookingListProps) => {
               status={booking.status}
             />
             <div className="flex gap-2 px-2">
-              <Link href={`/admin/kunjungan/${booking.id}/edit`} className="flex-1">
-                <Btn variant="light" size="sm" shape="rounded" className="w-full gap-1 text-xs font-bold">
-                  <Pencil size={14} /> Edit
-                </Btn>
-              </Link>
+              {editUrl && (
+                <Link href={editUrl(booking.id)} className="flex-1">
+                  <Btn variant="light" size="sm" shape="rounded" className="w-full gap-1 text-xs font-bold">
+                    <Pencil size={14} /> Edit
+                  </Btn>
+                </Link>
+              )}
               {onDelete && (
                 <Btn
                   type="button"

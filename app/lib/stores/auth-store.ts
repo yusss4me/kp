@@ -57,25 +57,22 @@ export const useAuthStore = create<AuthState>()(
 
       loginApi: async (email, password) => {
         try {
-          const { apiClient } = await import("@/app/lib/api/client");
-          const res = await apiClient.post("/login", { email, password });
+          const { loginAdmin } = await import("@/app/lib/api/services/auth");
+          const data = await loginAdmin({ email, password });
           
-          if (res.status === 200 || res.status === 201) {
-            const token = res.data?.token || "dummy_token_if_not_provided";
-            const roleFromApi = res.data?.role || res.data?.data?.role;
-            let role = roleFromApi;
-            
-            // Fallback for demo/testing if API doesn't return role
-            if (!role) {
-              role = email.includes("owner") ? "owner" : "admin";
-            }
-            
-            const name = res.data?.name || res.data?.data?.name || (role === "owner" ? "Owner" : "Administrator");
-
-            get().setAuth(token, { email, role, name });
-            return { success: true };
+          const token = data?.token || "dummy_token_if_not_provided";
+          const roleFromApi = data?.role || data?.data?.role;
+          let role: UserRole = roleFromApi as UserRole;
+          
+          // Fallback for demo/testing if API doesn't return role
+          if (!role) {
+            role = email.includes("owner") ? "owner" : "admin";
           }
-          return { success: false, error: "Gagal login. Email atau password salah." };
+          
+          const name = data?.name || data?.data?.name || (role === "owner" ? "Owner" : "Administrator");
+
+          get().setAuth(token, { email, role, name });
+          return { success: true };
         } catch (error: any) {
           console.error("Login Error:", error);
           const message = error.response?.data?.message || "Terjadi kesalahan pada server.";

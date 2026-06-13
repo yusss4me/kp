@@ -17,6 +17,7 @@ interface AdminOrphanFormTemplateProps {
   form: UseFormReturn<OrphanFormInput>;
   onSubmit: (data: OrphanFormInput) => void;
   onDelete?: () => void;
+  backUrl: string;
 }
 
 export function AdminOrphanFormTemplate({
@@ -26,6 +27,7 @@ export function AdminOrphanFormTemplate({
   form,
   onSubmit,
   onDelete,
+  backUrl,
 }: AdminOrphanFormTemplateProps) {
   const { register, formState: { errors, isSubmitting } } = form;
 
@@ -33,7 +35,7 @@ export function AdminOrphanFormTemplate({
     <DashboardHeader headerTitle={isEdit ? `Edit: ${title}` : "Anak Asuh Baru"}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-2xl mx-auto space-y-8 pb-20">
         <div className="flex justify-between items-center">
-          <Link href="/admin/orphans" className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary transition-colors group">
+          <Link href={backUrl} className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary transition-colors group">
             <div className="p-2 rounded-xl bg-gray-100 group-hover:bg-red-50 transition-colors">
               <ChevronLeft size={20} />
             </div>

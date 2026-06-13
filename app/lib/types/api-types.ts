@@ -1,17 +1,22 @@
 // Tipe data balasan API
 export interface ApiOrphanResponse {
-  id: string;
-  name: string;
-  gender: 'Laki-laki' | 'Perempuan';
-  birth_date: string;
-  birth_place: string;
-  education_level: string;
-  status: string;
-  guardian_name: string;
-  address: string;
+  id: string | number;
+  // Backend actual fields
+  nama?: string;
+  tanggal_lahir?: string;
+  status: "Baru" | "Aktif" | "Alumni";
+  kategori_bayi?: boolean;
+  // Alternative/extended fields (if backend is updated)
+  name?: string;
+  gender?: string;
+  birth_date?: string;
+  birth_place?: string;
+  education_level?: string;
+  guardian_name?: string;
+  address?: string;
   photo?: string;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface ApiLoginResponse {
@@ -31,4 +36,22 @@ export interface ProgramFormInput {
   category: string;
   end_date: string;
   thumbnail_url?: string;
+}
+
+export interface ApiGaleriPayload {
+  judul: string;
+  deskripsi: string;
+  file: File;
+}
+
+export interface ApiMutasiBarangPayload {
+  inventaris_id: string;
+  tipe: "masuk" | "keluar";
+  jumlah: number;
+  keterangan: string;
+}
+
+export interface ApiLoginPayload {
+  email: string;
+  password: string;
 }

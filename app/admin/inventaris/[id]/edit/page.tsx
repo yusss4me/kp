@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { AdminInventoryFormTemplate, InventoryFormInput } from "@/app/ui/templates/admin-inventory-form";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
+import { routes } from "@/app/lib/constants/routes";
 
 const schema = z.object({
   name: z.string().min(2),
@@ -33,13 +34,13 @@ export default function EditInventoryPage() {
 
   const onSubmit = (data: InventoryFormInput) => {
     updateInventory(id, data);
-    router.push("/admin/inventory");
+    router.push(routes.admin.inventaris.root());
   };
 
   const onDelete = () => {
     if (confirm(`Hapus ${item.name}?`)) {
       deleteInventory(id);
-      router.push("/admin/inventory");
+      router.push(routes.admin.inventaris.root());
     }
   };
 
@@ -51,6 +52,7 @@ export default function EditInventoryPage() {
       form={form}
       onSubmit={onSubmit}
       onDelete={onDelete}
+      backUrl={routes.admin.inventaris.root()}
     />
   );
 }

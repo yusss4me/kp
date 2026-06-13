@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { fetchAnakAsuh } from "@/app/lib/api/services/anak-asuh";
+import { fetchAnakAsuh, createAnakAsuh } from "@/app/lib/api/services/anak-asuh";
 import { createDonasi } from "@/app/lib/api/services/donasi";
 import { approveKunjungan, createKunjungan } from "@/app/lib/api/services/kunjungan";
 import { fetchPrograms } from "@/app/lib/api/services/programs";
-import { apiClient } from "@/app/lib/api/client";
+import { catatMutasiBarang } from "@/app/lib/api/services/logistik";
 import type {
   ApprovalRequest,
   DonaturSummary,
@@ -17,6 +17,8 @@ import type {
   PendingDonation,
   Program,
   VisitBooking,
+  FoundationProfile,
+  News,
 } from "@/app/lib/types/entities";
 import {
   calcProgress,
@@ -25,6 +27,20 @@ import {
   generateNumericId,
   programToListItem,
 } from "@/app/lib/utils/crud-helpers";
+
+/** Helper: check if error is an auth failure (401/403) */
+function isAuthError(error: any): boolean {
+  const status = error?.response?.status;
+  return status === 401 || status === 403;
+}
+
+/** Helper: extract user-friendly error message, with 401 awareness */
+function getErrorMessage(error: any, fallback: string): string {
+  if (isAuthError(error)) {
+    return "Sesi login Anda telah berakhir. Silakan login kembali.";
+  }
+  return error?.message || fallback;
+}
 
 interface YamutiStore {
   programs: Program[];
@@ -36,6 +52,10 @@ interface YamutiStore {
   bookings: VisitBooking[];
   admins: OwnerAdmin[];
   approvalRequests: ApprovalRequest[];
+  foundationProfile: FoundationProfile | null;
+  news: News[];
+  isLoading: boolean;
+  error: string | null;
 
   fetchPrograms: () => Promise<void>;
   fetchOrphans: () => Promise<void>;
@@ -74,6 +94,13 @@ interface YamutiStore {
 
   approveRequest: (id: string) => Promise<void>;
   rejectRequest: (id: string) => void;
+
+  updateFoundationProfile: (data: FoundationProfile) => void;
+  
+  getNewsById: (id: string) => News | undefined;
+  addNews: (data: Omit<News, "id">) => string;
+  updateNews: (id: string, data: Partial<News>) => void;
+  deleteNews: (id: string) => void;
 }
 
 function buildProgram(
@@ -103,26 +130,38 @@ export const useYamutiStore = create<YamutiStore>()(
       bookings: [],
       admins: [],
       approvalRequests: [],
+      foundationProfile: null,
+      news: [],
+      isLoading: false,
+      error: null,
 
       /** GET /programs — route belum tersedia, mengembalikan array kosong */
       fetchPrograms: async () => {
+        set({ isLoading: true, error: null });
         try {
           const programs = await fetchPrograms();
           if (programs.length > 0) {
             set({ programs });
           }
-        } catch (error) {
+        } catch (error: any) {
           console.error("Gagal mengambil data program dari API:", error);
+          set({ error: getErrorMessage(error, "Gagal mengambil data program") });
+        } finally {
+          set({ isLoading: false });
         }
       },
 
       /** GET /anak-asuh */
       fetchOrphans: async () => {
+        set({ isLoading: true, error: null });
         try {
           const orphans = await fetchAnakAsuh();
           set({ orphans });
-        } catch (error) {
+        } catch (error: any) {
           console.error("Gagal mengambil data anak asuh dari API:", error);
+          set({ error: getErrorMessage(error, "Gagal mengambil data anak asuh") });
+        } finally {
+          set({ isLoading: false });
         }
       },
 
@@ -170,8 +209,9 @@ export const useYamutiStore = create<YamutiStore>()(
             gross_amount: cleanAmount,
             payment_type: donation.tipe.toLowerCase(),
           });
-        } catch (error) {
+        } catch (error: any) {
           console.error("Gagal menambah donasi via API:", error);
+          set({ error: getErrorMessage(error, "Gagal menambah donasi") });
         }
 
         set((s) => ({
@@ -189,15 +229,16 @@ export const useYamutiStore = create<YamutiStore>()(
         const id = generateNumericId(get().orphans);
 
         try {
-          await apiClient.post("/anak-asuh", {
+          await createAnakAsuh({
             nama: data.name,
-            tanggal_lahir: "2015-01-01",
+            tanggal_lahir: data.birthDate,
             status: data.status,
-            kategori_bayi: data.age <= 2,
+            kategori_bayi: data.kategori_bayi,
           });
           set((s) => ({ orphans: [{ ...data, id }, ...s.orphans] }));
-        } catch (error) {
+        } catch (error: any) {
           console.error("Gagal menambah anak asuh via API:", error);
+          set({ error: getErrorMessage(error, "Gagal menambah anak asuh") });
           set((s) => ({ orphans: [{ ...data, id }, ...s.orphans] }));
         }
 
@@ -221,15 +262,16 @@ export const useYamutiStore = create<YamutiStore>()(
         const id = generateNumericId(get().inventory);
 
         try {
-          await apiClient.post("/mutasi-barang", {
+          await catatMutasiBarang({
             inventaris_id: id.toString(),
             tipe: "masuk",
             jumlah: parseInt(data.stock) || 1,
             keterangan: "Penambahan inventory",
           });
           set((s) => ({ inventory: [...s.inventory, { ...data, id }] }));
-        } catch (error) {
+        } catch (error: any) {
           console.error("Gagal menambah inventory via API:", error);
+          set({ error: getErrorMessage(error, "Gagal menambah inventory") });
           set((s) => ({ inventory: [...s.inventory, { ...data, id }] }));
         }
 
@@ -275,8 +317,9 @@ export const useYamutiStore = create<YamutiStore>()(
             slot_waktu: new Date(data.date).toISOString(),
           });
           set((s) => ({ bookings: [...s.bookings, { ...data, id }] }));
-        } catch (error) {
+        } catch (error: any) {
           console.error("Gagal menambah kunjungan via API:", error);
+          set({ error: getErrorMessage(error, "Gagal menambah kunjungan") });
           set((s) => ({ bookings: [...s.bookings, { ...data, id }] }));
         }
 
@@ -315,8 +358,9 @@ export const useYamutiStore = create<YamutiStore>()(
       approveRequest: async (id) => {
         try {
           await approveKunjungan(id);
-        } catch (error) {
+        } catch (error: any) {
           console.error("Gagal approve kunjungan via API:", error);
+          set({ error: getErrorMessage(error, "Gagal menyetujui kunjungan") });
         }
         set((s) => ({
           approvalRequests: s.approvalRequests.filter((r) => r.id !== id),
@@ -327,6 +371,28 @@ export const useYamutiStore = create<YamutiStore>()(
         set((s) => ({
           approvalRequests: s.approvalRequests.filter((r) => r.id !== id),
         }));
+      },
+
+      updateFoundationProfile: (data) => {
+        set({ foundationProfile: data });
+      },
+
+      getNewsById: (id) => get().news.find((n) => n.id === id),
+
+      addNews: (data) => {
+        const id = generateId("news-");
+        set((s) => ({ news: [{ ...data, id }, ...s.news] }));
+        return id;
+      },
+
+      updateNews: (id, data) => {
+        set((s) => ({
+          news: s.news.map((n) => (n.id === id ? { ...n, ...data } : n)),
+        }));
+      },
+
+      deleteNews: (id) => {
+        set((s) => ({ news: s.news.filter((n) => n.id !== id) }));
       },
     }),
     { name: "yamuti-crud" }

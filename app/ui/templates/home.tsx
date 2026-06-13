@@ -7,8 +7,7 @@ import { StatCard } from "../molecules/StatCard";
 import Link from "next/link";
 import { Btn } from "../atoms/button";
 import { DashboardHeader } from "../organisms/DashboardHeader";
-
-
+import { routes } from "@/app/lib/constants/routes";
 export interface HomeProps {
   className?: string;
   user: {
@@ -81,17 +80,17 @@ export default function Home({user, discover, headerTitle = "Beranda"}: HomeProp
 
                 {/* Quick Actions */}
                 <div className="flex flex-col sm:flex-row gap-3">
-                    <Link href="/home/aktivitas" className="flex-1">
+                    <Link href={routes.user.aktivitas.root()} className="flex-1">
                         <Btn variant="red" size="sm" shape="rounded" className="w-full gap-2 text-xs font-bold">
                             <Activity size={14} /> Aktivitas Donasi
                         </Btn>
                     </Link>
-                    <Link href="/home/aktivitas/kunjungan" className="flex-1">
+                    <Link href={routes.user.aktivitas.kunjungan.root()} className="flex-1">
                         <Btn variant="light" size="sm" shape="rounded" className="w-full gap-2 text-xs font-bold text-red-primary border border-red-primary/20">
                             <Pencil size={14} /> Ajukan Kunjungan
                         </Btn>
                     </Link>
-                    <Link href="/home/berita" className="flex-1">
+                    <Link href={`/home/berita`} className="flex-1">
                         <Btn variant="light" size="sm" shape="rounded" className="w-full gap-2 text-xs font-bold text-red-primary border border-red-primary/20">
                             <Newspaper size={14} /> Kabar Yamuti
                         </Btn>

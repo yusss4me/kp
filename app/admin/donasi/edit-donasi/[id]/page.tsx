@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { AdminProgramFormTemplate } from "@/app/ui/templates/admin-program-form";
 import { programFormToEntity, useYamutiStore } from "@/app/lib/stores/yamuti-store";
+import { routes } from "@/app/lib/constants/routes";
 
 const programSchema = z.object({
   title: z.string().min(10, "Judul minimal 10 karakter"),
@@ -46,13 +47,13 @@ export default function EditDonasiPage() {
 
   const onSubmit = async (data: ProgramFormValues) => {
     updateProgram(id, programFormToEntity(data, { collectedAmount: program.collectedAmount, image: program.image }));
-    router.push("/admin/donations");
+    router.push(routes.admin.donasi.root());
   };
 
   const onDelete = () => {
     if (confirm("Hapus program ini?")) {
       deleteProgram(id);
-      router.push("/admin/donations");
+      router.push(routes.admin.donasi.root());
     }
   };
 
@@ -65,6 +66,7 @@ export default function EditDonasiPage() {
       onSubmit={onSubmit}
       onDelete={onDelete}
       programImage={program.image}
+      backUrl={routes.admin.donasi.root()}
     />
   );
 }

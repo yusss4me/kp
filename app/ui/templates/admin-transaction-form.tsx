@@ -19,15 +19,16 @@ export type TransactionFormInput = {
 interface AdminTransactionFormTemplateProps {
   form: UseFormReturn<TransactionFormInput>;
   onSubmit: (data: TransactionFormInput) => void;
+  backUrl: string;
 }
 
-export function AdminTransactionFormTemplate({ form, onSubmit }: AdminTransactionFormTemplateProps) {
+export function AdminTransactionFormTemplate({ form, onSubmit, backUrl }: AdminTransactionFormTemplateProps) {
   const { register, formState: { errors, isSubmitting } } = form;
 
   return (
     <DashboardHeader headerTitle="Transaksi Baru">
       <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-2xl mx-auto space-y-8 pb-20">
-        <Link href="/admin/finance" className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary group">
+        <Link href={backUrl} className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary group">
           <div className="p-2 rounded-xl bg-gray-100 group-hover:bg-red-50"><ChevronLeft size={20} /></div>
           <Txt weight="bold">Kembali ke Keuangan</Txt>
         </Link>
