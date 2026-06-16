@@ -1,8 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import { DashboardHeader } from '@/app/ui/organisms/DashboardHeader';
-import type { FinanceTransaction } from '@/app/lib/types/entities';
-import { StatCard } from '@/app/ui/molecules/StatCard';
+import { DashboardHeader } from '@/app/ui/organisms/dashboard-header';
+import { DistributionSummary } from '@/app/ui/organisms/DistributionSummary';
+import type { FinanceTransaction, FundDistribution } from '@/app/lib/types/entities';
+import { StatCard } from '@/app/ui/molecules/stat-card';
 import { TransactionTable } from '@/app/ui/organisms/TransactionTable';
 import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';
@@ -19,11 +20,12 @@ export interface FinanceStat {
 interface AdminFinanceTemplateProps {
   stats: FinanceStat[];
   transactions: FinanceTransaction[];
+  distributions?: FundDistribution[];
   onDeleteTransaction?: (id: number) => void;
   addUrl?: string;
 }
 
-export function AdminFinanceTemplate({ stats, transactions, onDeleteTransaction, addUrl }: AdminFinanceTemplateProps) {
+export function AdminFinanceTemplate({ stats, transactions, distributions = [], onDeleteTransaction, addUrl }: AdminFinanceTemplateProps) {
   return (
     <DashboardHeader headerTitle="Manajemen Keuangan">
       <div className="space-y-10">
@@ -52,7 +54,7 @@ export function AdminFinanceTemplate({ stats, transactions, onDeleteTransaction,
         </div>
 
         {/* Financial Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
           {stats.map((stat, index) => (
             <StatCard
               key={index}
@@ -64,6 +66,9 @@ export function AdminFinanceTemplate({ stats, transactions, onDeleteTransaction,
             />
           ))}
         </div>
+
+        {/* Distribution Summary */}
+        <DistributionSummary distributions={distributions} />
 
         {/* Transaction History */}
         <TransactionTable transactions={transactions} onDelete={onDeleteTransaction} />

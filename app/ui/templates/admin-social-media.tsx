@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from 'react';
-import { DashboardHeader } from '@/app/ui/organisms/DashboardHeader';
+import { DashboardHeader } from '@/app/ui/organisms/dashboard-header';
 import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';
-import { StatCard } from '@/app/ui/molecules/StatCard';
+import { StatCard } from '@/app/ui/molecules/stat-card';
 import { Share2, Plus, Image as ImageIcon, Send, Globe, MessageCircle, LucideIcon } from 'lucide-react';
 import { apiClient } from '@/app/lib/api/client';
 

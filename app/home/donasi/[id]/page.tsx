@@ -4,6 +4,7 @@ import { DonationDetailTemplate } from "@/app/ui/templates/donationDetail";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
+import { routes } from "@/app/lib/constants/routes";
 
 const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop";
@@ -19,6 +20,8 @@ export default function Page() {
     fetchPrograms();
   }, [fetchPrograms]);
 
+  const donateFormUrl = routes.user.aktivitas.program.donation(id);
+
   if (!program) {
     return (
       <DonationDetailTemplate
@@ -32,6 +35,7 @@ export default function Page() {
         daysRemaining={0}
         description="Data program belum tersedia. Pastikan backend GET /programs sudah aktif."
         gallery={[]}
+        donateFormUrl={donateFormUrl}
       />
     );
   }
@@ -48,6 +52,7 @@ export default function Page() {
       daysRemaining={0}
       description={program.description}
       gallery={program.image ? [program.image] : []}
+      donateFormUrl={donateFormUrl}
     />
   );
 }

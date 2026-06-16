@@ -1,7 +1,7 @@
 import React from 'react';
-import { DashboardHeader } from '@/app/ui/organisms/DashboardHeader';
+import { DashboardHeader } from '@/app/ui/organisms/dashboard-header';
 import { BroadcastEditor } from '@/app/ui/organisms/BroadcastEditor';
-import { StatCard } from '@/app/ui/molecules/StatCard';
+import { StatCard } from '@/app/ui/molecules/stat-card';
 import { Txt } from '@/app/ui/atoms/text';
 import { MessageSquare, CheckCircle, Clock } from 'lucide-react';
 

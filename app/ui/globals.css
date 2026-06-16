@@ -35,15 +35,8 @@
 }
 
 :root {
-  --background: var(--color-lightdark-tertiary);
-  --foreground: var(--color-lightdark-primary);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: var(--color-lightdark-primary);
-    --foreground: var(--color-lightdark-tertiary);
-  }
+  --background: var(--color-lightdark-primary);
+  --foreground: var(--color-lightdark-tertiary);
 }
 
 body {

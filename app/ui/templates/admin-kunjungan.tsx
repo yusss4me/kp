@@ -1,9 +1,9 @@
 import React from 'react';
 import Link from 'next/link';
-import { DashboardHeader } from '@/app/ui/organisms/DashboardHeader';
+import { DashboardHeader } from '@/app/ui/organisms/dashboard-header';
 import type { VisitBooking } from '@/app/lib/types/entities';
 import { BookingList } from '@/app/ui/organisms/BookingList';
-import { StatCard } from '@/app/ui/molecules/StatCard';
+import { StatCard } from '@/app/ui/molecules/stat-card';
 import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';
 import { Plus } from 'lucide-react';

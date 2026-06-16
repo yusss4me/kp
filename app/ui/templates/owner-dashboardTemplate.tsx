@@ -1,7 +1,7 @@
-import { DashboardHeader } from '../organisms/DashboardHeader';
+import { DashboardHeader } from '../organisms/dashboard-header';
 import { OwnerAdminPerform } from '@/app/ui/organisms/owner-adminPerform';
 import { OwnerReport } from '@/app/ui/organisms/owner-report';
-import { StatCard } from '@/app/ui/molecules/StatCard';
+import { StatCard } from '@/app/ui/molecules/stat-card';
 import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';
 import {

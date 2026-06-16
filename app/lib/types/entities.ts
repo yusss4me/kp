@@ -57,6 +57,7 @@ export interface FinanceTransaction {
 export interface VisitBooking {
   id: number;
   visitor: string;
+  phone: string;
   date: string;
   time: string;
   type: string;
@@ -112,6 +113,16 @@ export interface GalleryPhoto {
   judul: string;
   deskripsi: string;
   file: File;
+}
+
+export interface FundDistribution {
+  id: number;
+  transactionId: number;
+  totalAmount: number;
+  branchAmount: number;
+  centralAmount: number;
+  date: string;
+  status: "Tercatat" | "Terkirim";
 }
 
 export interface MutasiBarang {

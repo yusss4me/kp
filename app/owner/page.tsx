@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { OwnerDashboard } from "@/app/ui/templates/owner-dashboardTemplate";
-import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
+import { useAdminStore } from "@/app/lib/stores/admin-store";
+import { useInventoryStore } from "@/app/lib/stores/inventory-store";
+import { useOrphans } from "@/app/lib/hooks/useOrphans";
+import { usePrograms } from "@/app/lib/hooks/usePrograms";
 import { FilePieChart } from "lucide-react";
 import { Skeleton } from "@/app/ui/atoms/skeleton";
 import { ErrorDisplay } from "@/app/ui/molecules/error-display";
@@ -12,25 +14,13 @@ import { ErrorDisplay } from "@/app/ui/molecules/error-display";
 export default function Page() {
   const router = useRouter();
   const authUser = useAuthStore((s) => s.user);
-  const orphans = useYamutiStore((s) => s.orphans);
-  const admins = useYamutiStore((s) => s.admins);
-  const programs = useYamutiStore((s) => s.programs);
-  const inventory = useYamutiStore((s) => s.inventory);
-  const pendingDonations = useYamutiStore((s) => s.pendingDonations);
-  const isLoading = useYamutiStore((s) => s.isLoading);
-  const error = useYamutiStore((s) => s.error);
-  const fetchOrphans = useYamutiStore((s) => s.fetchOrphans);
+  const admins = useAdminStore((s) => s.admins);
+  const inventory = useInventoryStore((s) => s.inventory);
+  const { data: orphans = [], isLoading: orphansLoading, error: orphansError, refetch: refetchOrphans } = useOrphans();
+  const { data: programs = [], isLoading: programsLoading } = usePrograms();
 
-  // API: GET /anak-asuh
-  useEffect(() => {
-    fetchOrphans();
-  }, [fetchOrphans]);
-
-  const donasi = pendingDonations.map((d) => ({
-    id: d.id,
-    jumlah: parseInt(d.jumlah.replace(/[^0-9]/g, "")) || 0,
-    tgl_donasi: new Date(),
-  }));
+  const isLoading = orphansLoading || programsLoading;
+  const error = orphansError;
 
   const adminData = admins.map((a) => ({
     id: a.id,
@@ -57,14 +47,13 @@ export default function Page() {
   }
 
   if (error) {
-    const isSessionExpired = error.includes("Sesi login");
+    const errorMsg = error instanceof Error ? error.message : "Gagal memuat data";
+    const isSessionExpired = errorMsg.includes("Sesi login");
     return (
       <ErrorDisplay 
         title={isSessionExpired ? "Sesi Berakhir" : "Gagal Memuat Dashboard Owner"}
-        message={error}
-        onRetry={() => {
-          fetchOrphans();
-        }}
+        message={errorMsg}
+        onRetry={() => refetchOrphans()}
         actionLabel="Login Kembali"
         onAction={isSessionExpired ? () => router.push('/auth') : undefined}
         fullPage
@@ -79,7 +68,7 @@ export default function Page() {
         role: "Pemilik Yayasan",
       }}
       headerTitle="Dashboard Eksekutif"
-      donasi={donasi}
+      donasi={[]}
       adminData={adminData}
       reportData={[
         { id: "1", title: "Laporan Keuangan", date: new Date().toISOString().slice(0, 10), type: "Bulanan", icon: FilePieChart },

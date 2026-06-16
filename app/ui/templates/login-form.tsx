@@ -1,13 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useTranslations } from "next-intl";
+import { useState, useEffect } from "react";
 import { Container } from "../atoms/container";
 import { Txt } from "../atoms/text";
 import { Input } from "../atoms/input";
 import { Btn } from "../atoms/button";
+import { Checkbox } from "../atoms/checkbox";
 import { PasswordField } from "../molecules/password-field";
 
 import { apiClient } from "@/app/lib/api/client";
@@ -18,12 +21,15 @@ import { routes } from "@/app/lib/constants/routes";
 const loginSchema = z.object({
   email: z.string().email("Format email tidak valid"),
   password: z.string().min(6, "Kata sandi minimal 6 karakter"),
+  rememberMe: z.boolean().optional(),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export interface LoginFormProps {
   className?: string;
+  /** Which auth flow this form serves: admin/owner (no register) or donatur (with register) */
+  variant?: "admin" | "donatur";
 }
 
 /**
@@ -37,20 +43,61 @@ export interface LoginFormProps {
  * @param {LoginFormProps} props - Properti komponen
  * @returns {JSX.Element} Komponen LoginForm
  */
-export default function LoginForm({}: LoginFormProps) {
+export default function LoginForm({ variant = "admin" }: LoginFormProps) {
+  const isDonatur = variant === "donatur";
+  const t = useTranslations(isDonatur ? "auth.donaturLogin" : "auth.login");
   const router = useRouter();
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
-    setError
+    setError,
+    setValue,
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      rememberMe: true,
+    },
   });
 
+  // Load saved email if remember me was used previously
+  const [savedEmail] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("yamuti-saved-email") || "";
+    }
+    return "";
+  });
+
+  useEffect(() => {
+    if (savedEmail) {
+      setValue("email", savedEmail);
+      setValue("rememberMe", true);
+    }
+  }, [savedEmail, setValue]);
+
   const onSubmit = async (data: LoginFormValues) => {
-    const { success, error } = await useAuthStore.getState().loginApi(data.email, data.password);
+    const store = useAuthStore.getState();
+    const rememberMe = data.rememberMe ?? true;
+
+    // Save email for next visit if remember me is checked
+    if (rememberMe) {
+      localStorage.setItem("yamuti-saved-email", data.email);
+    } else {
+      localStorage.removeItem("yamuti-saved-email");
+    }
+
+    const { success, error } = isDonatur
+      ? await store.loginDonaturApi(data.email, data.password, rememberMe)
+      : await store.loginApi(data.email, data.password, rememberMe);
     if (success) {
+      // If middleware provided a redirect URL, use it
+      const params = new URLSearchParams(window.location.search);
+      const redirectUrl = params.get('redirect');
+      if (redirectUrl) {
+        router.push(redirectUrl);
+        return;
+      }
       const role = useAuthStore.getState().user?.role || "admin";
       if (role === "owner") {
         router.push(routes.owner.root());
@@ -60,7 +107,7 @@ export default function LoginForm({}: LoginFormProps) {
         router.push(routes.user.root());
       }
     } else {
-      setError("root", { message: error || "Email atau password salah" });
+      setError("root", { message: error || t("invalidCredentials") });
     }
   };
 
@@ -76,10 +123,10 @@ export default function LoginForm({}: LoginFormProps) {
           font="jakarta"
           className="tracking-tight text-lightdark-tertiary"
         >
-          Selamat Datang Kembali
+          {t("title")}
         </Txt>
         <Txt variant="body" className="text-lightdark-neutral text-center">
-          Silakan masuk ke akun Anda untuk melanjutkan
+          {t("subtitle")}
         </Txt>
       </Container>
 
@@ -90,27 +137,38 @@ export default function LoginForm({}: LoginFormProps) {
           </div>
         )}
         <Input
-          label="Alamat Email"
+          label={t("emailLabel")}
           type="email"
-          placeholder="admin@yamuti.org"
+          placeholder={t("emailPlaceholder")}
           className="transition-all focus:ring-2 focus:ring-red-primary/10"
           {...register("email")}
           error={errors.email?.message}
         />
         <PasswordField 
-          label="Kata Sandi" 
-          placeholder="Masukkan Kata Sandi" 
+          label={t("passwordLabel")} 
+          placeholder={t("passwordPlaceholder")} 
           {...register("password")}
           error={errors.password?.message}
         />
 
-        <Container className="flex justify-end -mt-2">
+        <Container className="flex items-center justify-between -mt-2">
+          <Controller
+            name="rememberMe"
+            control={control}
+            render={({ field }) => (
+              <Checkbox
+                label={t("rememberMe")}
+                checked={field.value ?? true}
+                onChange={(e) => field.onChange(e.target.checked)}
+              />
+            )}
+          />
           <Link href="/auth/lupa-password">
             <Txt
               variant="small"
               className="text-red-primary hover:text-red-tertiary transition-colors cursor-pointer font-semibold"
             >
-              Lupa Kata Sandi?
+              {t("forgotPassword")}
             </Txt>
           </Link>
         </Container>
@@ -123,21 +181,23 @@ export default function LoginForm({}: LoginFormProps) {
           isLoading={isSubmitting}
           className="w-full mt-2 py-4 shadow-xl shadow-red-primary/20 hover:shadow-red-primary/30 active:scale-[0.98] transition-all font-bold text-lg"
         >
-          Masuk Sekarang
+          {t("submit")}
         </Btn>
       </form>
 
-      <Container className="text-center border-t border-lightdark-secondary pt-6">
-        <Txt variant="body" className="text-lightdark-neutral">
-          Belum punya akun?{" "}
-          <Link
-            href="/auth/daftar"
-            className="text-red-primary font-bold hover:text-red-tertiary transition-colors hover:underline"
-          >
-            Daftar Sekarang
-          </Link>
-        </Txt>
-      </Container>
+      {isDonatur && (
+        <Container className="text-center border-t border-lightdark-secondary pt-6">
+          <Txt variant="body" className="text-lightdark-neutral">
+            {t("noAccount")}{" "}
+            <Link
+              href="/auth/daftar"
+              className="text-red-primary font-bold hover:text-red-tertiary transition-colors hover:underline"
+            >
+              {t("register")}
+            </Link>
+          </Txt>
+        </Container>
+      )}
     </Container>
   );
 }

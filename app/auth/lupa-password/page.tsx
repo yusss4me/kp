@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import ForgotPasswordForm from "@/app/ui/templates/forgot-password-form";
+
+export const metadata: Metadata = {
+  title: "Lupa Password",
+  description: "Atur ulang kata sandi akun Anda di Yayasan Mutiara Titipan Ilahi.",
+};
 
 /**
  * Lupa Password Page

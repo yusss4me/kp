@@ -40,6 +40,30 @@ All UI components must be structured and organized following the **Atomic Design
 
 ---
 
+## 👁️ Showcase & Wireframe Directories
+
+This project includes dedicated directories for visually previewing and reviewing UI components built with the Atomic Design methodology. These directories are intended for **development-only** purposes and should not be exposed to end users in production.
+
+1. **UI Interface Showcase (`app/showcase/`)**
+   - Used to showcase full-page interface layouts and assembled templates with real component compositions.
+   - Each page under this directory renders a complete UI view (e.g., a dashboard, a form page, a detail page) so developers can visually verify how components come together.
+   - **Rules:**
+     - Wrap each showcase page in a root `<div>` with a visible background color (e.g., `bg-gray-100` or `bg-white`) to clearly distinguish the showcase area.
+     - Link buttons and navigation elements must **NOT** be assigned any functional behavior (no `router.push`, no `href` redirects). They should remain visually present but non-interactive (`href="#"` or no action at all).
+     - Name each showcase route descriptively (e.g., `app/showcase/dashboard/page.tsx`, `app/showcase/login/page.tsx`).
+
+2. **Component Wireframe Preview (`app/wireframe/`)**
+   - Used to preview individual **Atomic Design components** (atoms, molecules, organisms) in isolation as wireframes.
+   - Each page under this directory showcases one or more UI components with placeholder/dummy data to verify their visual structure and responsiveness before integration.
+   - **Rules:**
+     - Wrap each wireframe page in a root `<div>` with a visible background color (e.g., `bg-neutral-200` or `bg-slate-50`) to clearly separate the component preview from the page boundary.
+     - Link buttons and interactive elements within the previewed components must **NOT** be assigned any functional behavior. They should be rendered purely for visual/wireframe inspection.
+     - Organize wireframe files by atomic level or feature (e.g., `app/wireframe/atoms/button/page.tsx`, `app/wireframe/organisms/navbar/page.tsx`).
+
+> **Note:** Both directories are strictly for **visual review during development**. They must be excluded from production builds or protected via environment checks if necessary.
+
+---
+
 ## 🎯 Development Rules & Guidelines
 
 1. **Component Creation:**

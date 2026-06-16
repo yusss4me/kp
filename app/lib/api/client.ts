@@ -27,11 +27,22 @@ apiClient.interceptors.request.use(
 // Response interceptor to handle token expiration/401
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (error.response?.status === 401) {
-      // Clear auth state so middleware will redirect on next navigation
-      useAuthStore.getState().logout();
-      console.warn("Unauthorized access — auth state cleared");
+      const store = useAuthStore.getState();
+      // Clear auth state (Zustand + cookies)
+      await store.logout();
+      console.warn('Unauthorized access — auth state cleared, redirecting to login');
+
+      // Redirect to the correct login page based on current route
+      if (typeof window !== 'undefined') {
+        const { pathname } = window.location;
+        if (pathname.startsWith('/home')) {
+          window.location.href = `/auth/donatur?redirect=${encodeURIComponent(pathname)}&reason=session_expired`;
+        } else if (pathname.startsWith('/admin') || pathname.startsWith('/owner')) {
+          window.location.href = `/auth?redirect=${encodeURIComponent(pathname)}&reason=session_expired`;
+        }
+      }
     }
     return Promise.reject(error);
   }

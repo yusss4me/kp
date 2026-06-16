@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { DashboardHeader } from '../organisms/DashboardHeader';
+import { DashboardHeader } from '../organisms/dashboard-header';
 import { QuickActionCard, QuickActionCardProps } from '../molecules/QuickActionCard';
 import { Txt } from '../atoms/text';
 import { Container } from '../atoms/container';

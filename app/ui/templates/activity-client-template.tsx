@@ -8,7 +8,7 @@ import { Icn } from '../atoms/Icn';
 import { SearchGroup } from '../molecules/search-group';
 import { ActivityProgram } from '../organisms/activity-program';
 import { ActivityKunjungan } from '../organisms/activity-kunjungan';
-import { DashboardHeader } from '../organisms/DashboardHeader';
+import { DashboardHeader } from '../organisms/dashboard-header';
 
 
 export interface ActivityClientTemplateProps {

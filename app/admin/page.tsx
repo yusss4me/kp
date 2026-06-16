@@ -1,48 +1,38 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AdminDashboard } from "@/app/ui/templates/admin-dashboardTemplate";
-import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
+import { useOrphans } from "@/app/lib/hooks/useOrphans";
+import { usePrograms } from "@/app/lib/hooks/usePrograms";
 import { Skeleton } from "@/app/ui/atoms/skeleton";
 import { ErrorDisplay } from "@/app/ui/molecules/error-display";
 
 export default function Page() {
   const router = useRouter();
   const authUser = useAuthStore((s) => s.user);
-  const orphans = useYamutiStore((s) => s.orphans);
-  const programs = useYamutiStore((s) => s.programs);
-  const pendingDonations = useYamutiStore((s) => s.pendingDonations);
-  const inventory = useYamutiStore((s) => s.inventory);
-  const isLoading = useYamutiStore((s) => s.isLoading);
-  const error = useYamutiStore((s) => s.error);
-  const fetchOrphans = useYamutiStore((s) => s.fetchOrphans);
-  const fetchPrograms = useYamutiStore((s) => s.fetchPrograms);
+  const { data: orphans = [], isLoading: orphansLoading, error: orphansError, refetch: refetchOrphans } = useOrphans();
+  const { data: programs = [], isLoading: programsLoading, error: programsError, refetch: refetchPrograms } = usePrograms();
 
-  // API: GET /anak-asuh
-  useEffect(() => {
-    fetchOrphans();
-  }, [fetchOrphans]);
+  const isLoading = orphansLoading || programsLoading;
+  const error = orphansError || programsError;
 
-  // API: GET /programs — route belum tersedia di backend (404)
-  useEffect(() => {
-    fetchPrograms();
-  }, [fetchPrograms]);
+  const anak = orphans.map((o) => {
+    // Compute age from birthDate
+    const birthDate = o.birthDate ? new Date(o.birthDate) : null;
+    const age = birthDate
+      ? Math.floor((Date.now() - birthDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000))
+      : 0;
 
-  const anak = orphans.map((o) => ({
-    id: String(o.id),
-    nama: o.name,
-    jenisKelamin: "Laki-laki" as const,
-    umur: 0,
-    status: o.status,
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1a?auto=format&fit=crop&w=1170&q=80",
-  }));
-
-  const donasi = pendingDonations.map((d) => ({
-    id: d.id,
-    jumlah: parseInt(d.jumlah.replace(/[^0-9]/g, "")) || 0,
-  }));
+    return {
+      id: String(o.id),
+      nama: o.name,
+      jenisKelamin: "Laki-laki" as const, // TODO: update when backend provides gender field
+      umur: age,
+      status: o.status,
+      image: "/logo/icon.png", // Default avatar — replace when backend provides photo field
+    };
+  });
 
   if (isLoading) {
     return (
@@ -60,14 +50,15 @@ export default function Page() {
   }
 
   if (error) {
-    const isSessionExpired = error.includes("Sesi login");
+    const errorMsg = error instanceof Error ? error.message : "Gagal memuat data";
+    const isSessionExpired = errorMsg.includes("Sesi login");
     return (
       <ErrorDisplay 
         title={isSessionExpired ? "Sesi Berakhir" : "Gagal Memuat Dashboard Admin"}
-        message={error}
+        message={errorMsg}
         onRetry={() => {
-          fetchOrphans();
-          fetchPrograms();
+          refetchOrphans();
+          refetchPrograms();
         }}
         actionLabel="Login Kembali"
         onAction={isSessionExpired ? () => router.push('/auth') : undefined}
@@ -84,12 +75,9 @@ export default function Page() {
       }}
       headerTitle="Dashboard Utama"
       anak={anak}
-      donasi={donasi}
+      donasi={[]}
       program={programs.map((p) => ({ id: p.id }))}
-      stokBarang={inventory.map((i) => ({
-        id: String(i.id),
-        jumlah: parseInt(i.stock) || 0,
-      }))}
+      stokBarang={[]}
     />
   );
 }

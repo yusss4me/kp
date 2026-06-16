@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
-import { DashboardHeader } from "@/app/ui/organisms/DashboardHeader";
+import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
 import { Txt } from "@/app/ui/atoms/text";
 import { Btn } from "@/app/ui/atoms/button";
 import { Input } from "@/app/ui/atoms/input";

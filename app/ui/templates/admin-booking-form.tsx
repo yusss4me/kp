@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { UseFormReturn } from "react-hook-form";
-import { DashboardHeader } from "@/app/ui/organisms/DashboardHeader";
+import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
 import { Txt } from "@/app/ui/atoms/text";
 import { Btn } from "@/app/ui/atoms/button";
 import { Input } from "@/app/ui/atoms/input";
@@ -14,6 +14,7 @@ import { InteractiveCalendar } from "@/app/ui/organisms/interactive-calendar";
 
 export type BookingFormInput = {
   visitor: string;
+  phone: string;
   date: string;
   time: string;
   type: string;
@@ -57,7 +58,8 @@ export function AdminBookingFormTemplate({
         </div>
 
         <Container radius="2xl" className="p-8 border border-gray-100 shadow-sm space-y-6">
-          <Input label="Nama Pengunjung" {...register("visitor")} className="bg-gray-50/50" />
+          <Input label="Nama Pengunjung" {...register("visitor")} error={errors.visitor?.message} className="bg-gray-50/50" />
+          <Input label="Nomor Telepon / WhatsApp" type="tel" placeholder="081234567890" {...register("phone")} error={errors.phone?.message} className="bg-gray-50/50" />
           <div className="flex flex-col gap-2">
             <Txt variant="body" weight="bold" className="text-gray-700">Pilih Jadwal Kunjungan</Txt>
             <InteractiveCalendar 

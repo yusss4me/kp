@@ -1,6 +1,6 @@
 import { Txt } from "../atoms/text";
 import { CheckCircle2, ArrowRight } from "lucide-react";
-import { DiscoverSection } from "../organisms/discoverSction";
+import { DiscoverSection } from "../organisms/discover-section";
 import Link from "next/link";
 import { Btn } from "../atoms/button";
 import { Container } from "../atoms/container";

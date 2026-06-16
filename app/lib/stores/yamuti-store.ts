@@ -9,6 +9,7 @@ import type {
   ApprovalRequest,
   DonaturSummary,
   FinanceTransaction,
+  FundDistribution,
   InventoryItem,
   Orphan,
   OrphanGender,
@@ -27,20 +28,7 @@ import {
   generateNumericId,
   programToListItem,
 } from "@/app/lib/utils/crud-helpers";
-
-/** Helper: check if error is an auth failure (401/403) */
-function isAuthError(error: any): boolean {
-  const status = error?.response?.status;
-  return status === 401 || status === 403;
-}
-
-/** Helper: extract user-friendly error message, with 401 awareness */
-function getErrorMessage(error: any, fallback: string): string {
-  if (isAuthError(error)) {
-    return "Sesi login Anda telah berakhir. Silakan login kembali.";
-  }
-  return error?.message || fallback;
-}
+import { getErrorMessage } from "./store-utils";
 
 interface YamutiStore {
   programs: Program[];
@@ -49,6 +37,7 @@ interface YamutiStore {
   orphans: Orphan[];
   inventory: InventoryItem[];
   transactions: FinanceTransaction[];
+  distributions: FundDistribution[];
   bookings: VisitBooking[];
   admins: OwnerAdmin[];
   approvalRequests: ApprovalRequest[];
@@ -81,6 +70,7 @@ interface YamutiStore {
 
   addTransaction: (data: Omit<FinanceTransaction, "id" | "amount">) => number;
   deleteTransaction: (id: number) => void;
+  getDistributions: () => FundDistribution[];
 
   getBookingById: (id: number) => VisitBooking | undefined;
   addBooking: (data: Omit<VisitBooking, "id">) => Promise<number>;
@@ -127,6 +117,7 @@ export const useYamutiStore = create<YamutiStore>()(
       orphans: [],
       inventory: [],
       transactions: [],
+      distributions: [],
       bookings: [],
       admins: [],
       approvalRequests: [],
@@ -199,9 +190,15 @@ export const useYamutiStore = create<YamutiStore>()(
         }));
       },
 
-      /** POST /donasi */
+      /** POST /donasi — optimistic with rollback */
       addPendingDonation: async (donation) => {
         const cleanAmount = parseInt(donation.jumlah.replace(/[^0-9]/g, "")) || 0;
+        const newDonation = { ...donation, id: generateId("don-") };
+
+        // Optimistic update
+        const prev = get().pendingDonations;
+        set((s) => ({ pendingDonations: [newDonation, ...s.pendingDonations] }));
+
         try {
           await createDonasi({
             nama_donatur: donation.nama,
@@ -211,35 +208,35 @@ export const useYamutiStore = create<YamutiStore>()(
           });
         } catch (error: any) {
           console.error("Gagal menambah donasi via API:", error);
-          set({ error: getErrorMessage(error, "Gagal menambah donasi") });
+          // Rollback on failure
+          set({ error: getErrorMessage(error, "Gagal menambah donasi"), pendingDonations: prev });
         }
-
-        set((s) => ({
-          pendingDonations: [
-            { ...donation, id: generateId("don-") },
-            ...s.pendingDonations,
-          ],
-        }));
       },
 
       getOrphanById: (id) => get().orphans.find((o) => o.id === id),
 
-      /** POST /anak-asuh */
+      /** POST /anak-asuh — optimistic with rollback */
       addOrphan: async (data) => {
         const id = generateNumericId(get().orphans);
+        const tanggal_lahir = data.birthDate
+          ? new Date(data.birthDate).toISOString().split("T")[0]
+          : data.birthDate;
+
+        // Optimistic update
+        const prev = get().orphans;
+        set((s) => ({ orphans: [{ ...data, id }, ...s.orphans] }));
 
         try {
           await createAnakAsuh({
             nama: data.name,
-            tanggal_lahir: data.birthDate,
+            tanggal_lahir,
             status: data.status,
-            kategori_bayi: data.kategori_bayi,
+            kategori_bayi: data.kategori_bayi ?? false,
           });
-          set((s) => ({ orphans: [{ ...data, id }, ...s.orphans] }));
         } catch (error: any) {
           console.error("Gagal menambah anak asuh via API:", error);
-          set({ error: getErrorMessage(error, "Gagal menambah anak asuh") });
-          set((s) => ({ orphans: [{ ...data, id }, ...s.orphans] }));
+          // Rollback on failure
+          set({ error: getErrorMessage(error, "Gagal menambah anak asuh"), orphans: prev });
         }
 
         return id;
@@ -257,16 +254,20 @@ export const useYamutiStore = create<YamutiStore>()(
 
       getInventoryById: (id) => get().inventory.find((i) => i.id === id),
 
-      /** POST /mutasi-barang */
+      /** POST /mutasi-barang — currently local-only; backend GET /inventaris not yet available */
       addInventory: async (data) => {
         const id = generateNumericId(get().inventory);
 
+        // NOTE: POST /mutasi-barang requires an existing inventaris_id from the backend.
+        // Since there is no POST /inventaris endpoint yet, we store locally only.
+        // Once the backend supports inventory creation, re-enable the API call below.
+        /*
         try {
           await catatMutasiBarang({
             inventaris_id: id.toString(),
             tipe: "masuk",
             jumlah: parseInt(data.stock) || 1,
-            keterangan: "Penambahan inventory",
+            keterangan: `Penambahan barang: ${data.name}`,
           });
           set((s) => ({ inventory: [...s.inventory, { ...data, id }] }));
         } catch (error: any) {
@@ -274,7 +275,9 @@ export const useYamutiStore = create<YamutiStore>()(
           set({ error: getErrorMessage(error, "Gagal menambah inventory") });
           set((s) => ({ inventory: [...s.inventory, { ...data, id }] }));
         }
+        */
 
+        set((s) => ({ inventory: [...s.inventory, { ...data, id }] }));
         return id;
       },
 
@@ -295,32 +298,64 @@ export const useYamutiStore = create<YamutiStore>()(
           id,
           amount: formatRupiah(data.amountRaw),
         };
-        set((s) => ({ transactions: [item, ...s.transactions] }));
+        const newTransactions = [item, ...get().transactions];
+
+        // Auto-distribute 10/90 for income transactions
+        if (data.type === "Income") {
+          const branchAmount = Math.round(data.amountRaw * 0.1);
+          const centralAmount = data.amountRaw - branchAmount;
+          const distId = generateNumericId(get().distributions);
+          const distribution: FundDistribution = {
+            id: distId,
+            transactionId: id,
+            totalAmount: data.amountRaw,
+            branchAmount,
+            centralAmount,
+            date: data.date,
+            status: "Tercatat",
+          };
+          set((s) => ({
+            transactions: newTransactions,
+            distributions: [distribution, ...s.distributions],
+          }));
+        } else {
+          set((s) => ({ transactions: newTransactions }));
+        }
+
         return id;
       },
 
       deleteTransaction: (id) => {
-        set((s) => ({ transactions: s.transactions.filter((t) => t.id !== id) }));
+        set((s) => ({
+          transactions: s.transactions.filter((t) => t.id !== id),
+          distributions: s.distributions.filter((d) => d.transactionId !== id),
+        }));
       },
+
+      getDistributions: () => get().distributions,
 
       getBookingById: (id) => get().bookings.find((b) => b.id === id),
 
-      /** POST /kunjungan */
+      /** POST /kunjungan — optimistic with rollback */
       addBooking: async (data) => {
         const id = generateNumericId(get().bookings);
+        const slot_waktu = new Date(`${data.date}T${data.time || "08:00"}:00`).toISOString();
+
+        // Optimistic update
+        const prev = get().bookings;
+        set((s) => ({ bookings: [...prev, { ...data, id }] }));
 
         try {
           await createKunjungan({
             nama_pengunjung: data.visitor,
-            nomor_telepon: "08123456789",
+            nomor_telepon: data.phone || "",
             tujuan_kunjungan: data.type,
-            slot_waktu: new Date(data.date).toISOString(),
+            slot_waktu,
           });
-          set((s) => ({ bookings: [...s.bookings, { ...data, id }] }));
         } catch (error: any) {
           console.error("Gagal menambah kunjungan via API:", error);
-          set({ error: getErrorMessage(error, "Gagal menambah kunjungan") });
-          set((s) => ({ bookings: [...s.bookings, { ...data, id }] }));
+          // Rollback on failure
+          set({ error: getErrorMessage(error, "Gagal menambah kunjungan"), bookings: prev });
         }
 
         return id;
@@ -354,17 +389,18 @@ export const useYamutiStore = create<YamutiStore>()(
         set((s) => ({ admins: s.admins.filter((a) => a.id !== id) }));
       },
 
-      /** POST /kunjungan/{id}/approve */
+      /** POST /kunjungan/{id}/approve — optimistic with rollback */
       approveRequest: async (id) => {
+        const prev = get().approvalRequests;
+        set({ approvalRequests: prev.filter((r) => r.id !== id) });
+
         try {
           await approveKunjungan(id);
         } catch (error: any) {
           console.error("Gagal approve kunjungan via API:", error);
-          set({ error: getErrorMessage(error, "Gagal menyetujui kunjungan") });
+          // Rollback on failure
+          set({ error: getErrorMessage(error, "Gagal menyetujui kunjungan"), approvalRequests: prev });
         }
-        set((s) => ({
-          approvalRequests: s.approvalRequests.filter((r) => r.id !== id),
-        }));
       },
 
       rejectRequest: (id) => {

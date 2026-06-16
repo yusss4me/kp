@@ -6,12 +6,14 @@ export interface ActivityDetailTemplateProps {
     type: 'program' | 'kunjungan' | 'anak';
     id?: string;
     url: string;
+    /** Context-aware donate URL for program CTA (only used when type='program') */
+    donateUrl?: string;
 }
 
-export const ActivityDetailTemplate = ({ type, url, id }: ActivityDetailTemplateProps) => {
+export const ActivityDetailTemplate = ({ type, url, id, donateUrl }: ActivityDetailTemplateProps) => {
     switch (type) {
         case 'program':
-            return <DetailProgram url={url} id={id} />;
+            return <DetailProgram url={url} id={id} donateUrl={donateUrl} />;
         case 'kunjungan':
             return <DetailKunjungan url={url} id={id} />;
         case 'anak':

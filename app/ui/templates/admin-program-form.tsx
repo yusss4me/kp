@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { UseFormReturn } from "react-hook-form";
-import { DashboardHeader } from '@/app/ui/organisms/DashboardHeader';
+import { DashboardHeader } from '@/app/ui/organisms/dashboard-header';
 import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';
 import { Input } from '@/app/ui/atoms/input';

@@ -82,9 +82,17 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
         alert("Pengajuan kunjungan berhasil dikirim!");
         router.push("/");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Visit request failed", error);
-      alert("Gagal mengirim pengajuan, silakan coba lagi.");
+      // Handle 422 Laravel validation errors
+      const status = error?.response?.status;
+      const validationErrors = error?.response?.data?.errors;
+      if (status === 422 && validationErrors && typeof validationErrors === "object") {
+        const messages = Object.values(validationErrors).flat().join(", ");
+        alert(`Validasi gagal: ${messages}`);
+      } else {
+        alert(error?.response?.data?.message || "Gagal mengirim pengajuan, silakan coba lagi.");
+      }
     }
   };
 

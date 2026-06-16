@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { ErrorDisplay } from './ui/molecules/error-display';
 
 export default function Error({
@@ -10,16 +11,17 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTranslations('common');
+
   useEffect(() => {
-    // Log the error to an error reporting service
     console.error(error);
   }, [error]);
 
   return (
     <ErrorDisplay 
       fullPage
-      title="Terjadi Masalah"
-      message="Kami minta maaf atas ketidaknyamanan ini. Sepertinya ada masalah teknis yang sedang kami tangani."
+      title={t('error')}
+      message={t('error')}
       onRetry={() => reset()}
     />
   );

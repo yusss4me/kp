@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Container } from "@/app/ui/atoms/container";
 import { Txt } from "@/app/ui/atoms/text";
 import { Btn } from "@/app/ui/atoms/button";
-import { DashboardHeader } from "@/app/ui/organisms/DashboardHeader";
+import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
 import { FileText, Download } from "lucide-react";
 import { Input } from "@/app/ui/atoms/input";
 import { pdf } from "@react-pdf/renderer";

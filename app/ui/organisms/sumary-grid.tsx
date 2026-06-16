@@ -1,4 +1,4 @@
-import { StatCard } from '../molecules/StatCard';
+import { StatCard } from '../molecules/stat-card';
 import { Users, Wallet, Box, Heart } from 'lucide-react';
 
 export interface SummaryGridProps {

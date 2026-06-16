@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { DashboardHeader } from '@/app/ui/organisms/DashboardHeader';
-import { OrphanFilter } from '@/app/ui/organisms/OrphanFilter';
-import { OrphanCard } from '@/app/ui/molecules/OrphanCard';
+import { DashboardHeader } from '@/app/ui/organisms/dashboard-header';
+import { OrphanFilter } from '@/app/ui/organisms/orphan-filter';
+import { OrphanCard } from '@/app/ui/molecules/orphan-card';
 import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';
 import { Pencil } from 'lucide-react';

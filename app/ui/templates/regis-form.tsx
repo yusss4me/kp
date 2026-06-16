@@ -4,11 +4,14 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useRouter } from "next/navigation";
 import { Input } from "../atoms/input";
 import { Txt } from "../atoms/text";
 import { PasswordField } from "../molecules/password-field";
 import { Container } from "../atoms/container";
 import { Btn } from "../atoms/button";
+import { useAuthStore } from "@/app/lib/stores/auth-store";
+import { routes } from "@/app/lib/constants/routes";
 
 const regisSchema = z.object({
   fullName: z.string().min(3, "Nama lengkap minimal 3 karakter"),
@@ -38,19 +41,33 @@ export interface RegisFormProps {
  * @returns {JSX.Element} Komponen RegisForm
  */
 export default function RegisForm({}: RegisFormProps) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm<RegisFormValues>({
     resolver: zodResolver(regisSchema),
   });
 
   const onSubmit = async (data: RegisFormValues) => {
-    console.log("Registration data:", data);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    alert("Pendaftaran berhasil (Simulasi)");
+    const { success, error } = await useAuthStore.getState().registerDonaturApi(
+      data.fullName,
+      data.email,
+      data.password
+    );
+    if (success) {
+      // If auto-login succeeded, redirect to home
+      if (useAuthStore.getState().isAuthenticated) {
+        router.push(routes.user.root());
+      } else {
+        // Registration succeeded but no auto-login — redirect to donor login
+        router.push("/auth/donatur");
+      }
+    } else {
+      setError("root", { message: error || "Pendaftaran gagal. Silakan coba lagi." });
+    }
   };
 
   return (
@@ -73,6 +90,11 @@ export default function RegisForm({}: RegisFormProps) {
       </Container>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+        {errors.root && (
+          <div className="p-3 bg-red-50 text-red-500 text-sm rounded-lg border border-red-100">
+            {errors.root.message}
+          </div>
+        )}
         <Input
           label="Nama Lengkap"
           placeholder="Masukkan Nama Lengkap"
@@ -117,7 +139,7 @@ export default function RegisForm({}: RegisFormProps) {
         <Txt variant="body" className="text-lightdark-neutral">
           Sudah punya akun?{" "}
           <Link
-            href="/auth/masuk"
+            href="/auth/donatur"
             className="text-red-primary font-bold hover:text-red-tertiary transition-colors hover:underline"
           >
             Login di Sini

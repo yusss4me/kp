@@ -45,7 +45,7 @@ export const DiscoverSection: React.FC<DiscoverSectionProps> = ({ items  }) => {
               <DiscoverCard
                 title={item.title}
                 image={item.image}
-                href={routes.visitor.donasi(item.id)}
+                href={routes.donasi(item.id)}
               />
             </Container>
           ))

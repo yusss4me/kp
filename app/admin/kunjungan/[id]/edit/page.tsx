@@ -9,10 +9,11 @@ import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { routes } from "@/app/lib/constants/routes";
 
 const schema = z.object({
-  visitor: z.string().min(2),
-  date: z.string().min(1),
-  time: z.string().min(1),
-  type: z.string().min(1),
+  visitor: z.string().min(2, "Nama pengunjung wajib diisi"),
+  phone: z.string().min(10, "Nomor telepon tidak valid"),
+  date: z.string().min(1, "Tanggal wajib diisi"),
+  time: z.string().min(1, "Waktu wajib diisi"),
+  type: z.string().min(1, "Tipe kunjungan wajib diisi"),
   status: z.enum(["Menunggu", "Dikonfirmasi", "Selesai", "Dibatalkan"]),
 });
 
@@ -27,7 +28,7 @@ export default function EditKunjunganPage() {
   const form = useForm<BookingFormInput>({
     resolver: zodResolver(schema),
     values: booking
-      ? { visitor: booking.visitor, date: booking.date, time: booking.time, type: booking.type, status: booking.status }
+      ? { visitor: booking.visitor, phone: booking.phone || "", date: booking.date, time: booking.time, type: booking.type, status: booking.status }
       : undefined,
   });
 

@@ -30,7 +30,7 @@ export interface ListItemProps {
  * @returns {JSX.Element} Komponen item daftar
  */
 export const ListItem: React.FC<ListItemProps> = ({ 
-  icon:Icon, 
+  icon:icon, 
   label, 
   href }) => {
   const content = (
@@ -39,7 +39,7 @@ export const ListItem: React.FC<ListItemProps> = ({
     className="w-full flex items-center justify-between  border-b border-gray-50 group active:bg-gray-50 transition-all cursor-pointer">
       <Container className="flex items-center gap-4">
         <Container className="text-gray-600 group-hover:text-red-secondary transition-colors">
-          <Icn icon={Icon} size={20} color='current' />
+          <Icn icon={icon} size={20} color='current' />
         </Container>
         <span className="text-sm font-medium text-gray-800 group-hover:text-red-secondary transition-colors">{label}</span>
       </Container>

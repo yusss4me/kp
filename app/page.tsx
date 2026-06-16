@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import { LandingTemplate } from "@/app/ui/templates/landing";
 import {
   LANDING_USER_AVATARS,
   LANDING_SLIDES,
   LANDING_BENEFITS,
 } from "@/app/lib/constants/landing-content";
+
+export const metadata: Metadata = {
+  title: "Beranda",
+  description:
+    "Yayasan Mutiara Titipan Ilahi — Salurkan donasi Anda melalui program transparan yang berdampak nyata bagi anak yatim dan masyarakat membutuhkan.",
+};
 
 export default function Page() {
   // API: GET /programs — route belum tersedia di backend (404)

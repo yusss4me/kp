@@ -7,15 +7,16 @@ import { routes } from "@/app/lib/constants/routes";
 
 export default function FinancePage() {
   const transactions = useYamutiStore((s) => s.transactions);
+  const distributions = useYamutiStore((s) => s.distributions);
   const deleteTransaction = useYamutiStore((s) => s.deleteTransaction);
 
-  // API: GET /keuangan/transaksi — route belum tersedia; stats dihitung dari data store lokal
-  const stats = buildFinanceStats(transactions);
+  const stats = buildFinanceStats(transactions, distributions);
 
   return (
     <AdminFinanceTemplate
       stats={stats}
       transactions={transactions}
+      distributions={distributions}
       onDeleteTransaction={deleteTransaction}
       addUrl={routes.admin.keuangan.add()}
     />

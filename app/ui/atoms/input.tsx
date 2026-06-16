@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, forwardRef } from 'react';
+import { InputHTMLAttributes, forwardRef, useId } from 'react';
 import { cn } from '@/app/lib/utils';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -22,17 +22,24 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
  * @returns {JSX.Element} Komponen Input yang telah diformat
  */
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, suffix, className, isLoading, ...props }, ref) => {
+  ({ label, error, suffix, className, isLoading, id: propId, ...props }, ref) => {
+    const autoId = useId();
+    const inputId = propId || autoId;
+    const errorId = error ? `${inputId}-error` : undefined;
+
     return (
       <div className="flex flex-col gap-2 w-full">
         {label && (
-          <label className="text-md font-semibold text-lightdark-tertiary ml-1">
+          <label htmlFor={inputId} className="text-md font-semibold text-lightdark-tertiary ml-1">
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           <input
             ref={ref}
+            id={inputId}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={errorId}
             className={cn(
               'w-full px-4 py-3 rounded-xl border-2 transition-all border-lightdark-tertiary',
               'focus:border-lightdark-neutral bg-lightdark-secondary text-lightdark-tertiary outline-none',
@@ -50,7 +57,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             </div>
           )}
         </div>
-        {error && <span className="text-sm text-danger ml-1">{error}</span>}
+        {error && (
+          <span id={errorId} className="text-sm text-danger ml-1" role="alert">
+            {error}
+          </span>
+        )}
       </div>
     );
   }

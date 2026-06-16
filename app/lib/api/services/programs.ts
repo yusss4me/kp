@@ -1,5 +1,7 @@
 import type { Program } from "@/app/lib/types/entities";
 import { calcProgress, formatRupiah } from "@/app/lib/utils/crud-helpers";
+import { apiClient } from "@/app/lib/api/client";
+import { unwrapList } from "@/app/lib/api/response";
 
 interface ApiProgram {
   id: string | number;
@@ -21,7 +23,7 @@ interface ApiProgram {
   image?: string;
 }
 
-function mapProgram(item: ApiProgram): Program {
+export function mapProgram(item: ApiProgram): Program {
   const targetAmount = item.target_amount ?? item.targetAmount ?? 0;
   const collectedAmount = item.collected_amount ?? item.collectedAmount ?? 0;
 
@@ -41,15 +43,34 @@ function mapProgram(item: ApiProgram): Program {
   };
 }
 
-// GET /programs — route belum tersedia di backend (404)
+/** GET /programs — returns empty array on 404 (backend may not be ready) */
 export async function fetchPrograms(): Promise<Program[]> {
-  // const res = await apiClient.get("/programs");
-  // return unwrapList<ApiProgram>(res.data).map(mapProgram);
-  return [];
+  try {
+    const res = await apiClient.get("/programs");
+    return unwrapList<ApiProgram>(res.data).map(mapProgram);
+  } catch (error: any) {
+    // Gracefully handle 404 when backend route is not yet available
+    if (error?.response?.status === 404) return [];
+    throw error;
+  }
 }
 
-// POST /programs — route belum tersedia di backend (404)
-// export async function createProgram(payload: ProgramFormInput) {
-//   const res = await apiClient.post("/programs", payload);
-//   return res.data;
-// }
+export interface ProgramFormInput {
+  title: string;
+  description: string;
+  target_amount: number;
+  category: string;
+  end_date: string;
+  thumbnail_url?: string;
+}
+
+/** POST /programs — creates a new program (returns null on 404) */
+export async function createProgram(payload: ProgramFormInput) {
+  try {
+    const res = await apiClient.post("/programs", payload);
+    return res.data;
+  } catch (error: any) {
+    if (error?.response?.status === 404) return null;
+    throw error;
+  }
+}

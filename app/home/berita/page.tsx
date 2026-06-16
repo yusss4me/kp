@@ -1,6 +1,6 @@
 "use client";
 
-import { DashboardHeader } from "@/app/ui/organisms/DashboardHeader";
+import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
 import { Txt } from "@/app/ui/atoms/text";
 import { Newspaper } from "lucide-react";
 import { useAuthStore } from "@/app/lib/stores/auth-store";

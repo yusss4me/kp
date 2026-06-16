@@ -1,17 +1,12 @@
 'use client';
-import { Navbar, NavLink } from "@/app/ui/organisms/navBar";
+import { Navbar, NavLink } from "@/app/ui/organisms/nav-bar";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
+import { useTranslations } from "next-intl";
 import { 
   LayoutDashboard, 
   Compass
 } from "lucide-react";
 import { routes } from "@/app/lib/constants/routes";
-import image from "next/image";
-
-const ADMIN_LINKS: NavLink[] = [
-  { label: "Dashboard", href: routes.admin.root(), icon: LayoutDashboard },
-  { label: "Akses Cepat", href: routes.admin.quickAccess.root(), icon: Compass },
-];
 
 export default function Layout({
   children,
@@ -19,6 +14,12 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   const user = useAuthStore((s) => s.user);
+  const t = useTranslations("nav");
+
+  const ADMIN_LINKS: NavLink[] = [
+    { label: t("dashboard"), href: routes.admin.root(), icon: LayoutDashboard },
+    { label: t("activity"), href: routes.admin.quickAccess.root(), icon: Compass },
+  ];
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50/50">

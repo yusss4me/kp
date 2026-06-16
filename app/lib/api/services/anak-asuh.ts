@@ -3,7 +3,7 @@ import { unwrapList } from "@/app/lib/api/response";
 import type { ApiOrphanResponse } from "@/app/lib/types/api-types";
 import type { Orphan } from "@/app/lib/types/entities";
 
-function mapOrphan(item: ApiOrphanResponse): Orphan {
+export function mapOrphan(item: ApiOrphanResponse): Orphan {
   // Support both backend field names: tanggal_lahir and birth_date
   const birthDateStr = item.tanggal_lahir || item.birth_date;
   const birthYear = birthDateStr

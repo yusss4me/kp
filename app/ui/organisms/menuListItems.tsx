@@ -1,4 +1,4 @@
-
+'use client';
 
 import { LucideIcon } from "lucide-react";
 import { Container } from "../atoms/container";

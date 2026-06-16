@@ -1,15 +1,14 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import Image from 'next/image';
-import { ArrowLeft, Calendar, Clock, Users, MapPin, Info, CheckCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowLeft, Calendar, Clock, MapPin, Info, CheckCircle, User, Phone, FileText, Users } from 'lucide-react';
 import { Txt } from '../atoms/text';
 import { Btn } from '../atoms/button';
 import { Container } from '../atoms/container';
-import { Input } from '../atoms/input';
+import { getKunjunganById } from '@/app/lib/api/services/kunjungan';
+import { format } from 'date-fns';
+import { id as idLocale } from 'date-fns/locale';
 
 export interface DetailKunjunganData {
     image: string;
@@ -26,21 +25,19 @@ export interface DetailKunjunganProps {
     data?: DetailKunjunganData;
 }
 
-const kunjunganSchema = z.object({
-    fullName: z.string().min(3, 'Nama lengkap minimal 3 karakter'),
-    institution: z.string().optional(),
-    purpose: z.string().min(5, 'Keperluan minimal 5 karakter'),
-    visitDate: z.string().min(1, 'Tanggal harus dipilih'),
-    visitTime: z.string().min(1, 'Waktu harus dipilih'),
-    participantCount: z.number({ message: 'Jumlah peserta harus angka' }).min(1, 'Minimal 1 peserta'),
-});
-
-type KunjunganFormValues = z.infer<typeof kunjunganSchema>;
-
-
+interface KunjunganRecord {
+    nama_pengunjung: string;
+    nomor_telepon: string;
+    tujuan_kunjungan: string;
+    slot_waktu: string;
+    status: string;
+    jumlah_peserta?: number;
+}
 
 export const DetailKunjungan = ({ id, url, data }: DetailKunjunganProps) => {
     const router = useRouter();
+    const [record, setRecord] = useState<KunjunganRecord | null>(null);
+    const [loading, setLoading] = useState(!!id);
 
     const defaultData: DetailKunjunganData = data ?? {
         image: '/images/hero.png',
@@ -50,37 +47,37 @@ export const DetailKunjungan = ({ id, url, data }: DetailKunjunganProps) => {
         description: 'Silaturahmi ke Yayasan Yamuti untuk melihat langsung aktivitas anak-anak asuh.',
         ketentuanList: ['Harus membuat janji temu terlebih dahulu', 'Jumlah peserta minimal 1 orang', 'Menjaga ketertiban dan kebersihan'],
     };
-    
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm<KunjunganFormValues>({ resolver: zodResolver(kunjunganSchema) });
-
-    const onSubmit = async (formData: KunjunganFormValues) => {
-        console.log('Kunjungan form:', formData);
-        await new Promise(r => setTimeout(r, 1000));
-        alert('Pengajuan kunjungan berhasil dikirim! (Simulasi)');
-    };
+    useEffect(() => {
+        if (!id) return;
+        async function fetchData() {
+            try {
+                const result = await getKunjunganById(id as string);
+                setRecord(result);
+            } catch (err) {
+                console.error('Failed to fetch kunjungan detail', err);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchData();
+    }, [id]);
 
     return (
         <Container className="flex flex-col min-h-screen bg-gray-50 pb-24">
-            {/* Hero */}
-            <div className="relative h-[300px] w-full overflow-hidden">
-                <Image src={defaultData.image} alt={defaultData.title} fill className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-
-                <div className="absolute top-6 left-0 right-0 px-6">
+            {/* Header */}
+            <div className="bg-red-primary px-6 pt-8 pb-12 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+                <div className="flex items-center gap-4 mb-6">
                     <button
                         onClick={() => router.back()}
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md text-white"
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white"
                     >
                         <ArrowLeft size={20} />
                     </button>
+                    <Txt variant="h5" color="light" weight="bold">Detail Kunjungan</Txt>
                 </div>
-
-                <div className="absolute bottom-8 left-0 right-0 px-6 space-y-2">
+                <div className="space-y-2">
                     <div className="flex items-center gap-2 text-white/80">
                         <Calendar size={16} />
                         <Txt variant="caption" color="light" className="opacity-80 uppercase tracking-widest text-xs font-bold">
@@ -130,68 +127,100 @@ export const DetailKunjungan = ({ id, url, data }: DetailKunjunganProps) => {
                     </ul>
                 </div>
 
-                {/* Form */}
+                {/* Data Pengunjung */}
                 <div className="space-y-4 pt-2">
-                    <Txt variant="h6" weight="bold" className="text-gray-800">Formulir Pengajuan</Txt>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                        <Input
-                            label="Nama Lengkap"
-                            placeholder="Masukkan nama lengkap Anda"
-                            {...register('fullName')}
-                            error={errors.fullName?.message}
-                        />
-                        <Input
-                            label="Instansi / Perusahaan (Opsional)"
-                            placeholder="Nama instansi, kosongkan jika pribadi"
-                            {...register('institution')}
-                            error={errors.institution?.message}
-                        />
-                        <Input
-                            label="Keperluan Kunjungan"
-                            placeholder="Contoh: Penyerahan donasi, silaturahmi"
-                            {...register('purpose')}
-                            error={errors.purpose?.message}
-                        />
-                        <div className="grid grid-cols-2 gap-4">
-                            <Input
-                                label="Tanggal Kunjungan"
-                                type="date"
-                                {...register('visitDate')}
-                                error={errors.visitDate?.message}
-                            />
-                            <Input
-                                label="Waktu"
-                                type="time"
-                                {...register('visitTime')}
-                                error={errors.visitTime?.message}
-                            />
+                    <Txt variant="h6" weight="bold" className="text-gray-800">Data Pengunjung</Txt>
+
+                    {loading ? (
+                        <div className="p-6 text-center">
+                            <Txt className="text-gray-400">Memuat data pengunjung...</Txt>
                         </div>
-                        <Input
-                            label="Jumlah Peserta"
-                            type="number"
-                            placeholder="Contoh: 5"
-                            {...register('participantCount', { valueAsNumber: true })}
-                            error={errors.participantCount?.message}
-                        />
+                    ) : record ? (
+                        <div className="space-y-4">
+                            {/* Status Badge */}
+                            <div className="flex items-center gap-2">
+                                {record.status === 'approved' || record.status === 'Disetujui' ? (
+                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                                        <CheckCircle size={16} /> Disetujui
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">
+                                        <Clock size={16} /> Menunggu Persetujuan
+                                    </div>
+                                )}
+                            </div>
 
-                        <Btn
-                            type="submit"
-                            variant="red"
-                            size="lg"
-                            isLoading={isSubmitting}
-                            className="w-full py-4 rounded-2xl shadow-lg shadow-red-500/20 flex items-center justify-center gap-2 font-bold"
-                        >
-                            <Users size={20} />
-                            Kirim Pengajuan Kunjungan
-                        </Btn>
-                    </form>
-                </div>
+                            {/* Visitor Info Cards */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-2xl">
+                                    <div className="p-2 bg-white rounded-xl shadow-sm text-red-500">
+                                        <User size={20} />
+                                    </div>
+                                    <div>
+                                        <Txt variant="caption" className="text-gray-500">Nama Pengunjung</Txt>
+                                        <Txt variant="body" weight="bold" className="text-gray-800">{record.nama_pengunjung || 'Anonim'}</Txt>
+                                    </div>
+                                </div>
 
-                {/* Info konfirmasi */}
-                <div className="p-4 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                    <Txt variant="caption" className="text-gray-500 text-center block">
-                        Pengajuan Anda akan diproses dalam waktu maksimal 1×24 jam. Kami akan menghubungi Anda melalui nomor terdaftar.
-                    </Txt>
+                                <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-2xl">
+                                    <div className="p-2 bg-white rounded-xl shadow-sm text-red-500">
+                                        <Phone size={20} />
+                                    </div>
+                                    <div>
+                                        <Txt variant="caption" className="text-gray-500">No. Telepon</Txt>
+                                        <Txt variant="body" weight="bold" className="text-gray-800">{record.nomor_telepon || '-'}</Txt>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-2xl">
+                                    <div className="p-2 bg-white rounded-xl shadow-sm text-red-500">
+                                        <FileText size={20} />
+                                    </div>
+                                    <div>
+                                        <Txt variant="caption" className="text-gray-500">Tujuan Kunjungan</Txt>
+                                        <Txt variant="body" weight="bold" className="text-gray-800">{record.tujuan_kunjungan || '-'}</Txt>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-2xl">
+                                    <div className="p-2 bg-white rounded-xl shadow-sm text-red-500">
+                                        <Calendar size={20} />
+                                    </div>
+                                    <div>
+                                        <Txt variant="caption" className="text-gray-500">Jadwal Kunjungan</Txt>
+                                        <Txt variant="body" weight="bold" className="text-gray-800">
+                                            {record.slot_waktu ? format(new Date(record.slot_waktu), 'dd MMM yyyy, HH:mm', { locale: idLocale }) + ' WIB' : '-'}
+                                        </Txt>
+                                    </div>
+                                </div>
+
+                                {record.jumlah_peserta && (
+                                    <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-2xl">
+                                        <div className="p-2 bg-white rounded-xl shadow-sm text-red-500">
+                                            <Users size={20} />
+                                        </div>
+                                        <div>
+                                            <Txt variant="caption" className="text-gray-500">Jumlah Peserta</Txt>
+                                            <Txt variant="body" weight="bold" className="text-gray-800">{record.jumlah_peserta} orang</Txt>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* ID Kunjungan */}
+                            {id && (
+                                <div className="pt-4 border-t border-gray-100">
+                                    <Txt variant="caption" className="text-gray-400 text-center block">
+                                        ID Kunjungan: <span className="font-mono bg-gray-100 px-2 py-1 rounded">{id}</span>
+                                    </Txt>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="p-6 text-center bg-gray-50 rounded-2xl">
+                            <Txt className="text-gray-400">Data pengunjung belum tersedia.</Txt>
+                        </div>
+                    )}
                 </div>
             </div>
         </Container>

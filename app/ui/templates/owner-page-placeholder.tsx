@@ -1,4 +1,4 @@
-import { DashboardHeader } from "@/app/ui/organisms/DashboardHeader";
+import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
 import { Txt } from "@/app/ui/atoms/text";
 import { Btn } from "@/app/ui/atoms/button";
 import { LucideIcon, Plus } from "lucide-react";

@@ -99,6 +99,8 @@ export const Navbar = ({
     <>
       {/* Desktop View: Sidebar Layout */}
       <Container
+        role="complementary"
+        aria-label="Sidebar navigasi"
         className={cn(
           "hidden md:flex flex-col sticky top-0 h-screen w-28 z-50 shrink-0",
           "bg-red-primary border-r border-white/10",
@@ -119,7 +121,7 @@ export const Navbar = ({
           </Container>
 
           {/* Middle Section: Navigation Links */}
-          <nav className="flex flex-col items-center w-full gap-2 overflow-y-auto custom-scrollbar">
+          <nav aria-label="Navigasi utama" className="flex flex-col items-center w-full gap-2 overflow-y-auto custom-scrollbar">
             {desktopLinks.map((link) => (
               <NavLinkMolecule
                 key={link.href}
@@ -141,9 +143,13 @@ export const Navbar = ({
         {/* Bottom Section: User Profile */}
         <Container className="pt-6 border-t border-white/10">
           <Container className="flex items-center justify-center p-3">
-            <Btn onClick={() => setIsProfileOpen(!isProfileOpen)}
+            <Btn
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
               variant="transparent"
-              className="text-white hover:bg-white/10 rounded-full p-3">
+              className="text-white hover:bg-white/10 rounded-full p-3"
+              aria-label={isProfileOpen ? "Tutup profil" : "Buka profil"}
+              aria-expanded={isProfileOpen}
+            >
               {isProfileOpen
                 ? <Icn icon={X} size={25} color="current" />
                 : <Icn icon={User} size={25} color="current" />}
@@ -153,7 +159,11 @@ export const Navbar = ({
 
         {/* Profile Overlay (Desktop Fly-out) */}
         {isProfileOpen && (
-          <div className="absolute left-full top-0 h-screen w-[400px] bg-black/20 backdrop-blur-sm z-[60] animate-in slide-in-from-left-4 duration-300">
+          <div
+            className="absolute left-full top-0 h-screen w-[400px] bg-black/20 backdrop-blur-sm z-[60] animate-in slide-in-from-left-4 duration-300"
+            role="dialog"
+            aria-label="Menu profil pengguna"
+          >
             <div className="h-full " onClick={(e) => e.stopPropagation()}>
               <ProfileTemplate
                 user={user}
@@ -178,7 +188,8 @@ export const Navbar = ({
         {/* Mobile Top Header: Logo Branding */}
 
         {/* Mobile Bottom Navigation Bar */}
-        <Container
+        <nav
+          aria-label="Navigasi mobile"
           className={cn(
             "fixed bottom-0 left-0 w-full h-20 z-50 px-4 flex items-center justify-around",
             "bg-red-primary border-t border-white/10 pb-2",
@@ -200,7 +211,7 @@ export const Navbar = ({
               labelClassName="text-[9px] uppercase tracking-wider"
             />
           ))}
-        </Container>
+        </nav>
       </Container>
 
       {/* Mobile Top Header Spacer */}

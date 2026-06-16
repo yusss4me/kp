@@ -17,13 +17,15 @@ import { routes } from '@/app/lib/constants/routes';
 export interface DetailProgramProps {
   id?: string;
   url: string;
+  /** URL for the "DONASI SEKARANG" CTA button — context-aware (public vs donatur) */
+  donateUrl?: string;
 }
 
 const FALLBACK_GALLERY = [
   'https://images.unsplash.com/photo-1508817628294-5a453fa0b8fb?q=80&w=2070&auto=format&fit=crop',
 ];
 
-export const DetailProgram = ({ id, url }: DetailProgramProps) => {
+export const DetailProgram = ({ id, url, donateUrl }: DetailProgramProps) => {
   const router = useRouter();
   const [isDescExpanded, setIsDescExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<'donasi' | 'volunteer'>('donasi');
@@ -74,7 +76,7 @@ export const DetailProgram = ({ id, url }: DetailProgramProps) => {
       .replace('IDR', 'Rp');
 
   const progress = Math.min((data.raised / data.target) * 100, 100);
-  const donasiHref = id ? routes.visitor.donasi(id) : routes.explore();
+  const donasiHref = donateUrl || (id ? routes.visitor.donasi(id) : routes.explore());
 
   return (
     <Container className="flex flex-col min-h-screen bg-gray-50 pb-24">
@@ -191,7 +193,7 @@ export const DetailProgram = ({ id, url }: DetailProgramProps) => {
 
       <div className="bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-4 flex items-center gap-4">
         
-        <Link href={url} className="flex-grow">
+        <Link href={donasiHref} className="flex-grow">
           <Btn color="red" textColor="light" className="w-full h-14 font-bold rounded-2xl flex items-center justify-center transition-colors">
             DONASI SEKARANG
           </Btn>

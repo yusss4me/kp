@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { DashboardHeader } from '@/app/ui/organisms/DashboardHeader';
-import { StatCard } from '@/app/ui/molecules/StatCard';
+import { DashboardHeader } from '@/app/ui/organisms/dashboard-header';
+import { StatCard } from '@/app/ui/molecules/stat-card';
 import { InventoryTable } from '@/app/ui/organisms/InventoryTable';
 import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';

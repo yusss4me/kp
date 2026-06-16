@@ -1,10 +1,10 @@
-  import { DashboardHeader } from "../organisms/DashboardHeader";
-  import { StatCard } from "../molecules/StatCard";
-  import { OrphanCard } from "../molecules/OrphanCard";
-  import { Link } from "lucide-react";
+  import { DashboardHeader } from "../organisms/dashboard-header";
+  import { StatCard } from "../molecules/stat-card";
+  import { OrphanCard } from "../molecules/orphan-card";
   import { Txt } from "../atoms/text";
   import { Btn } from "../atoms/button";
   import { Plus, Wallet, Package, Heart, Users } from "lucide-react";
+  import { getTranslations } from "next-intl/server";
 
   interface AdminDashboardProps {
       user: {
@@ -36,7 +36,9 @@
     
   }
 
-  export const AdminDashboard = ({ user, headerTitle, anak, donasi, program, stokBarang }: AdminDashboardProps) => {
+  export const AdminDashboard = async ({ user, headerTitle, anak, donasi, program, stokBarang }: AdminDashboardProps) => {
+    const t = await getTranslations("dashboard");
+    const tCommon = await getTranslations("common");
     return (
       <DashboardHeader user={user} headerTitle={headerTitle}>
         <div className="space-y-10">
@@ -48,7 +50,7 @@
 
             <div className="space-y-3 relative z-10">
               <Txt variant="h2" weight="bold" className="text-red-primary">
-                Selamat Datang, {user.name}
+                {t("welcomeBack")}, {user.name}
               </Txt>
               <Txt variant="body" className="text-gray-500 max-w-xl">
                 Platform ini dirancang untuk mempermudah manajemen operasional Yayasan Yamuti secara transparan dan akuntabel.
@@ -64,7 +66,7 @@
           {/* Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
-              label="Total Anak Asuh"
+              label={t("totalOrphans")}
               value={anak.length.toString()}
               icon={Users}
               color="primary"
@@ -96,12 +98,12 @@
           <section className="space-y-6">
             <div className="flex items-center justify-between px-2">
               <Txt variant="h3" weight="bold" className="text-gray-900 tracking-tight">Anak Asuh Terbaru</Txt>
-              <Btn variant="light" size="sm" shape="rounded" className="text-red-primary font-bold">Lihat Semua</Btn>
+              <Btn variant="light" size="sm" shape="rounded" className="text-red-primary font-bold">{tCommon("back")} Semua</Btn>
             </div>
 
             {anak.length === 0 ? (
               <div className="w-full py-8 text-center text-gray-500">
-                <Txt variant="body">Belum ada data anak asuh.</Txt>
+                <Txt variant="body">{tCommon("noData")}</Txt>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

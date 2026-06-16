@@ -2,11 +2,11 @@
 
 import { Activity, HeartHandshake, Newspaper, Pencil, Wallet } from "lucide-react";
 import { Txt } from "../atoms/text"
-import { DiscoverSection } from "../organisms/discoverSction"
-import { StatCard } from "../molecules/StatCard";
+import { DiscoverSection } from "../organisms/discover-section"
+import { StatCard } from "../molecules/stat-card";
 import Link from "next/link";
 import { Btn } from "../atoms/button";
-import { DashboardHeader } from "../organisms/DashboardHeader";
+import { DashboardHeader } from "../organisms/dashboard-header";
 import { routes } from "@/app/lib/constants/routes";
 export interface HomeProps {
   className?: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { DashboardHeader } from "@/app/ui/organisms/DashboardHeader";
+import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
 import { Txt } from "@/app/ui/atoms/text";
 import { Btn } from "@/app/ui/atoms/button";
 import { Container } from "@/app/ui/atoms/container";

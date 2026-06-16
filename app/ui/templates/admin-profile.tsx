@@ -1,4 +1,4 @@
-import { AdminProfileHeader } from "@/app/ui/organisms/AdminProfileHeader";
+import { AdminProfileHeader } from "@/app/ui/organisms/admin-profile-header";
 import { AdminProfileMenuGroup } from "@/app/ui/organisms/AdminProfileMenuGroup";
 
 export interface AdminProfileTemplateProps {

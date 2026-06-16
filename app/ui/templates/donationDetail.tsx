@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { 
   ArrowLeft, 
   Heart, 
@@ -35,6 +36,8 @@ export interface DonationDetailTemplateProps {
   daysRemaining: number;
   description: string;
   gallery: string[];
+  /** Optional route to the donation form page. If provided, the CTA button navigates here. */
+  donateFormUrl?: string;
 }
 
 /**
@@ -70,6 +73,7 @@ export const DonationDetailTemplate: React.FC<DonationDetailTemplateProps> = ({
   daysRemaining,
   description,
   gallery,
+  donateFormUrl,
 }) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'donasi' | 'volunteer'>('donasi');
@@ -236,9 +240,17 @@ export const DonationDetailTemplate: React.FC<DonationDetailTemplateProps> = ({
         <Btn color='light' className="w-14 h-14 flex items-center justify-center rounded-2xl bg-gray-50 border border-gray-100 text-gray-400">
           <MapPin size={24} />
         </Btn>
-        <Btn color='red' textColor='light' className="flex-grow h-14 hover:bg-current/20 font-bold rounded-2xl flex items-center justify-center  transition-colors">
-          DONASI SEKARANG
-        </Btn>
+        {donateFormUrl ? (
+          <Link href={donateFormUrl} className="flex-grow">
+            <Btn color='red' textColor='light' className="w-full h-14 hover:bg-current/20 font-bold rounded-2xl flex items-center justify-center transition-colors">
+              DONASI SEKARANG
+            </Btn>
+          </Link>
+        ) : (
+          <Btn color='red' textColor='light' className="flex-grow h-14 hover:bg-current/20 font-bold rounded-2xl flex items-center justify-center transition-colors">
+            DONASI SEKARANG
+          </Btn>
+        )}
       </div>
     </Container>
   );

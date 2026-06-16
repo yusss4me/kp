@@ -95,11 +95,14 @@ export const Btn = ({
         shapes[shape],
         className
       )}
+      disabled={isLoading || props.disabled}
+      aria-busy={isLoading || undefined}
+      aria-disabled={isLoading || undefined}
       {...props}
     >
       {isLoading ? (
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+        <div className="flex items-center gap-2" role="status">
+          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" aria-hidden="true" />
           <span>Loading...</span>
         </div>
       ) : (

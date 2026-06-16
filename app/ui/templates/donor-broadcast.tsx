@@ -1,5 +1,5 @@
 import { BroadcastEditor } from "@/app/ui/organisms/BroadcastEditor";
-import { DashboardHeader } from "@/app/ui/organisms/DashboardHeader";
+import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
 
 export interface DonorBroadcastTemplateProps {
   templatePesan: { nama_template: string; isi: string }[];

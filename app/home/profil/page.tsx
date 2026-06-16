@@ -1,7 +1,7 @@
 "use client";
 
 import { ProfileTemplate } from "@/app/ui/templates/profile";
-import { DashboardHeader } from "@/app/ui/organisms/DashboardHeader";
+import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
 import { PROFILE_MENU_GROUPS } from "@/app/lib/constants/profile-constants";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";

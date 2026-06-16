@@ -1,21 +1,13 @@
 'use client';
 
-import { Navbar, NavLink } from "@/app/ui/organisms/navBar";
+import { Navbar, NavLink } from "@/app/ui/organisms/nav-bar";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
+import { useTranslations } from "next-intl";
 import { 
   LayoutDashboard, 
   Compass
 } from "lucide-react";
 import { routes } from "@/app/lib/constants/routes";
-
-/**
- * OWNER_LINKS
- * Definisi navigasi khusus untuk role Owner.
- */
-const OWNER_LINKS: NavLink[] = [
-  { label: "Dashboard", href: routes.owner.root(), icon: LayoutDashboard },
-  { label: "Akses Cepat", href: routes.owner.quickAccess.root(), icon: Compass },
-];
 
 /**
  * Owner Layout
@@ -27,6 +19,12 @@ export default function OwnerLayout({
   children: React.ReactNode;
 }) {
   const user = useAuthStore((s) => s.user);
+  const t = useTranslations("nav");
+
+  const OWNER_LINKS: NavLink[] = [
+    { label: t("dashboard"), href: routes.owner.root(), icon: LayoutDashboard },
+    { label: t("activity"), href: routes.owner.quickAccess.root(), icon: Compass },
+  ];
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50/50">

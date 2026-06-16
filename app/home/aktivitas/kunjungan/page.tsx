@@ -1,7 +1,7 @@
 "use client";
 
 import { ActivityKunjungan } from "@/app/ui/organisms/activity-kunjungan";
-import { DashboardHeader } from "@/app/ui/organisms/DashboardHeader";
+import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
 import { Txt } from "@/app/ui/atoms/text";
 import { Calendar } from "lucide-react";
 
