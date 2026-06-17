@@ -6,12 +6,12 @@
 
 
 
-import React, { FormEvent, ReactNode, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes, } from 'react';
+import { FormEvent, ReactNode, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes, } from 'react';
 import { Container } from '@/app/ui/atoms/container';
 import { Input, InputProps } from '@/app/ui/atoms/input';
 import { Textarea } from '@/app/ui/atoms/textarea';
 import { Select } from '@/app/ui/atoms/select';
-import { Img } from '../atoms/image';
+import { Img } from '@/app/ui/atoms/image';
 
 export interface inputConfigProps extends InputHTMLAttributes<HTMLInputElement>{
     name: string;

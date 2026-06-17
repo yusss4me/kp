@@ -44,7 +44,7 @@ export const AdminProfileMenuGroup: React.FC<AdminProfileMenuGroupProps> = ({ on
         <Txt weight="bold" color="dark" className=" ml-2">
           Manajemen Yayasan
         </Txt>
-        <Container variant="light" padding="md" radius="lg" shadow="sm" className="hidden bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
+        <Container variant="light" padding="md" radius="lg" shadow="sm" className="bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
           <ListItem icon={LayoutDashboard} label="Kelola Program" />
           <ListItem icon={FileCheck} label="Verifikasi Donasi" />
           <ListItem icon={Users} label="Kelola Donatur" />
@@ -56,7 +56,7 @@ export const AdminProfileMenuGroup: React.FC<AdminProfileMenuGroupProps> = ({ on
         <Txt weight="bold" color="dark" className=" ml-2">
           Laporan & Data
         </Txt>
-        <Container variant="light" padding="md" radius="lg" shadow="sm" className="hidden bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
+        <Container variant="light" padding="md" radius="lg" shadow="sm" className="bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
           <ListItem icon={BarChart3} label="Statistik Dampak" />
           <ListItem icon={FileText} label="Laporan Keuangan" />
           <ListItem icon={History} label="Log Aktivitas" />
@@ -68,7 +68,7 @@ export const AdminProfileMenuGroup: React.FC<AdminProfileMenuGroupProps> = ({ on
         <Txt weight="bold" color="dark" className=" ml-2">
           Sistem
         </Txt>
-        <Container variant="light" padding="md" radius="lg" shadow="sm" className="hidden bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
+        <Container variant="light" padding="md" radius="lg" shadow="sm" className="bg-white rounded-[32px] border border-gray-100 p-2 shadow-sm">
           <ListItem icon={Globe} label="Konfigurasi Website" />
           <ListItem icon={Settings} label="Pengaturan Akun" />
           <ListItem icon={Info} label="Bantuan Teknis" />

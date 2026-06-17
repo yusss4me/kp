@@ -1,8 +1,8 @@
-import { ProfileCard } from "../organisms/profile-card";
-import { MenuListItems } from "../organisms/menuListItems";
-import { Txt } from "../atoms/text";
+import { ProfileCard } from "@/app/ui/organisms/profile-card";
+import { MenuListItems } from "@/app/ui/organisms/menuListItems";
+import { Txt } from "@/app/ui/atoms/text";
 import { LogOut, LucideIcon } from "lucide-react";
-import { Btn } from "../atoms/button";
+import { Btn } from "@/app/ui/atoms/button";
 
 export interface ProfileTemplateProps {
     user: {
@@ -29,6 +29,7 @@ export interface ProfileTemplateProps {
     isFlyout?: boolean;
     /** Sembunyikan header halaman saat dibungkus DashboardHeader */
     embedded?: boolean;
+    onLogout?: () => void;
 }
 
 /**
@@ -50,6 +51,7 @@ export const ProfileTemplate = ({
     className = "",
     isFlyout = false,
     embedded = false,
+    onLogout,
 }: ProfileTemplateProps) => {
     return (
         <div className={`h-full w-full ${isFlyout ? 'max-w-md bg-white shadow-2xl' : 'w-full'} overflow-hidden flex flex-col transition-all duration-500 ${className}`}>
@@ -94,7 +96,7 @@ export const ProfileTemplate = ({
 
             {/* Footer / Logout Button */}
             <div className={`p-6 ${isFlyout ? 'bg-gray-50/50 border-t' : 'bg-white'} mt-auto animate-in fade-in duration-1000 delay-500`}>
-                <Btn variant="light" className={`w-full py-4 ${isFlyout ? 'text-red-primary' : 'bg-red-50 text-red-primary hover:bg-red-100'} font-bold transition-all flex items-center justify-center gap-2 rounded-xl active:scale-[0.98]`}>
+                <Btn onClick={onLogout} variant="light" className={`w-full py-4 ${isFlyout ? 'text-red-primary' : 'bg-red-50 text-red-primary hover:bg-red-100'} font-bold transition-all flex items-center justify-center gap-2 rounded-xl active:scale-[0.98]`}>
                     <LogOut size={18} />
                     Keluar Akun
                 </Btn>

@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: YAMUTI API
   description: API Documentation for YAMUTI Backend (Kerja Praktek)
-  version: 1.0.0
+  version: 1.1.0
 servers:
   - url: https://yamuti-backend.onrender.com/api
     description: Production Server
@@ -17,9 +17,9 @@ components:
 security:
   - bearerAuth: []
 paths:
-  /login:
+  /auth/login:
     post:
-      summary: Login Admin
+      summary: Login User / Admin
       tags:
         - Authentication
       security: []
@@ -39,6 +39,38 @@ paths:
       responses:
         '200':
           description: Login Successful
+  /auth/register:
+    post:
+      summary: Register User Baru (Donatur)
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                no_whatsapp:
+                  type: string
+      responses:
+        '201':
+          description: Registrasi Berhasil
+  /dashboard/summary:
+    get:
+      summary: Mendapatkan ringkasan statistik (Admin & Owner)
+      tags:
+        - Dashboard
+      responses:
+        '200':
+          description: Berhasil mendapatkan summary
   /anak-asuh:
     get:
       summary: Dapatkan Daftar Anak Asuh
@@ -94,6 +126,20 @@ paths:
       responses:
         '201':
           description: Donasi Created, returns snap_token
+  /donasi/{id}/verify:
+    patch:
+      summary: Verifikasi Bukti Transfer Donasi
+      tags:
+        - Donasi
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Donasi diverifikasi (PAID)
   /kunjungan:
     post:
       summary: Request Kunjungan (Public)
@@ -119,9 +165,9 @@ paths:
       responses:
         '201':
           description: Kunjungan requested
-  /kunjungan/{id}/approve:
-    post:
-      summary: Approve Kunjungan
+  /kunjungan/{id}/status:
+    patch:
+      summary: Update Status Kunjungan
       tags:
         - Kunjungan
       parameters:
@@ -130,9 +176,19 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [APPROVED, REJECTED, COMPLETED]
       responses:
         '200':
-          description: Approved and WhatsApp sent
+          description: Status diubah dan notifikasi WhatsApp terkirim jika disetujui/ditolak
   /mutasi-barang:
     post:
       summary: Catat Mutasi Barang

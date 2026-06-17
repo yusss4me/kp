@@ -23,23 +23,27 @@ export interface LoginResponse {
   };
 }
 
-/** POST /login — login admin/owner (public, tanpa auth) */
+/** POST /auth/login — login admin/owner (public, tanpa auth) */
 export async function loginAdmin(payload: ApiLoginPayload): Promise<LoginResponse> {
-  const res = await apiClient.post("/login", payload);
+  const res = await apiClient.post("/auth/login", payload);
   return res.data as LoginResponse;
 }
 
-/** POST /donatur/login — login khusus donatur */
+/** POST /auth/login — login khusus donatur (same endpoint, role-checked in store) */
 export async function loginDonatur(payload: ApiLoginPayload): Promise<LoginResponse> {
-  const res = await apiClient.post("/login", payload);
+  const res = await apiClient.post("/auth/login", payload);
   return res.data as LoginResponse;
 }
 
-/** POST /donatur/register — pendaftaran donatur baru */
+/** POST /auth/register — pendaftaran donatur baru */
 export interface RegisterDonaturPayload {
   name: string;
   email: string;
   password: string;
+  password_confirmation: string;
+  no_whatsapp: string;
+  nik: string;
+  alamat: string;
 }
 
 export interface RegisterDonaturResponse {
@@ -51,7 +55,7 @@ export interface RegisterDonaturResponse {
 }
 
 export async function registerDonatur(payload: RegisterDonaturPayload): Promise<RegisterDonaturResponse> {
-  const res = await apiClient.post("/daftar", payload);
+  const res = await apiClient.post("/auth/register", payload);
   return res.data as RegisterDonaturResponse;
 }
 
@@ -150,6 +154,30 @@ export interface ChangePasswordResponse {
 export async function changePassword(payload: ChangePasswordPayload): Promise<ChangePasswordResponse> {
   const res = await apiClient.put("/profile/password", payload);
   return res.data as ChangePasswordResponse;
+}
+
+/** POST /auth/logout — logout user (memerlukan Bearer token) */
+export async function logoutUser(): Promise<{ message?: string }> {
+  const res = await apiClient.post("/auth/logout");
+  return res.data;
+}
+
+/** GET /auth/me — ambil data user yang sedang login (memerlukan Bearer token) */
+export interface CurrentUserResponse {
+  id: string | number;
+  name: string;
+  email: string;
+  role: string;
+  no_whatsapp?: string;
+  nik?: string;
+  alamat?: string;
+  photo?: string;
+}
+
+export async function getCurrentUser(): Promise<CurrentUserResponse> {
+  const res = await apiClient.get("/auth/me");
+  const body = res.data as { data?: CurrentUserResponse } | CurrentUserResponse;
+  return (body as { data?: CurrentUserResponse }).data || (body as CurrentUserResponse);
 }
 
 /** POST /contact — kirim pesan kontak */

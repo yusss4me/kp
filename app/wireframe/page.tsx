@@ -1,120 +1,63 @@
-import { Txt } from "@/app/ui/atoms/text";
-import { Container } from "@/app/ui/atoms/container";
-import { Btn } from "@/app/ui/atoms/button";
-import { Icn } from "@/app/ui/atoms/Icn";
-import { Lnk } from "@/app/ui/atoms/link";
-import { Atom, FlaskConical, LayoutGrid, Layers, Eye } from "lucide-react";
-
-const wireframePages = [
-  {
-    title: "Atoms",
-    description: "Basic building blocks: Txt, Btn, Input, Badge, Avatar, Icn, Container, Img, Lnk, ProgressBar, Select, Skeleton, Textarea, Table, and more.",
-    href: "/wireframe/atoms",
-    icon: Atom,
-    color: "bg-info/10 text-info",
-  },
-  {
-    title: "Molecules",
-    description: "Combinations of atoms: DonationCard, StatCard, OrphanCard, ProgramCard, VisitingCard, Toast, ConfirmationModal, SearchGroup, PasswordField, and more.",
-    href: "/wireframe/molecules",
-    icon: FlaskConical,
-    color: "bg-success/10 text-success",
-  },
-  {
-    title: "Organisms",
-    description: "Complex UI sections: DashboardHeader, MenuListItems, ProfileCard, ImpactStats, InventoryTable, TransactionTable, BookingList, CategoryList, CTASection, and more.",
-    href: "/wireframe/organisms",
-    icon: LayoutGrid,
-    color: "bg-warning/10 text-warning",
-  },
-  {
-    title: "Templates",
-    description: "Full-page layouts: LandingTemplate, ExploreTemplate, DonationDetailTemplate, ProfileTemplate, QuickAccessTemplate, and more.",
-    href: "/wireframe/templates",
-    icon: Layers,
-    color: "bg-red-primary/10 text-red-primary",
-  },
-];
-
-const previewCard = {
-  title: "Component Preview",
-  description: "Isolated single-component viewer. Browse all components by Atomic Design level and preview each one individually.",
-  href: "/wireframe/preview",
-  icon: Eye,
-  color: "bg-lightdark-tertiary text-white",
-};
-
-export default function WireframeIndexPage() {
+export default function WireframePublicLanding() {
   return (
-    <div className="min-h-screen bg-neutral-200 p-6 md:p-10">
-      <div className="max-w-5xl mx-auto space-y-10">
-        {/* Header */}
-        <header className="space-y-2">
-          <Txt variant="h1" weight="bold" className="text-gray-900">
-            YAMUTI Wireframe
-          </Txt>
-          <Txt variant="body" color="grey">
-            Interactive code-based wireframe for all Atomic Design UI components. Select a level below to preview components with placeholder data.
-          </Txt>
-        </header>
+    <div className="w-full">
+      {/* <HeroSectionOrganism /> */}
+      <section className="relative bg-gray-50 border-b border-gray-200 py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="max-w-4xl mx-auto text-center space-y-6">
+          <div className="w-3/4 mx-auto h-12 sm:h-16 bg-gray-200 rounded"></div>
+          <div className="w-2/3 mx-auto h-6 sm:h-8 bg-gray-100 rounded"></div>
+          <div className="flex justify-center space-x-4 pt-4">
+            <div className="w-32 h-12 bg-gray-900 rounded"></div>
+            <div className="w-32 h-12 bg-white border border-gray-300 rounded"></div>
+          </div>
+        </div>
+      </section>
 
-        {/* Cards Grid — Hierarchy */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {wireframePages.map((page) => (
-            <Lnk key={page.href} href={page.href} className="block">
-              <Container
-                variant="light"
-                radius="2xl"
-                shadow="md"
-                padding="lg"
-                className="h-full hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100"
-              >
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${page.color}`}>
-                  <Icn icon={page.icon} size={24} color="current" />
+      {/* <StatsSectionOrganism /> */}
+      <section className="py-12 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="space-y-2">
+                <div className="w-20 h-8 bg-gray-200 rounded mx-auto"></div>
+                <div className="w-24 h-4 bg-gray-100 rounded mx-auto"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* <ProgramHighlightOrganism /> */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto space-y-10">
+          <div className="text-center space-y-4">
+            <div className="w-48 h-8 bg-gray-200 rounded mx-auto"></div>
+            <div className="w-64 h-4 bg-gray-100 rounded mx-auto"></div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col">
+                <div className="w-full h-48 bg-gray-100"></div>
+                <div className="p-6 space-y-4 flex-1 flex flex-col">
+                  <div className="w-3/4 h-6 bg-gray-200 rounded"></div>
+                  <div className="w-full h-12 bg-gray-50 rounded"></div>
+                  {/* Progress Bar Molecule */}
+                  <div className="mt-auto pt-4 space-y-2">
+                    <div className="w-full h-2 bg-gray-100 rounded-full">
+                      <div className="w-1/2 h-full bg-gray-300 rounded-full"></div>
+                    </div>
+                    <div className="flex justify-between">
+                      <div className="w-16 h-3 bg-gray-200 rounded"></div>
+                      <div className="w-16 h-3 bg-gray-200 rounded"></div>
+                    </div>
+                  </div>
                 </div>
-                <Txt variant="h4" weight="bold" className="text-gray-900 mb-2">
-                  {page.title}
-                </Txt>
-                <Txt variant="small" color="grey" className="mb-6 line-clamp-3">
-                  {page.description}
-                </Txt>
-                <Btn variant="light" textColor="red" size="sm" shape="rounded" className="w-full">
-                  View Components
-                </Btn>
-              </Container>
-            </Lnk>
-          ))}
-        </div>
-
-        {/* Single Component Preview Card */}
-        <div>
-          <Txt variant="h5" weight="bold" className="text-gray-700 mb-4">Isolated Preview</Txt>
-          <Lnk href={previewCard.href} className="block">
-            <Container
-              variant="light"
-              radius="2xl"
-              shadow="md"
-              padding="lg"
-              className="hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 flex items-center gap-6 max-w-xl"
-            >
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${previewCard.color}`}>
-                <Icn icon={previewCard.icon} size={28} color="current" />
               </div>
-              <div className="flex-1">
-                <Txt variant="h5" weight="bold" className="text-gray-900 mb-1">
-                  {previewCard.title}
-                </Txt>
-                <Txt variant="small" color="grey" className="line-clamp-2">
-                  {previewCard.description}
-                </Txt>
-              </div>
-              <Btn variant="red" size="sm" shape="rounded" className="shrink-0">
-                Open
-              </Btn>
-            </Container>
-          </Lnk>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

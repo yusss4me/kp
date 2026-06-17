@@ -55,3 +55,43 @@ export interface ApiLoginPayload {
   email: string;
   password: string;
 }
+
+export interface ApiRegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+  no_whatsapp: string;
+  nik: string;
+  alamat: string;
+}
+
+export interface ApiBroadcastPayload {
+  pesan: string;
+  target_penerima: "donatur" | "umum" | "semua";
+}
+
+export interface ApiTransaksiKeuanganPayload {
+  jenis: "pemasukan" | "pengeluaran";
+  kategori?: string;
+  nominal: number;
+  keterangan?: string;
+  tanggal?: string;
+}
+
+export interface ApiKunjunganStatusPayload {
+  status: "APPROVED" | "REJECTED" | "COMPLETED";
+}
+
+export interface ApiDashboardSummary {
+  total_anak_asuh?: number;
+  total_donasi_bulan_ini?: number;
+  kunjungan_menunggu?: number;
+  saldo_kas_terkini?: number;
+}
+
+export interface ApiKasSaldo {
+  saldo: number;
+  total_pemasukan?: number;
+  total_pengeluaran?: number;
+}

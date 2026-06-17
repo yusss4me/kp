@@ -63,6 +63,7 @@ export interface NavbarProps {
   amountVisitUser?: string;
   amountDonatedUser?: string;
   className?: string;
+  profileMenuGroups?: any;
 }
 
 /**
@@ -88,6 +89,7 @@ export const Navbar = ({
   amountVisitUser = "0",
   amountDonatedUser = "Rp 0",
   className = "",
+  profileMenuGroups,
 }: NavbarProps) => {
   const pathname = usePathname();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -170,7 +172,7 @@ export const Navbar = ({
                 amountProgramUser={amountProgramUser}
                 amountVisitUser={amountVisitUser}
                 amountDonatedUser={amountDonatedUser}
-                listMenu={PROFILE_MENU_GROUPS}
+                listMenu={profileMenuGroups || PROFILE_MENU_GROUPS}
                 className={className}
                 isFlyout={true} />
             </div>

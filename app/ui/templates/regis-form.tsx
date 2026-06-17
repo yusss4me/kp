@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { Input } from "../atoms/input";
-import { Txt } from "../atoms/text";
-import { PasswordField } from "../molecules/password-field";
-import { Container } from "../atoms/container";
-import { Btn } from "../atoms/button";
+import { Input } from "@/app/ui/atoms/input";
+import { Txt } from "@/app/ui/atoms/text";
+import { PasswordField } from "@/app/ui/molecules/password-field";
+import { Container } from "@/app/ui/atoms/container";
+import { Btn } from "@/app/ui/atoms/button";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
 import { routes } from "@/app/lib/constants/routes";
 
@@ -18,6 +18,9 @@ const regisSchema = z.object({
   email: z.string().email("Format email tidak valid"),
   password: z.string().min(6, "Kata sandi minimal 6 karakter"),
   confirmPassword: z.string(),
+  no_whatsapp: z.string().min(10, "Nomor WhatsApp minimal 10 karakter"),
+  nik: z.string().min(16, "NIK harus 16 digit"),
+  alamat: z.string().min(5, "Alamat minimal 5 karakter"),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Konfirmasi kata sandi tidak cocok",
   path: ["confirmPassword"],
@@ -55,7 +58,11 @@ export default function RegisForm({}: RegisFormProps) {
     const { success, error } = await useAuthStore.getState().registerDonaturApi(
       data.fullName,
       data.email,
-      data.password
+      data.password,
+      data.confirmPassword,
+      data.no_whatsapp,
+      data.nik,
+      data.alamat
     );
     if (success) {
       // If auto-login succeeded, redirect to home
@@ -115,6 +122,27 @@ export default function RegisForm({}: RegisFormProps) {
           placeholder="Masukkan Kata Sandi" 
           {...register("password")}
           error={errors.password?.message}
+        />
+        <Input
+          label="Nomor WhatsApp"
+          placeholder="Contoh: 081234567890"
+          className="focus:ring-2 focus:ring-red-primary/10 transition-all"
+          {...register("no_whatsapp")}
+          error={errors.no_whatsapp?.message}
+        />
+        <Input
+          label="NIK"
+          placeholder="Masukkan NIK (16 digit)"
+          className="focus:ring-2 focus:ring-red-primary/10 transition-all"
+          {...register("nik")}
+          error={errors.nik?.message}
+        />
+        <Input
+          label="Alamat"
+          placeholder="Masukkan alamat lengkap"
+          className="focus:ring-2 focus:ring-red-primary/10 transition-all"
+          {...register("alamat")}
+          error={errors.alamat?.message}
         />
         <PasswordField
           label="Konfirmasi Kata Sandi"

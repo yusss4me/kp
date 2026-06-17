@@ -3,12 +3,14 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { AdminProfileTemplate } from "@/app/ui/templates/admin-profile";
-import { routes } from "@/app/lib/constants/routes";
+import { useAuthStore } from "@/app/lib/stores/auth-store";
 
 export default function Page() {
   const router = useRouter();
+  const authUser = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
   const [editing, setEditing] = useState(false);
-  const [name, setName] = useState("Admin Yamuti");
+  const [name, setName] = useState(authUser?.name || "Administrator");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = () => {
@@ -27,8 +29,8 @@ export default function Page() {
         alert("Profil berhasil diupdate!");
       }}
       onLogout={() => {
-        // TODO: Implement logout logic
-        router.push("/auth");
+        logout();
+        router.push("/auth/admin");
       }}
       fileInputRef={fileInputRef}
       onImageUpload={handleImageUpload}

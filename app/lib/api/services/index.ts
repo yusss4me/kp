@@ -6,3 +6,8 @@ export * from "./kunjungan";
 export * from "./logistik";
 export * from "./programs";
 export * from "./artikel";
+export * from "./inventaris";
+export * from "./keuangan";
+export * from "./broadcast";
+export * from "./dashboard";
+export * from "./admins";

@@ -6,12 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useTranslations } from "next-intl";
 import { useState, useEffect } from "react";
-import { Container } from "../atoms/container";
-import { Txt } from "../atoms/text";
-import { Input } from "../atoms/input";
-import { Btn } from "../atoms/button";
-import { Checkbox } from "../atoms/checkbox";
-import { PasswordField } from "../molecules/password-field";
+import { Container } from "@/app/ui/atoms/container";
+import { Txt } from "@/app/ui/atoms/text";
+import { Input } from "@/app/ui/atoms/input";
+import { Btn } from "@/app/ui/atoms/button";
+import { Checkbox } from "@/app/ui/atoms/checkbox";
+import { PasswordField } from "@/app/ui/molecules/password-field";
 
 import { apiClient } from "@/app/lib/api/client";
 import { useAuthStore } from "@/app/lib/stores/auth-store";

@@ -28,3 +28,25 @@ export const PROFILE_MENU_GROUPS = [
         ]
     }
 ];
+
+export const ADMIN_PROFILE_MENU_GROUPS = [
+    {
+        title: "Navigasi Admin",
+        items: [
+            { label: "Profil Admin", icon: Settings, href: "/admin/profile" },
+            { label: "Kelola Program", icon: Heart, href: "/admin/program" },
+            { label: "Verifikasi Donasi", icon: Wallet, href: "/admin/donasi" }
+        ]
+    }
+];
+
+export const OWNER_PROFILE_MENU_GROUPS = [
+    {
+        title: "Navigasi Owner",
+        items: [
+            { label: "Profil Owner", icon: Settings, href: "/owner/profile" },
+            { label: "Laporan Keuangan", icon: History, href: "/owner/reports" },
+            { label: "Kelola Admin", icon: Info, href: "/owner/admins" }
+        ]
+    }
+];

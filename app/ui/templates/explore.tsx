@@ -1,6 +1,6 @@
-import { Txt } from "../atoms/text";
-import { SearchGroup } from "../molecules/search-group";
-import { DonationCard } from "../molecules/donationCard";
+import { Txt } from "@/app/ui/atoms/text";
+import { SearchGroup } from "@/app/ui/molecules/search-group";
+import { DonationCard } from "@/app/ui/molecules/donationCard";
 import { routes } from "@/app/lib/constants/routes";
 
 export interface ExploreCampaign {

@@ -1,6 +1,6 @@
-import { DetailProgram } from "../organisms/activity-detail-program";
-import { DetailKunjungan } from "../organisms/activity-detail-kunjungan";
-import { DetailAnak } from "../organisms/activity-detail-anak";
+import { DetailProgram } from "@/app/ui/organisms/activity-detail-program";
+import { DetailKunjungan } from "@/app/ui/organisms/activity-detail-kunjungan";
+import { DetailAnak } from "@/app/ui/organisms/activity-detail-anak";
 
 export interface ActivityDetailTemplateProps {
     type: 'program' | 'kunjungan' | 'anak';

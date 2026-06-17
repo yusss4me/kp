@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { ErrorDisplay } from './ui/molecules/error-display';
+import { ErrorDisplay } from '@/app/ui/molecules/error-display';
 
 export default function Error({
   error,

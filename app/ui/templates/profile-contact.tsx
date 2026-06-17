@@ -3,14 +3,15 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ProfileSubpageTemplate } from "./profile-subpage";
+import { ProfileSubpageTemplate } from "@/app/ui/templates/profile-subpage";
 import { Container } from "@/app/ui/atoms/container";
 import { Txt } from "@/app/ui/atoms/text";
 import { Btn } from "@/app/ui/atoms/button";
 import { Input } from "@/app/ui/atoms/input";
 import { Textarea } from "@/app/ui/atoms/textarea";
 import { MessageCircle, Mail, Phone, MapPin, Send } from "lucide-react";
-
+import { useState } from "react";
+import { sendContactMessage } from "@/app/lib/api/services/auth";
 const contactSchema = z.object({
   fullName: z.string().min(3, "Nama lengkap minimal 3 karakter"),
   email: z.string().email("Format email tidak valid"),
@@ -30,18 +31,29 @@ export interface ProfileContactTemplateProps {
 }
 
 export function ProfileContactTemplate({ contact }: ProfileContactTemplateProps) {
+  const [submitMessage, setSubmitMessage] = useState<{type: 'success'|'error', text: string} | null>(null);
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm<ContactValues>({
     resolver: zodResolver(contactSchema),
   });
 
   const onSubmit = async (data: ContactValues) => {
-    console.log("Contact message:", data);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    alert("Pesan Anda telah dikirim! (Simulasi)");
+    try {
+      await sendContactMessage({
+        fullName: data.fullName,
+        email: data.email,
+        message: data.message
+      });
+      setSubmitMessage({ type: 'success', text: 'Pesan Anda telah dikirim!' });
+      reset();
+    } catch (e) {
+      setSubmitMessage({ type: 'error', text: 'Gagal mengirim pesan.' });
+    }
   };
 
   return (
@@ -95,6 +107,13 @@ export function ProfileContactTemplate({ contact }: ProfileContactTemplateProps)
                 <Input label="Alamat Email" placeholder="nama@email.com" {...register("email")} error={errors.email?.message} />
               </div>
               <Textarea label="Pesan Anda" placeholder="Tuliskan pesan Anda di sini..." {...register("message")} error={errors.message?.message} />
+              
+              {submitMessage && (
+                <div className={`p-4 rounded-xl text-sm font-bold ${submitMessage.type === 'success' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-primary'}`}>
+                  {submitMessage.text}
+                </div>
+              )}
+
               <Btn type="submit" variant="red" size="lg" isLoading={isSubmitting} className="w-full gap-3 py-6 rounded-2xl shadow-xl shadow-red-primary/20">
                 Kirim Pesan <Send size={20} />
               </Btn>

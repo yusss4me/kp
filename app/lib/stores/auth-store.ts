@@ -23,7 +23,7 @@ interface AuthState {
   setRememberMe: (value: boolean) => void;
   loginApi: (email: string, password: string, rememberMe?: boolean) => Promise<{ success: boolean; error?: string }>;
   loginDonaturApi: (email: string, password: string, rememberMe?: boolean) => Promise<{ success: boolean; error?: string }>;
-  registerDonaturApi: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  registerDonaturApi: (name: string, email: string, password: string, password_confirmation: string, no_whatsapp: string, nik: string, alamat: string) => Promise<{ success: boolean; error?: string }>;
   forgotPasswordApi: (email: string) => Promise<{ success: boolean; message?: string; error?: string }>;
   resetPasswordApi: (token: string, email: string, password: string, passwordConfirmation: string) => Promise<{ success: boolean; message?: string; error?: string }>;
   fetchProfileApi: () => Promise<{ success: boolean; error?: string }>;
@@ -107,6 +107,12 @@ export const useAuthStore = create<AuthState>()(
       },
 
       logout: async () => {
+        try {
+          const { logoutUser } = await import("@/app/lib/api/services/auth");
+          await logoutUser();
+        } catch {
+          // Continue with local logout even if backend call fails
+        }
         set({ token: null, user: null, isAuthenticated: false });
         // Clear httpOnly cookies server-side via API route
         await clearAuthCookies();
@@ -211,10 +217,10 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      registerDonaturApi: async (name, email, password) => {
+      registerDonaturApi: async (name, email, password, password_confirmation, no_whatsapp, nik, alamat) => {
         try {
           const { registerDonatur } = await import("@/app/lib/api/services/auth");
-          const data = await registerDonatur({ name, email, password });
+          const data = await registerDonatur({ name, email, password, password_confirmation, no_whatsapp, nik, alamat });
 
           // Auto-login after registration if token is returned
           const token = data?.data?.token;

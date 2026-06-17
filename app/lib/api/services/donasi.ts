@@ -42,3 +42,9 @@ export async function fetchDonasiRiwayat(donaturId: string) {
     throw error;
   }
 }
+
+/** PATCH /donasi/{id}/verify — verifikasi bukti transfer donasi (admin) */
+export async function verifyDonasi(id: string) {
+  const res = await apiClient.patch(`/donasi/${id}/verify`);
+  return res.data;
+}

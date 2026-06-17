@@ -1,12 +1,9 @@
-import React from "react";
 import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
 import { Txt } from "@/app/ui/atoms/text";
 import { Btn } from "@/app/ui/atoms/button";
 import { StatCard } from "@/app/ui/molecules/stat-card";
 import { Badge } from "@/app/ui/atoms/badge";
 import {
-  Heart,
-  ShieldCheck,
   AlertCircle,
   CheckCircle2,
   TrendingUp,

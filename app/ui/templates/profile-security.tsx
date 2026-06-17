@@ -1,12 +1,47 @@
-import { ProfileSubpageTemplate } from "./profile-subpage";
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { ProfileSubpageTemplate } from "@/app/ui/templates/profile-subpage";
 import { Container } from "@/app/ui/atoms/container";
 import { Txt } from "@/app/ui/atoms/text";
 import { Btn } from "@/app/ui/atoms/button";
 import { PasswordField } from "@/app/ui/molecules/password-field";
 import { Lock, ShieldCheck, Smartphone } from "lucide-react";
 import Link from "next/link";
+import { changePassword } from "@/app/lib/api/services/auth";
+
+const securitySchema = z.object({
+  current_password: z.string().min(1, "Kata sandi saat ini wajib diisi"),
+  password: z.string().min(6, "Kata sandi baru minimal 6 karakter"),
+  password_confirmation: z.string().min(1, "Konfirmasi kata sandi wajib diisi"),
+}).refine((data) => data.password === data.password_confirmation, {
+  message: "Konfirmasi kata sandi tidak cocok",
+  path: ["password_confirmation"],
+});
+
+type SecurityValues = z.infer<typeof securitySchema>;
 
 export function ProfileSecurityTemplate() {
+  const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<SecurityValues>({
+    resolver: zodResolver(securitySchema),
+  });
+
+  const onSubmit = async (data: SecurityValues) => {
+    try {
+      await changePassword({
+        current_password: data.current_password,
+        password: data.password,
+        password_confirmation: data.password_confirmation,
+      });
+      alert("Kata sandi berhasil diperbarui!");
+      reset();
+    } catch (e) {
+      alert("Gagal memperbarui kata sandi.");
+    }
+  };
+
   return (
     <ProfileSubpageTemplate
       backHref="/home/profil/settings"
@@ -20,16 +55,16 @@ export function ProfileSecurityTemplate() {
           <Txt variant="h4" weight="bold">
             Ubah Kata Sandi
           </Txt>
-          <div className="space-y-4">
-            <PasswordField label="Kata Sandi Saat Ini" placeholder="Masukkan kata sandi lama" />
-            <PasswordField label="Kata Sandi Baru" placeholder="Masukkan kata sandi baru" />
-            <PasswordField label="Konfirmasi Kata Sandi Baru" placeholder="Ulangi kata sandi baru" />
-          </div>
-          <div className="flex justify-end pt-4">
-            <Btn variant="red" className="px-8 rounded-xl shadow-lg shadow-red-primary/20">
-              Perbarui Sandi
-            </Btn>
-          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <PasswordField label="Kata Sandi Saat Ini" placeholder="Masukkan kata sandi lama" {...register("current_password")} error={errors.current_password?.message} />
+            <PasswordField label="Kata Sandi Baru" placeholder="Masukkan kata sandi baru" {...register("password")} error={errors.password?.message} />
+            <PasswordField label="Konfirmasi Kata Sandi Baru" placeholder="Ulangi kata sandi baru" {...register("password_confirmation")} error={errors.password_confirmation?.message} />
+            <div className="flex justify-end pt-4">
+              <Btn type="submit" variant="red" isLoading={isSubmitting} className="px-8 rounded-xl shadow-lg shadow-red-primary/20">
+                Perbarui Sandi
+              </Btn>
+            </div>
+          </form>
         </Container>
 
         <Container variant="light" radius="2xl" padding="lg" shadow="sm" className="border border-gray-100 flex items-center justify-between">

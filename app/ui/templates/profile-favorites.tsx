@@ -1,4 +1,4 @@
-import { ProfileSubpageTemplate } from "./profile-subpage";
+import { ProfileSubpageTemplate } from "@/app/ui/templates/profile-subpage";
 import { DiscoverSection } from "@/app/ui/organisms/discover-section";
 import { Container } from "@/app/ui/atoms/container";
 import { Txt } from "@/app/ui/atoms/text";

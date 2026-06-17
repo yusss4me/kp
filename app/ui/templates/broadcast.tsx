@@ -1,4 +1,4 @@
-import { UpdateList } from "../organisms/UpdateList";
+import { UpdateList } from "@/app/ui/organisms/UpdateList";
 
 export interface BroadcastTemplateProps {
   className?: string;

@@ -4,9 +4,9 @@ import { useAuthStore } from "@/app/lib/stores/auth-store";
 import { useTranslations } from "next-intl";
 import { 
   LayoutDashboard, 
-  Compass
 } from "lucide-react";
 import { routes } from "@/app/lib/constants/routes";
+import { ADMIN_PROFILE_MENU_GROUPS } from "@/app/lib/constants/profile-constants";
 
 export default function Layout({
   children,
@@ -30,6 +30,7 @@ export default function Layout({
           name: user?.name || "Admin Yamuti", 
           role: "Administrator" 
         }} 
+        profileMenuGroups={ADMIN_PROFILE_MENU_GROUPS}
       />
       <main className="flex-grow pb-24 md:pb-0">
         {children}

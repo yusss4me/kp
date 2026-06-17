@@ -2,7 +2,7 @@
 
 import { Txt } from "../atoms/text";
 import { Badge } from "../atoms/badge";
-import { DataVerification } from "../molecules/dataVerification";
+import { DataVerification } from "../molecules/DataVerification";
 import { Clock } from "lucide-react";
 
 interface PendingDonationAdminProps {

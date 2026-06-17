@@ -1,7 +1,7 @@
-import { Skeleton } from "./ui/atoms/skeleton";
-import { Container } from "./ui/atoms/container";
-import { BtnSkeleton } from "./ui/atoms/button";
-import { InputSkeleton } from "./ui/atoms/input";
+import { Skeleton } from "@/app/ui/atoms/skeleton";
+import { Container } from "@/app/ui/atoms/container";
+import { BtnSkeleton } from "@/app/ui/atoms/button";
+import { InputSkeleton } from "@/app/ui/atoms/input";
 
 export default function Loading() {
   return (

@@ -33,7 +33,7 @@ export interface AdminProfileHeaderProps {
 export const AdminProfileHeader: React.FC<AdminProfileHeaderProps> = (props) => {
     const { title, subtitle, image, totalDonasi, programAktif, menungguVerifikasi, className } = props;
   return (
-    <Container variant='red' padding='md' radius='lg' shadow='xl' className="hidden relative overflow-hidden">
+    <Container variant='red' padding='md' radius='lg' shadow='xl' className="relative overflow-hidden">
       {/* Decorative element */}
       
       
@@ -47,7 +47,7 @@ export const AdminProfileHeader: React.FC<AdminProfileHeaderProps> = (props) => 
       {/* Admin Quick Stats Card */}
       <Container className="mt-8 grid grid-cols-2 gap-4">
         
-        <Container className="hidden flex-col bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10">
+        <Container className="flex-col bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10">
           <Icn icon={Wallet} size={16} color="light"  />
           <Txt variant="h5" weight="bold" color="light">{totalDonasi}</Txt>
           <Txt variant="caption" weight="bold" color="light" className="opacity-60 uppercase tracking-wider">
@@ -61,13 +61,13 @@ export const AdminProfileHeader: React.FC<AdminProfileHeaderProps> = (props) => 
             Program Aktif
           </Txt>
         </Container>
-        <Container className="hidden col-span-2 bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10 flex items-center justify-between">
+        <Container className="col-span-2 bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10 flex items-center justify-between">
           
           <Container className="flex items-center gap-3">
-            <Container className="hidden bg-warning/20 p-2 rounded-xl">
+            <Container className="bg-warning/20 p-2 rounded-xl">
               <Icn icon={Clock} size={16} color="light" />
             </Container>
-            <Container className="hidden">
+            <Container>
               <Txt variant="small" weight="bold" color="light">{menungguVerifikasi}</Txt>
               <Txt variant="caption" color="light" className="opacity-60">Verifikasi Donasi</Txt>
             </Container>

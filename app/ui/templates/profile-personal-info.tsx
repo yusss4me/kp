@@ -3,12 +3,14 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ProfileSubpageTemplate } from "./profile-subpage";
+import { ProfileSubpageTemplate } from "@/app/ui/templates/profile-subpage";
 import { Container } from "@/app/ui/atoms/container";
 import { Btn } from "@/app/ui/atoms/button";
 import { Input } from "@/app/ui/atoms/input";
 import { Textarea } from "@/app/ui/atoms/textarea";
 import { User, Camera, Save } from "lucide-react";
+import { updateProfile } from "@/app/lib/api/services/auth";
+import { useAuthStore } from "@/app/lib/stores/auth-store";
 
 const personalInfoSchema = z.object({
   firstName: z.string().min(2, "Nama depan minimal 2 karakter"),
@@ -25,6 +27,9 @@ export interface ProfilePersonalInfoTemplateProps {
 }
 
 export function ProfilePersonalInfoTemplate({ defaultValues }: ProfilePersonalInfoTemplateProps) {
+  const authStore = useAuthStore((s) => s);
+  const user = authStore.user;
+
   const {
     register,
     handleSubmit,
@@ -32,19 +37,28 @@ export function ProfilePersonalInfoTemplate({ defaultValues }: ProfilePersonalIn
   } = useForm<PersonalInfoValues>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
-      firstName: "Abdullah",
-      lastName: "Rahman",
-      email: "abdullah@email.com",
-      phoneNumber: "081234567890",
-      address: "Jl. Kebaikan No. 123, Jakarta",
+      firstName: user?.name?.split(" ")[0] || "Donatur",
+      lastName: user?.name?.split(" ").slice(1).join(" ") || "Yamuti",
+      email: user?.email || "donatur@yamuti.org",
+      phoneNumber: user?.phone || "081234567890",
+      address: user?.address || "Jl. Kebaikan No. 123, Jakarta",
       ...defaultValues,
     },
   });
 
   const onSubmit = async (data: PersonalInfoValues) => {
-    console.log("Personal info:", data);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    alert("Profil berhasil diperbarui! (Simulasi)");
+    try {
+      const updatedData = await updateProfile({
+        name: `${data.firstName} ${data.lastName}`,
+        phone: data.phoneNumber,
+        address: data.address,
+      });
+      // Update store state
+      authStore.setAuth({ user: { ...user, ...updatedData } as any, token: authStore.token || "", isAuthenticated: true });
+      alert("Profil berhasil diperbarui!");
+    } catch (e) {
+      alert("Gagal memperbarui profil.");
+    }
   };
 
   return (

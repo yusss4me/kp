@@ -8,6 +8,7 @@ import {
   Compass
 } from "lucide-react";
 import { routes } from "@/app/lib/constants/routes";
+import { OWNER_PROFILE_MENU_GROUPS } from "@/app/lib/constants/profile-constants";
 
 /**
  * Owner Layout
@@ -36,6 +37,7 @@ export default function OwnerLayout({
           role: "Pemilik Yayasan",
           image: user?.image || ""
         }} 
+        profileMenuGroups={OWNER_PROFILE_MENU_GROUPS}
       />
       
       {/* Konten Utama */}

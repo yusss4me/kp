@@ -3,8 +3,10 @@ import {
   fetchKunjunganList,
   createKunjungan,
   approveKunjungan,
+  updateKunjunganStatus,
   getKunjunganById,
   type CreateKunjunganPayload,
+  type KunjunganStatus,
 } from "@/app/lib/api/services/kunjungan";
 
 /** React Query hook for fetching kunjungan list */
@@ -38,7 +40,20 @@ export function useCreateKunjungan() {
   });
 }
 
-/** React Query mutation hook for approving a kunjungan */
+/** React Query mutation hook for updating kunjungan status (APPROVED, REJECTED, COMPLETED) */
+export function useUpdateKunjunganStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, status }: { id: string; status: KunjunganStatus }) =>
+      updateKunjunganStatus(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["kunjungan"] });
+    },
+  });
+}
+
+/** React Query mutation hook for approving a kunjungan (convenience wrapper) */
 export function useApproveKunjungan() {
   const queryClient = useQueryClient();
 

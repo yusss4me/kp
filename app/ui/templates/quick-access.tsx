@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { DashboardHeader } from '../organisms/dashboard-header';
-import { QuickActionCard, QuickActionCardProps } from '../molecules/QuickActionCard';
-import { Txt } from '../atoms/text';
-import { Container } from '../atoms/container';
-import { LucideIcon, ChevronRight } from 'lucide-react';
+import { DashboardHeader } from '@/app/ui/organisms/dashboard-header';
+import { QuickActionCard, QuickActionCardProps } from '@/app/ui/molecules/QuickActionCard';
+import { Txt } from '@/app/ui/atoms/text';
+import { Container } from '@/app/ui/atoms/container';
+import { LucideIcon } from 'lucide-react';
 import { cn } from '@/app/lib/utils';
 
 interface QuickAccessSection {

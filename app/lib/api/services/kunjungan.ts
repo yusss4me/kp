@@ -14,10 +14,17 @@ export async function createKunjungan(payload: CreateKunjunganPayload) {
   return res.data;
 }
 
-/** POST /kunjungan/{id}/approve — setujui kunjungan (memerlukan Bearer token) */
-export async function approveKunjungan(id: string) {
-  const res = await apiClient.post(`/kunjungan/${id}/approve`);
+/** PATCH /kunjungan/{id}/status — update status kunjungan (APPROVED, REJECTED, COMPLETED) */
+export type KunjunganStatus = "APPROVED" | "REJECTED" | "COMPLETED";
+
+export async function updateKunjunganStatus(id: string, status: KunjunganStatus) {
+  const res = await apiClient.patch(`/kunjungan/${id}/status`, { status });
   return res.data;
+}
+
+/** PATCH /kunjungan/{id}/status — setujui kunjungan (status = APPROVED) */
+export async function approveKunjungan(id: string) {
+  return updateKunjunganStatus(id, "APPROVED");
 }
 
 /** GET /kunjungan — returns empty array on 404 (backend may not be ready) */

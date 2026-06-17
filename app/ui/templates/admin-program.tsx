@@ -1,16 +1,16 @@
-import { ProgramSectionAdmin } from "../organisms/program-section-admin"
-import { DashboardHeader } from "../organisms/dashboard-header"
-import { Txt } from "../atoms/text"
-import { Btn } from "../atoms/button"
-import { Badge } from "../atoms/badge"
-import { StatCard } from "../molecules/stat-card"
+import { ProgramSectionAdmin } from "@/app/ui/organisms/program-section-admin";
+import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
+import { Txt } from "@/app/ui/atoms/text"
+import { Btn } from "@/app/ui/atoms/button"
+import { Badge } from "@/app/ui/atoms/badge"
+import { StatCard } from "@/app/ui/molecules/stat-card"
 import { Filter, Plus, Search, DollarSign, Clock, Link, MoreVertical } from "lucide-react"
 import { Lnk } from "@/app/ui/atoms/link"
-import { DataVerification } from "../molecules/dataVerification"
+import { DataVerification } from "@/app/ui/molecules/DataVerification"
 import { Heart, Users } from "lucide-react"
-import { PendingDonationAdmin } from "../organisms/program-pending-admin"
-import { ProgramsSection } from "../organisms/programs-section"
-import { ProgramTableAdmin } from "../organisms/program-table-admin"
+import { PendingDonationAdmin } from "@/app/ui/organisms/program-pending-admin"
+import { ProgramsSection } from "@/app/ui/organisms/programs-section"
+import { ProgramTableAdmin } from "@/app/ui/organisms/program-table-admin"
 
 interface AdminProgramTemplateProps {
     programs: {

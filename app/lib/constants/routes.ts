@@ -61,6 +61,9 @@ export const routes = {
     settings: {
       root: () => `/owner/settings`,
     },
+    profile: {
+      root: () => `/owner/profile`,
+    },
   },
   
   admin: {

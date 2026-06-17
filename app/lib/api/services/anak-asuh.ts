@@ -44,3 +44,30 @@ export async function createAnakAsuh(payload: CreateAnakAsuhPayload) {
   const res = await apiClient.post("/anak-asuh", payload);
   return res.data;
 }
+
+/** GET /anak-asuh/{id} — detail anak asuh (memerlukan Bearer token) */
+export async function fetchAnakAsuhById(id: string | number): Promise<Orphan> {
+  const res = await apiClient.get(`/anak-asuh/${id}`);
+  const body = res.data as { data?: ApiOrphanResponse } | ApiOrphanResponse;
+  const item = (body as { data?: ApiOrphanResponse }).data || (body as ApiOrphanResponse);
+  return mapOrphan(item);
+}
+
+export interface UpdateAnakAsuhPayload {
+  nama?: string;
+  tanggal_lahir?: string;
+  status?: string;
+  kategori_bayi?: boolean;
+}
+
+/** PUT /anak-asuh/{id} — update anak asuh (memerlukan Bearer token) */
+export async function updateAnakAsuh(id: string | number, payload: UpdateAnakAsuhPayload) {
+  const res = await apiClient.put(`/anak-asuh/${id}`, payload);
+  return res.data;
+}
+
+/** DELETE /anak-asuh/{id} — hapus anak asuh (memerlukan Bearer token) */
+export async function deleteAnakAsuh(id: string | number) {
+  const res = await apiClient.delete(`/anak-asuh/${id}`);
+  return res.data;
+}

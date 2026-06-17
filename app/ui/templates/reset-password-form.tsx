@@ -7,10 +7,10 @@ import * as z from "zod";
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle, ArrowLeft } from "lucide-react";
-import { Container } from "../atoms/container";
-import { Txt } from "../atoms/text";
-import { Btn } from "../atoms/button";
-import { PasswordField } from "../molecules/password-field";
+import { Container } from "@/app/ui/atoms/container";
+import { Txt } from "@/app/ui/atoms/text";
+import { Btn } from "@/app/ui/atoms/button";
+import { PasswordField } from "@/app/ui/molecules/password-field";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
 
 const resetPasswordSchema = z

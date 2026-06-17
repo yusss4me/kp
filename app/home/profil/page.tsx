@@ -5,8 +5,10 @@ import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
 import { PROFILE_MENU_GROUPS } from "@/app/lib/constants/profile-constants";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   const authUser = useAuthStore((s) => s.user);
   const programs = useYamutiStore((s) => s.programs);
   const bookings = useYamutiStore((s) => s.bookings);
@@ -32,6 +34,10 @@ export default function Page() {
         listMenu={PROFILE_MENU_GROUPS}
         isFlyout={false}
         embedded
+        onLogout={() => {
+          useAuthStore.getState().logout();
+          router.push("/auth/donatur");
+        }}
       />
     </DashboardHeader>
   );

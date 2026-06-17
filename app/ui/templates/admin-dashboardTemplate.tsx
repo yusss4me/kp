@@ -1,8 +1,8 @@
-  import { DashboardHeader } from "../organisms/dashboard-header";
-  import { StatCard } from "../molecules/stat-card";
-  import { OrphanCard } from "../molecules/orphan-card";
-  import { Txt } from "../atoms/text";
-  import { Btn } from "../atoms/button";
+  import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
+  import { StatCard } from "@/app/ui/molecules/stat-card";
+  import { OrphanCard } from "@/app/ui/molecules/orphan-card";
+  import { Txt } from "@/app/ui/atoms/text";
+  import { Btn } from "@/app/ui/atoms/button";
   import { Plus, Wallet, Package, Heart, Users } from "lucide-react";
   import { getTranslations } from "next-intl/server";
 
