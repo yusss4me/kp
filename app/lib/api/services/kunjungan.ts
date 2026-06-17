@@ -10,8 +10,27 @@ export interface CreateKunjunganPayload {
 
 /** POST /kunjungan — ajukan kunjungan (public, tanpa auth) */
 export async function createKunjungan(payload: CreateKunjunganPayload) {
-  const res = await apiClient.post("/kunjungan", payload);
-  return res.data;
+  try {
+    const res = await apiClient.post("/kunjungan", payload, {
+      timeout: 15000,
+    });
+    return res.data;
+  } catch (error: any) {
+    // Gracefully handle backend not available
+    if (error?.code === "ERR_NETWORK" || error?.code === "ECONNABORTED") {
+      console.warn("POST /kunjungan — network error or timeout, backend may be unavailable");
+      return null;
+    }
+    if (error?.response?.status === 404) {
+      console.warn("POST /kunjungan — endpoint not found (backend may not be ready)");
+      return null;
+    }
+    if (error?.response?.status === 422) {
+      console.error("POST /kunjungan — validation error:", error.response.data);
+      throw error;
+    }
+    throw error;
+  }
 }
 
 /** PATCH /kunjungan/{id}/status — update status kunjungan (APPROVED, REJECTED, COMPLETED) */

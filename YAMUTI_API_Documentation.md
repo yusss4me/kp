@@ -64,11 +64,29 @@ Dokumentasi ini ditujukan bagi Tim Frontend. Seluruh *endpoint* mengembalikan *r
 
 ---
 
-## 5. Donasi & Keuangan (`/donasi` & `/keuangan`)
+## 5. Kampanye Crowdfunding (`/kampanye`)
+
+### Daftar Kampanye (Public)
+- **Endpoint:** `GET /kampanye`
+- **Query Params:** `?status=Aktif`, `?per_page=15`
+- **Response:** Mengembalikan daftar kampanye lengkap dengan total donasi terkumpul (`donasi_sum_gross_amount`).
+
+### Detail Kampanye (Public)
+- **Endpoint:** `GET /kampanye/{id}` (bisa menggunakan `id` atau `slug`)
+
+### Kelola Kampanye (Admin Only)
+**Headers:** `Authorization: Bearer <token>`
+- **POST** `/kampanye` (Format `multipart/form-data` untuk mendukung upload `thumbnail`)
+- **PUT** `/kampanye/{id}` (Update detail kampanye)
+- **DELETE** `/kampanye/{id}` (Hapus kampanye)
+
+---
+
+## 6. Donasi & Keuangan (`/donasi` & `/keuangan`)
 
 ### Buat Donasi Baru (Public - Tidak Butuh Token)
 - **Endpoint:** `POST /donasi`
-- **Body:** `nama_donatur`, `no_whatsapp`, `gross_amount` (uang), `nama_barang` (barang), dsb.
+- **Body:** `nama_donatur`, `no_whatsapp`, `gross_amount` (uang), `nama_barang` (barang), `kampanye_id` (opsional: jika berdonasi untuk kampanye tertentu).
 - **Response:** Mengembalikan `snap_token` (Midtrans) jika tipe uang.
 
 ### Manajemen Donasi (Admin)

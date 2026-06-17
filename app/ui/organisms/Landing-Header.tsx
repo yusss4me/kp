@@ -54,7 +54,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = () => {
 
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex items-center gap-3">
-            <Link href="/auth/">
+            <Link href="/auth/donatur">
               <Btn variant="light" textColor='dark' shape="circle" className="px-6">Masuk</Btn>
             </Link>
             <Link href="/auth/daftar">
@@ -90,7 +90,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = () => {
             />
           ))}
           <div className="flex flex-col gap-4 pt-4">
-            <Link href="/auth/" onClick={() => setIsMenuOpen(false)}>
+            <Link href="/auth/donatur" onClick={() => setIsMenuOpen(false)}>
               <Btn variant="light" textColor='dark' shape="circle" className="w-full py-4">Masuk</Btn>
             </Link>
             <Link href="/auth/daftar" onClick={() => setIsMenuOpen(false)}>

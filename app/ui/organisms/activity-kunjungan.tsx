@@ -17,11 +17,11 @@ import { InteractiveCalendar } from "./interactive-calendar";
 const visitSchema = z.object({
   fullName: z.string().min(3, "Nama lengkap minimal 3 karakter"),
   phone: z.string().min(10, "Nomor telepon tidak valid"),
-  institution: z.string().optional(),
+  
   purpose: z.string().min(5, "Keperluan minimal 5 karakter"),
   visitDate: z.string().min(1, "Tanggal harus dipilih"),
   visitTime: z.string().regex(/^\d{2}:00$/, "Waktu kunjungan hanya diperbolehkan tepat per jam (misal: 08:00, 10:00)").min(1, "Waktu harus dipilih"),
-  participantCount: z.number({ message: "Jumlah peserta harus angka" }).min(1, "Minimal 1 peserta"),
+  
 });
 
 type VisitFormValues = z.infer<typeof visitSchema>;
@@ -126,13 +126,7 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
                   error={errors.phone?.message}
                   disabled={isUser}
                 />
-                <Input 
-                  label="Instansi / Perusahaan" 
-                  placeholder="Nama Instansi (Kosongkan jika pribadi)" 
-                  className="focus:ring-2 focus:ring-red-primary/10 transition-all"
-                  {...register("institution")}
-                  error={errors.institution?.message}
-                />
+                
                 <Input 
                   label="Keperluan Kunjungan" 
                   placeholder="Contoh: Penyerahan Donasi, Silaturahmi, dll" 
@@ -160,14 +154,7 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
                   )}
                 </div>
                 
-                <Input 
-                  label="Jumlah Peserta" 
-                  type="number" 
-                  placeholder="Contoh: 3" 
-                  className="focus:ring-2 focus:ring-red-primary/10 transition-all"
-                  {...register("participantCount", { valueAsNumber: true })}
-                  error={errors.participantCount?.message}
-                />
+                
               </div>
 
               <Btn

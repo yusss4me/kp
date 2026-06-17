@@ -19,8 +19,7 @@ const regisSchema = z.object({
   password: z.string().min(6, "Kata sandi minimal 6 karakter"),
   confirmPassword: z.string(),
   no_whatsapp: z.string().min(10, "Nomor WhatsApp minimal 10 karakter"),
-  nik: z.string().min(16, "NIK harus 16 digit"),
-  alamat: z.string().min(5, "Alamat minimal 5 karakter"),
+  
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Konfirmasi kata sandi tidak cocok",
   path: ["confirmPassword"],
@@ -61,8 +60,7 @@ export default function RegisForm({}: RegisFormProps) {
       data.password,
       data.confirmPassword,
       data.no_whatsapp,
-      data.nik,
-      data.alamat
+      
     );
     if (success) {
       // If auto-login succeeded, redirect to home
@@ -117,33 +115,21 @@ export default function RegisForm({}: RegisFormProps) {
           {...register("email")}
           error={errors.email?.message}
         />
+          <Input
+            label="Nomor WhatsApp"
+            placeholder="Contoh: 081234567890"
+            className="focus:ring-2 focus:ring-red-primary/10 transition-all"
+            {...register("no_whatsapp")}
+            error={errors.no_whatsapp?.message}
+          />
+        
         <PasswordField 
           label="Kata Sandi" 
           placeholder="Masukkan Kata Sandi" 
           {...register("password")}
           error={errors.password?.message}
         />
-        <Input
-          label="Nomor WhatsApp"
-          placeholder="Contoh: 081234567890"
-          className="focus:ring-2 focus:ring-red-primary/10 transition-all"
-          {...register("no_whatsapp")}
-          error={errors.no_whatsapp?.message}
-        />
-        <Input
-          label="NIK"
-          placeholder="Masukkan NIK (16 digit)"
-          className="focus:ring-2 focus:ring-red-primary/10 transition-all"
-          {...register("nik")}
-          error={errors.nik?.message}
-        />
-        <Input
-          label="Alamat"
-          placeholder="Masukkan alamat lengkap"
-          className="focus:ring-2 focus:ring-red-primary/10 transition-all"
-          {...register("alamat")}
-          error={errors.alamat?.message}
-        />
+        
         <PasswordField
           label="Konfirmasi Kata Sandi"
           placeholder="Masukkan Konfirmasi Kata Sandi"

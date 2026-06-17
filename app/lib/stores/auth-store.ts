@@ -23,7 +23,7 @@ interface AuthState {
   setRememberMe: (value: boolean) => void;
   loginApi: (email: string, password: string, rememberMe?: boolean) => Promise<{ success: boolean; error?: string }>;
   loginDonaturApi: (email: string, password: string, rememberMe?: boolean) => Promise<{ success: boolean; error?: string }>;
-  registerDonaturApi: (name: string, email: string, password: string, password_confirmation: string, no_whatsapp: string, nik: string, alamat: string) => Promise<{ success: boolean; error?: string }>;
+  registerDonaturApi: (name: string, email: string, password: string, password_confirmation: string, no_whatsapp: string) => Promise<{ success: boolean; error?: string }>;
   forgotPasswordApi: (email: string) => Promise<{ success: boolean; message?: string; error?: string }>;
   resetPasswordApi: (token: string, email: string, password: string, passwordConfirmation: string) => Promise<{ success: boolean; message?: string; error?: string }>;
   fetchProfileApi: () => Promise<{ success: boolean; error?: string }>;
@@ -165,7 +165,7 @@ export const useAuthStore = create<AuthState>()(
           return { success: true };
         } catch (error: any) {
           console.error("Login Error:", error);
-          const message = error.response?.data?.message || "Terjadi kesalahan pada server.";
+          const message = error?.message || error.response?.data?.message || "Terjadi kesalahan pada server.";
           return { success: false, error: message };
         }
       },
@@ -212,15 +212,15 @@ export const useAuthStore = create<AuthState>()(
           return { success: true };
         } catch (error: any) {
           console.error("Donatur Login Error:", error);
-          const message = error.response?.data?.message || "Terjadi kesalahan pada server.";
+          const message = error?.message || error.response?.data?.message || "Terjadi kesalahan pada server.";
           return { success: false, error: message };
         }
       },
 
-      registerDonaturApi: async (name, email, password, password_confirmation, no_whatsapp, nik, alamat) => {
+      registerDonaturApi: async (name, email, password, password_confirmation, no_whatsapp) => {
         try {
           const { registerDonatur } = await import("@/app/lib/api/services/auth");
-          const data = await registerDonatur({ name, email, password, password_confirmation, no_whatsapp, nik, alamat });
+          const data = await registerDonatur({ name, email, password, password_confirmation, no_whatsapp,  });
 
           // Auto-login after registration if token is returned
           const token = data?.data?.token;
@@ -236,7 +236,7 @@ export const useAuthStore = create<AuthState>()(
           return { success: true };
         } catch (error: any) {
           console.error("Register Error:", error);
-          const message = error.response?.data?.message || "Terjadi kesalahan pada server.";
+          const message = error?.message || error.response?.data?.message || "Terjadi kesalahan pada server.";
           return { success: false, error: message };
         }
       },
@@ -251,7 +251,7 @@ export const useAuthStore = create<AuthState>()(
           };
         } catch (error: any) {
           console.error("Forgot Password Error:", error);
-          const message = error.response?.data?.message || "Terjadi kesalahan. Pastikan email terdaftar.";
+          const message = error?.message || error.response?.data?.message || "Terjadi kesalahan. Pastikan email terdaftar.";
           return { success: false, error: message };
         }
       },
@@ -271,7 +271,7 @@ export const useAuthStore = create<AuthState>()(
           };
         } catch (error: any) {
           console.error("Reset Password Error:", error);
-          const message = error.response?.data?.message || "Token tidak valid atau sudah kedaluwarsa.";
+          const message = error?.message || error.response?.data?.message || "Token tidak valid atau sudah kedaluwarsa.";
           return { success: false, error: message };
         }
       },
@@ -296,7 +296,7 @@ export const useAuthStore = create<AuthState>()(
           return { success: true };
         } catch (error: any) {
           console.error("Fetch Profile Error:", error);
-          const message = error.response?.data?.message || "Gagal mengambil profil.";
+          const message = error?.message || error.response?.data?.message || "Gagal mengambil profil.";
           return { success: false, error: message };
         }
       },
@@ -319,7 +319,7 @@ export const useAuthStore = create<AuthState>()(
           return { success: true, message: "Profil berhasil diperbarui." };
         } catch (error: any) {
           console.error("Update Profile Error:", error);
-          const message = error.response?.data?.message || "Gagal memperbarui profil.";
+          const message = error?.message || error.response?.data?.message || "Gagal memperbarui profil.";
           return { success: false, error: message };
         }
       },
@@ -335,7 +335,7 @@ export const useAuthStore = create<AuthState>()(
           return { success: true, message: data.message || "Kata sandi berhasil diubah." };
         } catch (error: any) {
           console.error("Change Password Error:", error);
-          const message = error.response?.data?.message || "Gagal mengubah kata sandi.";
+          const message = error?.message || error.response?.data?.message || "Gagal mengubah kata sandi.";
           return { success: false, error: message };
         }
       },

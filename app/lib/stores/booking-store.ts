@@ -36,7 +36,17 @@ export const useBookingStore = create<BookingStore>()(
 
       addBooking: async (data) => {
         const id = generateNumericId(get().bookings);
-        const slot_waktu = new Date(`${data.date}T${data.time || "08:00"}:00`).toISOString();
+
+        // Safe date construction to avoid RangeError from invalid ISO strings
+        let slot_waktu: string;
+        try {
+          const dateStr = data.date ? `${data.date}T${data.time || "08:00"}:00` : new Date().toISOString();
+          const parsed = new Date(dateStr);
+          if (isNaN(parsed.getTime())) throw new Error("Invalid date");
+          slot_waktu = parsed.toISOString();
+        } catch {
+          slot_waktu = new Date().toISOString();
+        }
 
         // Optimistic update with rollback
         const prev = get().bookings;

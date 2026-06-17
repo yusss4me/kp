@@ -34,6 +34,10 @@ export interface PendingDonation {
   tipe: string;
   jumlah: string;
   tanggal: string;
+  /** Optional: nama barang untuk donasi barang */
+  nama_barang?: string;
+  /** Optional: ID kampanye jika donasi ditujukan ke kampanye tertentu */
+  kampanye_id?: string;
 }
 
 export interface InventoryItem {

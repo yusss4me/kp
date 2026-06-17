@@ -30,6 +30,7 @@ import { cn } from "@/app/lib/utils";
 import { NavLink as NavLinkMolecule } from "@/app/ui/molecules/navlink";
 import { PROFILE_MENU_GROUPS } from "@/app/lib/constants/profile-constants";
 import { routes } from "@/app/lib/constants/routes";
+import { NotificationBell } from "@/app/ui/organisms/notification-bell";
 
 /**
  * Navigation link type definition.
@@ -110,7 +111,7 @@ export const Navbar = ({
         )}
       >
         {/* Top Section: Branding & Header */}
-        <Container className="flex flex-col gap-10">
+        <Container className="flex flex-col gap-6">
           <Container className="flex items-center justify-center">
             <Img
               src="/logo/yamuti.png"
@@ -121,6 +122,11 @@ export const Navbar = ({
               aspect="square"
             />
           </Container>
+
+          {/* Notification Bell (Desktop) */}
+          <div className="flex items-center justify-center">
+            <NotificationBell />
+          </div>
 
           {/* Middle Section: Navigation Links */}
           <nav aria-label="Navigasi utama" className="flex flex-col items-center w-full gap-2 overflow-y-auto custom-scrollbar">
@@ -187,7 +193,11 @@ export const Navbar = ({
 
       {/* Mobile View: Top Header + Bottom Navigation */}
       <Container className="md:hidden flex flex-col">
-        {/* Mobile Top Header: Logo Branding */}
+        {/* Mobile Top Header: Logo + Notification Bell */}
+        <div className="sticky top-0 z-50 flex items-center justify-between px-4 py-3 bg-red-primary shadow-md">
+          <Img src="/logo/yamuti.png" alt="Logo" w={32} h={32} rounded="full" aspect="square" />
+          <NotificationBell />
+        </div>
 
         {/* Mobile Bottom Navigation Bar */}
         <nav

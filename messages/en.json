@@ -62,6 +62,8 @@
     "home": "Home",
     "about": "About",
     "activity": "Activity",
+    "explore": "Explore",
+    "notifications": "Notifications",
     "profile": "Profile",
     "settings": "Settings",
     "logout": "Logout"

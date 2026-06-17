@@ -102,6 +102,65 @@ paths:
       responses:
         '201':
           description: Created
+  /kampanye:
+    get:
+      summary: Mendapatkan Daftar Kampanye (Public)
+      tags:
+        - Kampanye
+      security: []
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            example: Aktif
+      responses:
+        '200':
+          description: Berhasil
+    post:
+      summary: Buat Kampanye Baru
+      tags:
+        - Kampanye
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                judul:
+                  type: string
+                deskripsi:
+                  type: string
+                target_donasi:
+                  type: number
+                tanggal_mulai:
+                  type: string
+                  format: date
+                tanggal_berakhir:
+                  type: string
+                  format: date
+                thumbnail:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Created
+  /kampanye/{id}:
+    get:
+      summary: Mendapatkan Detail Kampanye (Public)
+      tags:
+        - Kampanye
+      security: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Berhasil
   /donasi:
     post:
       summary: Buat Donasi Baru (Public)
@@ -122,6 +181,8 @@ paths:
                 gross_amount:
                   type: integer
                 payment_type:
+                  type: string
+                kampanye_id:
                   type: string
       responses:
         '201':

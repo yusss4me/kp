@@ -54,5 +54,5 @@ export default function Page() {
     );
   }
 
-  return <ExploreTemplate campaigns={campaigns} role="donatur" />;
+  return <ExploreTemplate campaigns={campaigns} role="admin" />;
 }

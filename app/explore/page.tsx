@@ -45,7 +45,7 @@ export default function Page() {
 
   if (error) {
     return (
-      <ErrorDisplay 
+      <ErrorDisplay
         title="Gagal Memuat Program"
         message={error}
         onRetry={() => fetchPrograms()}
@@ -54,5 +54,5 @@ export default function Page() {
     );
   }
 
-  return <ExploreTemplate campaigns={campaigns} />;
+  return <ExploreTemplate campaigns={campaigns} role="visitor" />;
 }

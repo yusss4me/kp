@@ -25,25 +25,39 @@ export interface LoginResponse {
 
 /** POST /auth/login — login admin/owner (public, tanpa auth) */
 export async function loginAdmin(payload: ApiLoginPayload): Promise<LoginResponse> {
-  const res = await apiClient.post("/auth/login", payload);
-  return res.data as LoginResponse;
+  try {
+    const res = await apiClient.post("/auth/login", payload, { timeout: 15000 });
+    return res.data as LoginResponse;
+  } catch (error: any) {
+    if (error?.code === "ERR_NETWORK" || error?.code === "ECONNABORTED") {
+      console.warn("POST /auth/login — network error or timeout");
+      throw Object.assign(new Error("Tidak dapat terhubung ke server. Periksa koneksi internet Anda atau coba lagi nanti."), { code: "ERR_NETWORK" });
+    }
+    throw error;
+  }
 }
 
 /** POST /auth/login — login khusus donatur (same endpoint, role-checked in store) */
 export async function loginDonatur(payload: ApiLoginPayload): Promise<LoginResponse> {
-  const res = await apiClient.post("/auth/login", payload);
-  return res.data as LoginResponse;
+  try {
+    const res = await apiClient.post("/auth/login", payload, { timeout: 15000 });
+    return res.data as LoginResponse;
+  } catch (error: any) {
+    if (error?.code === "ERR_NETWORK" || error?.code === "ECONNABORTED") {
+      console.warn("POST /auth/login — network error or timeout");
+      throw Object.assign(new Error("Tidak dapat terhubung ke server. Periksa koneksi internet Anda atau coba lagi nanti."), { code: "ERR_NETWORK" });
+    }
+    throw error;
+  }
 }
 
 /** POST /auth/register — pendaftaran donatur baru */
 export interface RegisterDonaturPayload {
   name: string;
   email: string;
+  no_whatsapp: string;
   password: string;
   password_confirmation: string;
-  no_whatsapp: string;
-  nik: string;
-  alamat: string;
 }
 
 export interface RegisterDonaturResponse {
@@ -55,8 +69,16 @@ export interface RegisterDonaturResponse {
 }
 
 export async function registerDonatur(payload: RegisterDonaturPayload): Promise<RegisterDonaturResponse> {
-  const res = await apiClient.post("/auth/register", payload);
-  return res.data as RegisterDonaturResponse;
+  try {
+    const res = await apiClient.post("/auth/register", payload, { timeout: 15000 });
+    return res.data as RegisterDonaturResponse;
+  } catch (error: any) {
+    if (error?.code === "ERR_NETWORK" || error?.code === "ECONNABORTED") {
+      console.warn("POST /auth/register — network error or timeout");
+      throw Object.assign(new Error("Tidak dapat terhubung ke server. Periksa koneksi internet Anda atau coba lagi nanti."), { code: "ERR_NETWORK" });
+    }
+    throw error;
+  }
 }
 
 /** POST /forgot-password — kirim email reset password */
@@ -70,8 +92,16 @@ export interface ForgotPasswordResponse {
 }
 
 export async function forgotPassword(payload: ForgotPasswordPayload): Promise<ForgotPasswordResponse> {
-  const res = await apiClient.post("/forgot-password", payload);
-  return res.data as ForgotPasswordResponse;
+  try {
+    const res = await apiClient.post("/forgot-password", payload, { timeout: 15000 });
+    return res.data as ForgotPasswordResponse;
+  } catch (error: any) {
+    if (error?.code === "ERR_NETWORK" || error?.code === "ECONNABORTED") {
+      console.warn("POST /forgot-password — network error or timeout");
+      throw Object.assign(new Error("Tidak dapat terhubung ke server. Periksa koneksi internet Anda atau coba lagi nanti."), { code: "ERR_NETWORK" });
+    }
+    throw error;
+  }
 }
 
 /** POST /reset-password — reset password dengan token dari email */
@@ -88,8 +118,16 @@ export interface ResetPasswordResponse {
 }
 
 export async function resetPassword(payload: ResetPasswordPayload): Promise<ResetPasswordResponse> {
-  const res = await apiClient.post("/reset-password", payload);
-  return res.data as ResetPasswordResponse;
+  try {
+    const res = await apiClient.post("/reset-password", payload, { timeout: 15000 });
+    return res.data as ResetPasswordResponse;
+  } catch (error: any) {
+    if (error?.code === "ERR_NETWORK" || error?.code === "ECONNABORTED") {
+      console.warn("POST /reset-password — network error or timeout");
+      throw Object.assign(new Error("Tidak dapat terhubung ke server. Periksa koneksi internet Anda atau coba lagi nanti."), { code: "ERR_NETWORK" });
+    }
+    throw error;
+  }
 }
 
 /** GET /profile — ambil profil user yang sedang login */
@@ -115,10 +153,18 @@ export interface ProfileResponse {
 }
 
 export async function fetchProfile(): Promise<ProfileData> {
-  const res = await apiClient.get("/profile");
-  const body = res.data as ProfileResponse;
-  // Normalize: backend may wrap in `data` or `user` key
-  return body.data || body.user || body;
+  try {
+    const res = await apiClient.get("/profile", { timeout: 15000 });
+    const body = res.data as ProfileResponse;
+    // Normalize: backend may wrap in `data` or `user` key
+    return body.data || body.user || body;
+  } catch (error: any) {
+    if (error?.code === "ERR_NETWORK" || error?.code === "ECONNABORTED") {
+      console.warn("GET /profile — network error or timeout");
+      throw Object.assign(new Error("Tidak dapat terhubung ke server. Periksa koneksi internet Anda atau coba lagi nanti."), { code: "ERR_NETWORK" });
+    }
+    throw error;
+  }
 }
 
 /** PUT /profile — update profil user */
@@ -135,9 +181,17 @@ export interface UpdateProfileResponse {
 }
 
 export async function updateProfile(payload: UpdateProfilePayload): Promise<ProfileData> {
-  const res = await apiClient.put("/profile", payload);
-  const body = res.data as UpdateProfileResponse;
-  return (body.data || body.user || body) as ProfileData;
+  try {
+    const res = await apiClient.put("/profile", payload, { timeout: 15000 });
+    const body = res.data as UpdateProfileResponse;
+    return (body.data || body.user || body) as ProfileData;
+  } catch (error: any) {
+    if (error?.code === "ERR_NETWORK" || error?.code === "ECONNABORTED") {
+      console.warn("PUT /profile — network error or timeout");
+      throw Object.assign(new Error("Tidak dapat terhubung ke server. Periksa koneksi internet Anda atau coba lagi nanti."), { code: "ERR_NETWORK" });
+    }
+    throw error;
+  }
 }
 
 /** PUT /profile/password — ubah kata sandi */
@@ -152,14 +206,30 @@ export interface ChangePasswordResponse {
 }
 
 export async function changePassword(payload: ChangePasswordPayload): Promise<ChangePasswordResponse> {
-  const res = await apiClient.put("/profile/password", payload);
-  return res.data as ChangePasswordResponse;
+  try {
+    const res = await apiClient.put("/profile/password", payload, { timeout: 15000 });
+    return res.data as ChangePasswordResponse;
+  } catch (error: any) {
+    if (error?.code === "ERR_NETWORK" || error?.code === "ECONNABORTED") {
+      console.warn("PUT /profile/password — network error or timeout");
+      throw Object.assign(new Error("Tidak dapat terhubung ke server. Periksa koneksi internet Anda atau coba lagi nanti."), { code: "ERR_NETWORK" });
+    }
+    throw error;
+  }
 }
 
 /** POST /auth/logout — logout user (memerlukan Bearer token) */
 export async function logoutUser(): Promise<{ message?: string }> {
-  const res = await apiClient.post("/auth/logout");
-  return res.data;
+  try {
+    const res = await apiClient.post("/auth/logout", {}, { timeout: 15000 });
+    return res.data;
+  } catch (error: any) {
+    if (error?.code === "ERR_NETWORK" || error?.code === "ECONNABORTED") {
+      console.warn("POST /auth/logout — network error or timeout");
+      return { message: "Logout berhasil (offline)" };
+    }
+    throw error;
+  }
 }
 
 /** GET /auth/me — ambil data user yang sedang login (memerlukan Bearer token) */
@@ -175,9 +245,17 @@ export interface CurrentUserResponse {
 }
 
 export async function getCurrentUser(): Promise<CurrentUserResponse> {
-  const res = await apiClient.get("/auth/me");
-  const body = res.data as { data?: CurrentUserResponse } | CurrentUserResponse;
-  return (body as { data?: CurrentUserResponse }).data || (body as CurrentUserResponse);
+  try {
+    const res = await apiClient.get("/auth/me", { timeout: 15000 });
+    const body = res.data as { data?: CurrentUserResponse } | CurrentUserResponse;
+    return (body as { data?: CurrentUserResponse }).data || (body as CurrentUserResponse);
+  } catch (error: any) {
+    if (error?.code === "ERR_NETWORK" || error?.code === "ECONNABORTED") {
+      console.warn("GET /auth/me — network error or timeout");
+      throw Object.assign(new Error("Tidak dapat terhubung ke server. Periksa koneksi internet Anda atau coba lagi nanti."), { code: "ERR_NETWORK" });
+    }
+    throw error;
+  }
 }
 
 /** POST /contact — kirim pesan kontak */
@@ -192,6 +270,14 @@ export interface ContactResponse {
 }
 
 export async function sendContactMessage(payload: ContactPayload): Promise<ContactResponse> {
-  const res = await apiClient.post("/contact", payload);
-  return res.data as ContactResponse;
+  try {
+    const res = await apiClient.post("/contact", payload, { timeout: 15000 });
+    return res.data as ContactResponse;
+  } catch (error: any) {
+    if (error?.code === "ERR_NETWORK" || error?.code === "ECONNABORTED") {
+      console.warn("POST /contact — network error or timeout");
+      throw Object.assign(new Error("Tidak dapat terhubung ke server. Periksa koneksi internet Anda atau coba lagi nanti."), { code: "ERR_NETWORK" });
+    }
+    throw error;
+  }
 }

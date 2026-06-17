@@ -35,6 +35,9 @@ export const routes = {
       },
 
     },
+    notifications: {
+      root: () => `/home/profil/notifications`,
+    },
     
     
   },
@@ -63,6 +66,12 @@ export const routes = {
     },
     profile: {
       root: () => `/owner/profile`,
+    },
+    explore: {
+      root: () => `/owner/explore`,
+    },
+    notifications: {
+      root: () => `/owner/notifications`,
     },
   },
   
@@ -111,6 +120,12 @@ export const routes = {
     },
     quickAccess: {
       root: () => `/admin/quick-access`,
+    },
+    explore: {
+      root: () => `/admin/explore`,
+    },
+    notifications: {
+      root: () => `/admin/notifications`,
     },
   },
 

@@ -4,8 +4,11 @@ import { unwrapList } from "@/app/lib/api/response";
 export interface CreateDonasiPayload {
   nama_donatur: string;
   no_whatsapp: string;
-  gross_amount: number;
-  payment_type: string;
+  gross_amount?: number;
+  nama_barang?: string;
+  payment_type?: string;
+  /** Optional: ID kampanye jika berdonasi untuk kampanye tertentu */
+  kampanye_id?: string;
 }
 
 /** POST /donasi — buat donasi baru (public, tanpa auth) */

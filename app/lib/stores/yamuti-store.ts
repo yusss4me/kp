@@ -29,6 +29,7 @@ import {
   programToListItem,
 } from "@/app/lib/utils/crud-helpers";
 import { getErrorMessage } from "./store-utils";
+import { useNotificationStore } from "./notification-store";
 
 interface YamutiStore {
   programs: Program[];
@@ -161,6 +162,12 @@ export const useYamutiStore = create<YamutiStore>()(
       addProgram: (data) => {
         const program = buildProgram({ ...data, collectedAmount: 0 });
         set((s) => ({ programs: [...s.programs, program] }));
+        useNotificationStore.getState().addNotification({
+          title: "Program Baru Ditambahkan",
+          message: `Program "${data.title}" berhasil ditambahkan.`,
+          type: "program",
+          link: `/admin/explore`,
+        });
         return program.id;
       },
 
@@ -200,11 +207,28 @@ export const useYamutiStore = create<YamutiStore>()(
         set((s) => ({ pendingDonations: [newDonation, ...s.pendingDonations] }));
 
         try {
-          await createDonasi({
+          const donasiPayload: Parameters<typeof createDonasi>[0] = {
             nama_donatur: donation.nama,
             no_whatsapp: "081234567890",
-            gross_amount: cleanAmount,
             payment_type: donation.tipe.toLowerCase(),
+          };
+          // Pass gross_amount for money donations
+          if (donation.tipe.toLowerCase() !== "barang") {
+            donasiPayload.gross_amount = cleanAmount;
+          }
+          // Pass nama_barang for goods donations
+          if (donation.nama_barang) {
+            donasiPayload.nama_barang = donation.nama_barang;
+          }
+          // Pass kampanye_id if donating to a specific campaign
+          if (donation.kampanye_id) {
+            donasiPayload.kampanye_id = donation.kampanye_id;
+          }
+          await createDonasi(donasiPayload);
+          useNotificationStore.getState().addNotification({
+            title: "Donasi Baru Diterima",
+            message: `Donasi dari ${donation.nama} sebesar Rp ${cleanAmount.toLocaleString("id-ID")} berhasil dicatat.`,
+            type: "donation",
           });
         } catch (error: any) {
           console.error("Gagal menambah donasi via API:", error);
@@ -339,7 +363,17 @@ export const useYamutiStore = create<YamutiStore>()(
       /** POST /kunjungan — optimistic with rollback */
       addBooking: async (data) => {
         const id = generateNumericId(get().bookings);
-        const slot_waktu = new Date(`${data.date}T${data.time || "08:00"}:00`).toISOString();
+
+        // Safe date construction to avoid RangeError from invalid ISO strings
+        let slot_waktu: string;
+        try {
+          const dateStr = data.date ? `${data.date}T${data.time || "08:00"}:00` : new Date().toISOString();
+          const parsed = new Date(dateStr);
+          if (isNaN(parsed.getTime())) throw new Error("Invalid date");
+          slot_waktu = parsed.toISOString();
+        } catch {
+          slot_waktu = new Date().toISOString();
+        }
 
         // Optimistic update
         const prev = get().bookings;
@@ -351,6 +385,12 @@ export const useYamutiStore = create<YamutiStore>()(
             nomor_telepon: data.phone || "",
             tujuan_kunjungan: data.type,
             slot_waktu,
+          });
+          useNotificationStore.getState().addNotification({
+            title: "Kunjungan Baru Diajukan",
+            message: `${data.visitor} mengajukan kunjungan pada ${data.date}.`,
+            type: "kunjungan",
+            link: `/admin/kunjungan`,
           });
         } catch (error: any) {
           console.error("Gagal menambah kunjungan via API:", error);
@@ -396,6 +436,11 @@ export const useYamutiStore = create<YamutiStore>()(
 
         try {
           await approveKunjungan(id);
+          useNotificationStore.getState().addNotification({
+            title: "Kunjungan Disetujui",
+            message: `Permintaan kunjungan #${id} telah disetujui.`,
+            type: "kunjungan",
+          });
         } catch (error: any) {
           console.error("Gagal approve kunjungan via API:", error);
           // Rollback on failure
@@ -418,6 +463,12 @@ export const useYamutiStore = create<YamutiStore>()(
       addNews: (data) => {
         const id = generateId("news-");
         set((s) => ({ news: [{ ...data, id }, ...s.news] }));
+        useNotificationStore.getState().addNotification({
+          title: "Berita Baru Dipublikasikan",
+          message: `Berita "${data.title}" berhasil dipublikasikan.`,
+          type: "broadcast",
+          link: `/admin/cms/berita`,
+        });
         return id;
       },
 
