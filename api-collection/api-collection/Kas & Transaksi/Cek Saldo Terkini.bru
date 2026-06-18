@@ -1,0 +1,13 @@
+meta {
+  name: Cek Saldo Terkini
+  type: http
+  seq: 1
+}
+get {
+  url: {{base_url}}/api/kas/saldo
+  body: none
+  auth: bearer
+}
+auth:bearer {
+  token: {{token}}
+}

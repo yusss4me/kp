@@ -54,9 +54,10 @@ export const useBookingStore = create<BookingStore>()(
 
         try {
           await createKunjungan({
-            nama_pengunjung: data.visitor,
-            nomor_telepon: data.phone || "",
-            tujuan_kunjungan: data.type,
+            nama_tamu: data.visitor,
+            no_whatsapp: data.phone || "",
+            jumlah_pengunjung: 1,
+            maksud: data.type,
             slot_waktu,
           });
         } catch (error: any) {

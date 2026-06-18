@@ -1,0 +1,14 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+put {
+  url: {{base_url}}/api/artikel/REPLACE_ID
+  body: none
+  auth: bearer
+}
+auth:bearer {
+  token: {{token}}
+}
+

@@ -5,8 +5,11 @@ import {
   createInventaris,
   updateInventaris,
   deleteInventaris,
+  catatMutasiInventaris,
+  fetchRiwayatMutasi,
   type CreateInventarisPayload,
   type UpdateInventarisPayload,
+  type CatatMutasiPayload,
 } from "@/app/lib/api/services/inventaris";
 
 /** React Query hook for fetching inventaris list */
@@ -59,5 +62,33 @@ export function useDeleteInventaris() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["inventaris"] });
     },
+  });
+}
+
+/** React Query mutation hook for recording inventaris mutasi */
+export function useCatatMutasiInventaris() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      inventarisId,
+      payload,
+    }: {
+      inventarisId: string | number;
+      payload: CatatMutasiPayload;
+    }) => catatMutasiInventaris(inventarisId, payload),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["inventaris"] });
+      queryClient.invalidateQueries({ queryKey: ["inventaris", variables.inventarisId, "mutasi"] });
+    },
+  });
+}
+
+/** React Query hook for inventaris mutasi history */
+export function useRiwayatMutasi(inventarisId: string | number) {
+  return useQuery({
+    queryKey: ["inventaris", inventarisId, "mutasi"],
+    queryFn: () => fetchRiwayatMutasi(inventarisId),
+    enabled: !!inventarisId,
+    staleTime: 2 * 60 * 1000,
   });
 }

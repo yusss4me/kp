@@ -1,0 +1,13 @@
+meta {
+  name: Delete
+  type: http
+  seq: 5
+}
+delete {
+  url: {{base_url}}/api/kategori-artikel/REPLACE_ID
+  body: none
+  auth: bearer
+}
+auth:bearer {
+  token: {{token}}
+}

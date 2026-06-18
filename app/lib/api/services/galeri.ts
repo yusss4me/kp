@@ -25,3 +25,16 @@ export async function fetchGaleriList() {
     throw error;
   }
 }
+
+/** GET /galeri/{id} — detail galeri */
+export async function fetchGaleriById(id: string | number) {
+  const res = await apiClient.get(`/galeri/${id}`);
+  const body = res.data as { data?: unknown } | unknown;
+  return (body as { data?: unknown }).data || body;
+}
+
+/** DELETE /galeri/{id} — hapus item galeri (memerlukan Bearer token) */
+export async function deleteGaleri(id: string | number) {
+  const res = await apiClient.delete(`/galeri/${id}`);
+  return res.data;
+}

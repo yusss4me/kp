@@ -105,16 +105,16 @@ export function middleware(request: NextRequest) {
     }
 
     // Token expired → clear cookies, redirect ke login admin
-    if (isTokenExpired(token)) {
-      const loginUrl = new URL('/auth', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      loginUrl.searchParams.set('reason', 'session_expired');
+    // if (isTokenExpired(token)) {
+    //   const loginUrl = new URL('/auth', request.url);
+    //   loginUrl.searchParams.set('redirect', pathname);
+    //   loginUrl.searchParams.set('reason', 'session_expired');
 
-      const response = NextResponse.redirect(loginUrl);
-      response.cookies.set('yamuti-auth-token', '', { maxAge: 0, path: '/' });
-      response.cookies.set('yamuti-auth-role', '', { maxAge: 0, path: '/' });
-      return response;
-    }
+    //   const response = NextResponse.redirect(loginUrl);
+    //   response.cookies.set('yamuti-auth-token', '', { maxAge: 0, path: '/' });
+    //   response.cookies.set('yamuti-auth-role', '', { maxAge: 0, path: '/' });
+    //   return response;
+    // }
 
     // RBAC: Admin hanya bisa akses /admin
     if (isAdminRoute && role !== 'admin') {

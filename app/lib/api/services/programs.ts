@@ -51,8 +51,9 @@ export function mapProgram(item: ApiKampanye): Program {
 /** GET /kampanye — daftar kampanye (public, optional ?status=Aktif) */
 export async function fetchPrograms(status?: string): Promise<Program[]> {
   try {
-    const params = status ? `?status=${encodeURIComponent(status)}` : "";
-    const res = await apiClient.get(`/kampanye/${params}`);
+    const res = await apiClient.get("/kampanye", {
+      params: status ? { status } : undefined,
+    });
     return unwrapList<ApiKampanye>(res.data).map(mapProgram);
   } catch (error: any) {
     // Gracefully handle 404 when backend route is not yet available
@@ -106,21 +107,31 @@ export async function createKampanye(payload: KampanyeFormInput) {
   }
 }
 
-/** PUT /kampanye/{id} — update kampanye (admin, multipart/form-data) */
+/** PUT /kampanye/{id} — update kampanye (admin, JSON sesuai api-collection) */
 export async function updateKampanye(id: string, payload: Partial<KampanyeFormInput>) {
-  const formData = new FormData();
-  if (payload.judul) formData.append("judul", payload.judul);
-  if (payload.deskripsi) formData.append("deskripsi", payload.deskripsi);
-  if (payload.target_donasi !== undefined) formData.append("target_donasi", String(payload.target_donasi));
-  if (payload.tanggal_mulai) formData.append("tanggal_mulai", payload.tanggal_mulai);
-  if (payload.tanggal_berakhir) formData.append("tanggal_berakhir", payload.tanggal_berakhir);
-  if (payload.thumbnail) formData.append("thumbnail", payload.thumbnail);
+  if (payload.thumbnail) {
+    const formData = new FormData();
+    if (payload.judul) formData.append("judul", payload.judul);
+    if (payload.deskripsi) formData.append("deskripsi", payload.deskripsi);
+    if (payload.target_donasi !== undefined) formData.append("target_donasi", String(payload.target_donasi));
+    if (payload.tanggal_mulai) formData.append("tanggal_mulai", payload.tanggal_mulai);
+    if (payload.tanggal_berakhir) formData.append("tanggal_berakhir", payload.tanggal_berakhir);
+    formData.append("thumbnail", payload.thumbnail);
+    formData.append("_method", "PUT");
+    const res = await apiClient.post(`/kampanye/${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data;
+  }
 
-  // Laravel uses POST + _method=PUT for multipart uploads
-  formData.append("_method", "PUT");
-  const res = await apiClient.post(`/kampanye/${id}`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const body: Record<string, string | number> = {};
+  if (payload.judul) body.judul = payload.judul;
+  if (payload.deskripsi) body.deskripsi = payload.deskripsi;
+  if (payload.target_donasi !== undefined) body.target_donasi = payload.target_donasi;
+  if (payload.tanggal_mulai) body.tanggal_mulai = payload.tanggal_mulai;
+  if (payload.tanggal_berakhir) body.tanggal_berakhir = payload.tanggal_berakhir;
+
+  const res = await apiClient.put(`/kampanye/${id}`, body);
   return res.data;
 }
 

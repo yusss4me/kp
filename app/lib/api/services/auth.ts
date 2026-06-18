@@ -63,9 +63,9 @@ export interface RegisterDonaturPayload {
 export interface RegisterDonaturResponse {
   message?: string;
   data?: {
-    token?: string;
     user?: LoginUser;
   };
+  token?: string;
 }
 
 export async function registerDonatur(payload: RegisterDonaturPayload): Promise<RegisterDonaturResponse> {

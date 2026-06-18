@@ -37,11 +37,25 @@ interface AuthState {
  * This replaces the insecure document.cookie approach.
  */
 async function setAuthCookies(token: string, role: string) {
-  await fetch("/api/auth/set-cookie", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ token, role }),
-  });
+  if (!token) {
+    console.warn("[setAuthCookies] Skipped: token is empty/null");
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/auth/set-cookie", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, role }),
+    });
+
+    if (!res.ok) {
+      const errorBody = await res.json().catch(() => ({}));
+      console.error("[setAuthCookies] Failed:", res.status, errorBody);
+    }
+  } catch (err) {
+    console.error("[setAuthCookies] Network error:", err);
+  }
 }
 
 /**
@@ -223,7 +237,7 @@ export const useAuthStore = create<AuthState>()(
           const data = await registerDonatur({ name, email, password, password_confirmation, no_whatsapp,  });
 
           // Auto-login after registration if token is returned
-          const token = data?.data?.token;
+          const token = data?.token;
           if (token) {
             const userObj = data?.data?.user;
             await get().setAuth(token, {

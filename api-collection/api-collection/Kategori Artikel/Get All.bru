@@ -1,0 +1,13 @@
+meta {
+  name: Get All
+  type: http
+  seq: 1
+}
+get {
+  url: {{base_url}}/api/kategori-artikel
+  body: none
+  auth: bearer
+}
+auth:bearer {
+  token: {{token}}
+}

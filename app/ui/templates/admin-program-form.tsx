@@ -166,7 +166,9 @@ export function AdminProgramFormTemplate({
                   </div>
                 </div>
               ) : (
+
                 <div className="aspect-video w-full rounded-2xl bg-gray-50 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-3 group hover:border-red-primary/30 hover:bg-red-50/10 transition-all cursor-pointer">
+                  
                   <div className="p-3 bg-white rounded-full shadow-sm group-hover:scale-110 transition-transform">
                     <ImageIcon className="text-gray-400 group-hover:text-red-primary" size={24} />
                   </div>
@@ -201,7 +203,7 @@ export function AdminProgramFormTemplate({
                 <Btn type="button" variant="red" className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20">
                   Pratinjau Halaman
                 </Btn>
-              )}
+                )}
             </Container>
           </div>
         </div>

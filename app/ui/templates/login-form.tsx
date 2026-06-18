@@ -72,7 +72,7 @@ export default function LoginForm({ variant = "admin" }: LoginFormProps) {
   useEffect(() => {
     if (savedEmail) {
       setValue("email", savedEmail);
-      setValue("rememberMe", true);
+      setValue("rememberMe", false);
     }
   }, [savedEmail, setValue]);
 

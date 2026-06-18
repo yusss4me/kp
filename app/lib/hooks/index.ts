@@ -44,6 +44,7 @@ export {
   useDeleteArtikel,
   useKategoriArtikel,
   useCreateKategoriArtikel,
+  useUpdateKategoriArtikel,
   useDeleteKategoriArtikel,
 } from "./useArtikel";
 export { useDashboardSummary } from "./useDashboard";

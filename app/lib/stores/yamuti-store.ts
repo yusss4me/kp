@@ -252,10 +252,12 @@ export const useYamutiStore = create<YamutiStore>()(
 
         try {
           await createAnakAsuh({
-            nama: data.name,
+            nama_lengkap: data.name,
+            tempat_lahir: "Tasikmalaya",
             tanggal_lahir,
-            status: data.status,
-            kategori_bayi: data.kategori_bayi ?? false,
+            jenis_kelamin: "L",
+            status_yatim_piatu: "Yatim Piatu",
+            tanggal_masuk: new Date().toISOString().split("T")[0],
           });
         } catch (error: any) {
           console.error("Gagal menambah anak asuh via API:", error);
@@ -381,9 +383,10 @@ export const useYamutiStore = create<YamutiStore>()(
 
         try {
           await createKunjungan({
-            nama_pengunjung: data.visitor,
-            nomor_telepon: data.phone || "",
-            tujuan_kunjungan: data.type,
+            nama_tamu: data.visitor,
+            no_whatsapp: data.phone || "",
+            jumlah_pengunjung: 1,
+            maksud: data.type,
             slot_waktu,
           });
           useNotificationStore.getState().addNotification({

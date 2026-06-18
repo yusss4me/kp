@@ -1,20 +1,22 @@
-import { apiClient } from "@/app/lib/api/client";
-import { unwrapList } from "@/app/lib/api/response";
 import type { ApiMutasiBarangPayload } from "@/app/lib/types/api-types";
+import {
+  catatMutasiInventaris,
+  fetchRiwayatMutasi,
+  type CatatMutasiPayload,
+} from "@/app/lib/api/services/inventaris";
 
-/** POST /mutasi-barang — catat mutasi barang (memerlukan Bearer token) */
+/** POST /inventaris/{id}/mutasi — catat mutasi barang (memerlukan Bearer token) */
 export async function catatMutasiBarang(payload: ApiMutasiBarangPayload) {
-  const res = await apiClient.post("/mutasi-barang", payload);
-  return res.data;
+  const mutasiPayload: CatatMutasiPayload = {
+    tipe: payload.tipe,
+    jumlah: payload.jumlah,
+    tanggal_mutasi: payload.tanggal_mutasi,
+    keterangan: payload.keterangan,
+  };
+  return catatMutasiInventaris(payload.inventaris_id, mutasiPayload);
 }
 
-/** GET /mutasi-barang — returns empty array on 404 (backend may not be ready) */
-export async function fetchMutasiBarangList() {
-  try {
-    const res = await apiClient.get("/mutasi-barang");
-    return unwrapList(res.data);
-  } catch (error: any) {
-    if (error?.response?.status === 404) return [];
-    throw error;
-  }
+/** GET /inventaris/{id}/mutasi — riwayat mutasi per item inventaris */
+export async function fetchMutasiBarangList(inventarisId: string) {
+  return fetchRiwayatMutasi(inventarisId);
 }

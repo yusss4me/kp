@@ -3,10 +3,10 @@ import { mapOrphan } from "@/app/lib/api/services/anak-asuh";
 import type { ApiOrphanResponse } from "@/app/lib/types/api-types";
 
 describe("mapOrphan", () => {
-  it("maps Indonesian field names (nama, tanggal_lahir)", () => {
+  it("maps Indonesian field names (nama_lengkap, tanggal_lahir)", () => {
     const result = mapOrphan({
       id: 1,
-      nama: "Budi Santoso",
+      nama_lengkap: "Budi Santoso",
       tanggal_lahir: "2015-06-15",
       status: "Aktif",
       kategori_bayi: false,
@@ -17,6 +17,18 @@ describe("mapOrphan", () => {
     expect(result.birthDate).toBe("2015-06-15");
     expect(result.status).toBe("Aktif");
     expect(result.kategori_bayi).toBe(false);
+  });
+
+  it("maps Indonesian field names (nama, tanggal_lahir)", () => {
+    const result = mapOrphan({
+      id: 1,
+      nama: "Budi Santoso",
+      tanggal_lahir: "2015-06-15",
+      status: "Aktif",
+      kategori_bayi: false,
+    });
+
+    expect(result.name).toBe("Budi Santoso");
   });
 
   it("maps English field names (name, birth_date)", () => {
@@ -33,6 +45,18 @@ describe("mapOrphan", () => {
     expect(result.birthDate).toBe("2018-03-20");
     expect(result.status).toBe("Baru");
     expect(result.kategori_bayi).toBe(true);
+  });
+
+  it("prefers nama_lengkap over nama and name", () => {
+    const result = mapOrphan({
+      id: 3,
+      nama_lengkap: "Full Name",
+      nama: "Indonesian Name",
+      name: "English Name",
+      status: "Aktif",
+    });
+
+    expect(result.name).toBe("Full Name");
   });
 
   it("prefers nama over name", () => {

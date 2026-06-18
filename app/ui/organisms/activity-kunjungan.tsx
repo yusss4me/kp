@@ -66,9 +66,10 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
   const onSubmit = async (data: VisitFormValues) => {
     try {
       const payload = {
-        nama_pengunjung: data.fullName,
-        nomor_telepon: data.phone,
-        tujuan_kunjungan: data.purpose,
+        nama_tamu: data.fullName,
+        no_whatsapp: data.phone,
+        jumlah_pengunjung: 1,
+        maksud: data.purpose,
         slot_waktu: `${data.visitDate}T${data.visitTime}:00Z`,
       };
       // API: POST /kunjungan

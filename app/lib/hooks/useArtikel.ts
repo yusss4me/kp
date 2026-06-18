@@ -7,7 +7,9 @@ import {
   deleteArtikel,
   fetchKategoriArtikel,
   createKategoriArtikel,
+  updateKategoriArtikel,
   deleteKategoriArtikel,
+  type CreateArtikelPayload,
 } from "@/app/lib/api/services/artikel";
 
 /** React Query hook for fetching artikel list */
@@ -33,7 +35,7 @@ export function useArtikel(id: string | number) {
 export function useCreateArtikel() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (formData: FormData) => createArtikel(formData),
+    mutationFn: (payload: CreateArtikelPayload) => createArtikel(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["artikel"] });
     },
@@ -44,8 +46,13 @@ export function useCreateArtikel() {
 export function useUpdateArtikel() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, formData }: { id: string | number; formData: FormData }) =>
-      updateArtikel(id, formData),
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: string | number;
+      payload: Partial<CreateArtikelPayload>;
+    }) => updateArtikel(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["artikel"] });
     },
@@ -77,6 +84,18 @@ export function useCreateKategoriArtikel() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: { nama: string }) => createKategoriArtikel(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["kategori-artikel"] });
+    },
+  });
+}
+
+/** React Query mutation hook for updating a kategori artikel */
+export function useUpdateKategoriArtikel() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: string | number; payload: { nama?: string } }) =>
+      updateKategoriArtikel(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["kategori-artikel"] });
     },

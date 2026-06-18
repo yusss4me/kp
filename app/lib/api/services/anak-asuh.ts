@@ -4,25 +4,14 @@ import type { ApiOrphanResponse } from "@/app/lib/types/api-types";
 import type { Orphan } from "@/app/lib/types/entities";
 
 export function mapOrphan(item: ApiOrphanResponse): Orphan {
-  // Support both backend field names: tanggal_lahir and birth_date
   const birthDateStr = item.tanggal_lahir || item.birth_date;
-  const birthYear = birthDateStr
-    ? new Date(birthDateStr).getFullYear()
-    : new Date().getFullYear() - 10;
-  const currentYear = new Date().getFullYear();
-
-
-  // If gender is not provided, default to Laki-laki
-  // const gender = (item.gender as Orphan["gender"]) || "Laki-laki";
 
   return {
     id: Number(item.id),
-    name: item.nama || item.name || "—",
-    birthDate: item.tanggal_lahir || item.birth_date || "",
+    name: item.nama_lengkap || item.nama || item.name || "—",
+    birthDate: birthDateStr || "",
     status: item.status || "Baru",
     kategori_bayi: item.kategori_bayi || false,
-    
-    
   };
 }
 
@@ -32,11 +21,14 @@ export async function fetchAnakAsuh(): Promise<Orphan[]> {
   return unwrapList<ApiOrphanResponse>(res.data).map(mapOrphan);
 }
 
+/** POST /anak-asuh — payload sesuai api-collection */
 export interface CreateAnakAsuhPayload {
-  nama: string;
+  nama_lengkap: string;
+  tempat_lahir: string;
   tanggal_lahir: string;
-  status: string;
-  kategori_bayi: boolean;
+  jenis_kelamin: "L" | "P";
+  status_yatim_piatu: string;
+  tanggal_masuk: string;
 }
 
 /** POST /anak-asuh — tambah anak asuh baru (memerlukan Bearer token) */
@@ -53,11 +45,14 @@ export async function fetchAnakAsuhById(id: string | number): Promise<Orphan> {
   return mapOrphan(item);
 }
 
+/** PUT /anak-asuh/{id} — payload sesuai api-collection */
 export interface UpdateAnakAsuhPayload {
-  nama?: string;
+  nama_lengkap?: string;
+  tempat_lahir?: string;
   tanggal_lahir?: string;
-  status?: string;
-  kategori_bayi?: boolean;
+  jenis_kelamin?: "L" | "P";
+  status_yatim_piatu?: string;
+  tanggal_masuk?: string;
 }
 
 /** PUT /anak-asuh/{id} — update anak asuh (memerlukan Bearer token) */

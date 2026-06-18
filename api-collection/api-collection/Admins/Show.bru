@@ -1,0 +1,13 @@
+meta {
+  name: Show
+  type: http
+  seq: 2
+}
+get {
+  url: {{base_url}}/api/admins/REPLACE_ID
+  body: none
+  auth: bearer
+}
+auth:bearer {
+  token: {{token}}
+}

@@ -2,6 +2,8 @@ import axios from "axios";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://yamuti-backend.onrender.com/api";
+export const API_LOCAL_URL = process.env.NEXT_PUBLIC_API_LOCAL_URL || "http://localhost:8000/api";
+
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,

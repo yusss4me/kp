@@ -1,10 +1,15 @@
 // Tipe data balasan API
 export interface ApiOrphanResponse {
   id: string | number;
-  // Backend actual fields
+  // Backend actual fields (api-collection)
+  nama_lengkap?: string;
   nama?: string;
+  tempat_lahir?: string;
   tanggal_lahir?: string;
-  status: "Baru" | "Aktif" | "Alumni";
+  jenis_kelamin?: string;
+  status_yatim_piatu?: string;
+  tanggal_masuk?: string;
+  status?: "Baru" | "Aktif" | "Alumni";
   kategori_bayi?: boolean;
   // Alternative/extended fields (if backend is updated)
   name?: string;
@@ -48,7 +53,8 @@ export interface ApiMutasiBarangPayload {
   inventaris_id: string;
   tipe: "masuk" | "keluar";
   jumlah: number;
-  keterangan: string;
+  tanggal_mutasi?: string;
+  keterangan?: string;
 }
 
 export interface ApiLoginPayload {

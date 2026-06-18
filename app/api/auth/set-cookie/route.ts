@@ -2,24 +2,50 @@ import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/app/lib/utils/rate-limit";
 
 /**
- * Validate JWT format (header.payload.signature).
- * Does NOT verify the signature — that is the backend's responsibility.
- * Only ensures the token is structurally valid before setting it as a cookie.
+ * Validate that the token is a non-empty string with reasonable constraints.
+ * Accepts both JWT tokens (header.payload.signature) and Laravel Sanctum
+ * plain-text tokens (e.g. "1|a3kR9xLm...").
+ *
+ * This does NOT verify the token cryptographically — that is the backend's
+ * responsibility. It only prevents obviously invalid values from being
+ * persisted as cookies.
  */
-function isValidJwtFormat(token: string): boolean {
+function isValidTokenFormat(token: string): boolean {
+  if (typeof token !== "string") return false;
+
+  const trimmed = token.trim();
+  // Must be non-empty and within reasonable length bounds
+  if (trimmed.length < 10 || trimmed.length > 4096) return false;
+
+  // Must only contain URL-safe / base64 / Sanctum characters
+  // Allowed: alphanumeric, dots, hyphens, underscores, pipes, slashes, plus, equals
+  if (!/^[A-Za-z0-9._\-|/+=]+$/.test(trimmed)) return false;
+
+  return true;
+}
+
+/**
+ * Attempt to extract `exp` from a JWT payload.
+ * Returns the expiration timestamp in seconds, or null if the token
+ * is not a JWT or has no exp claim.
+ */
+function tryParseJwtExp(token: string): number | null {
   const parts = token.split(".");
-  if (parts.length !== 3) return false;
+  if (parts.length !== 3) return null;
 
   try {
-    // Verify each part is valid base64url
-    const payload = parts[1].replace(/-/g, "+").replace(/_/g, "/");
-    const decoded = atob(payload);
-    const parsed = JSON.parse(decoded);
-    // Must have exp claim
-    return typeof parsed === "object" && parsed !== null && typeof parsed.exp === "number";
+    let base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const pad = base64.length % 4;
+    if (pad === 2) base64 += "==";
+    else if (pad === 3) base64 += "=";
+
+    const payload = JSON.parse(atob(base64));
+    if (typeof payload?.exp === "number") return payload.exp;
   } catch {
-    return false;
+    // Not a JWT or unparseable — that's fine
   }
+
+  return null;
 }
 
 /**
@@ -27,6 +53,7 @@ function isValidJwtFormat(token: string): boolean {
  *
  * Sets httpOnly cookies for auth token and role server-side.
  * Called by the client after successful login.
+ * Supports both JWT and Laravel Sanctum plain-text tokens.
  */
 export async function POST(request: NextRequest) {
   // Rate limit: max 20 cookie-set requests per minute per IP
@@ -41,8 +68,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Token is required" }, { status: 400 });
     }
 
-    // Validate JWT structure before persisting
-    if (!isValidJwtFormat(token)) {
+    // Validate token is a well-formed string (JWT or Sanctum)
+    if (!isValidTokenFormat(token)) {
       return NextResponse.json({ error: "Invalid token format" }, { status: 400 });
     }
 
@@ -52,10 +79,16 @@ export async function POST(request: NextRequest) {
 
     const isSecure = request.nextUrl.protocol === "https:";
 
-    // Parse JWT exp to calculate accurate maxAge
-    const payload = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+    // Calculate cookie maxAge:
+    // - If the token is a JWT with an exp claim, derive from that (capped at 7 days)
+    // - Otherwise, default to 1 day
+    const DEFAULT_MAX_AGE = 24 * 60 * 60; // 1 day
+    const MAX_AGE_CAP = 7 * 24 * 60 * 60; // 7 days
+    const exp = tryParseJwtExp(token);
     const nowSec = Math.floor(Date.now() / 1000);
-    const maxAge = Math.max(0, Math.min(payload.exp - nowSec, 7 * 24 * 60 * 60)); // cap at 7 days
+    const maxAge = exp !== null
+      ? Math.max(0, Math.min(exp - nowSec, MAX_AGE_CAP))
+      : DEFAULT_MAX_AGE;
 
     const response = NextResponse.json({ success: true });
 
@@ -80,3 +113,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 }
+

@@ -4,26 +4,30 @@ import type { InventoryItem } from "@/app/lib/types/entities";
 
 export interface ApiInventarisResponse {
   id: string | number;
+  nama_barang?: string;
   nama?: string;
   name?: string;
+  deskripsi?: string;
   kategori?: string;
   category?: string;
+  stok_sekarang?: number | string;
   stok?: number | string;
   stock?: number | string;
+  satuan?: string;
   status?: string;
   created_at?: string;
   updated_at?: string;
 }
 
 export function mapInventaris(item: ApiInventarisResponse): InventoryItem {
-  const stockRaw = item.stok ?? item.stock ?? 0;
+  const stockRaw = item.stok_sekarang ?? item.stok ?? item.stock ?? 0;
   const stockNum = typeof stockRaw === "string" ? parseInt(stockRaw) || 0 : stockRaw;
   const status =
     stockNum > 10 ? "Cukup" : stockNum > 0 ? "Menipis" : "Habis";
   return {
     id: Number(item.id),
-    name: item.nama ?? item.name ?? "—",
-    category: item.kategori ?? item.category ?? "Umum",
+    name: item.nama_barang ?? item.nama ?? item.name ?? "—",
+    category: item.kategori ?? item.category ?? item.satuan ?? "Umum",
     stock: String(stockRaw),
     status: (item.status as InventoryItem["status"]) ?? status,
   };
@@ -40,10 +44,12 @@ export async function fetchInventarisList(): Promise<InventoryItem[]> {
   }
 }
 
+/** POST /inventaris — payload sesuai api-collection */
 export interface CreateInventarisPayload {
-  nama: string;
-  kategori?: string;
-  stok?: number;
+  nama_barang: string;
+  deskripsi?: string;
+  stok_sekarang?: number;
+  satuan?: string;
 }
 
 /** POST /inventaris — tambah master barang (memerlukan Bearer token) */
@@ -60,10 +66,12 @@ export async function fetchInventarisById(id: string | number): Promise<Inventor
   return mapInventaris(item);
 }
 
+/** PUT /inventaris/{id} — payload sesuai api-collection */
 export interface UpdateInventarisPayload {
-  nama?: string;
-  kategori?: string;
-  stok?: number;
+  nama_barang?: string;
+  deskripsi?: string;
+  stok_sekarang?: number;
+  satuan?: string;
 }
 
 /** PUT /inventaris/{id} — update barang (memerlukan Bearer token) */
@@ -76,4 +84,31 @@ export async function updateInventaris(id: string | number, payload: UpdateInven
 export async function deleteInventaris(id: string | number) {
   const res = await apiClient.delete(`/inventaris/${id}`);
   return res.data;
+}
+
+/** POST /inventaris/{id}/mutasi — catat mutasi stok (memerlukan Bearer token) */
+export interface CatatMutasiPayload {
+  tipe: "masuk" | "keluar";
+  jumlah: number;
+  tanggal_mutasi?: string;
+  keterangan?: string;
+}
+
+export async function catatMutasiInventaris(
+  inventarisId: string | number,
+  payload: CatatMutasiPayload
+) {
+  const res = await apiClient.post(`/inventaris/${inventarisId}/mutasi`, payload);
+  return res.data;
+}
+
+/** GET /inventaris/{id}/mutasi — riwayat mutasi barang (memerlukan Bearer token) */
+export async function fetchRiwayatMutasi(inventarisId: string | number) {
+  try {
+    const res = await apiClient.get(`/inventaris/${inventarisId}/mutasi`);
+    return unwrapList(res.data);
+  } catch (error: any) {
+    if (error?.response?.status === 404) return [];
+    throw error;
+  }
 }
