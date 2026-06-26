@@ -67,9 +67,6 @@ export function AdminFinanceTemplate({ stats, transactions, distributions = [], 
           ))}
         </div>
 
-        {/* Distribution Summary */}
-        <DistributionSummary distributions={distributions} />
-
         {/* Transaction History */}
         <TransactionTable transactions={transactions} onDelete={onDeleteTransaction} />
       </div>

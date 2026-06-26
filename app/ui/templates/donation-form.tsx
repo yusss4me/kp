@@ -15,13 +15,13 @@ import { FormActionTemplate } from "@/app/ui/templates/form-action";
 import { useToast } from "@/app/ui/providers/toast-provider";
 import { useRouter } from "next/navigation";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
+import { useAuthStore } from "@/app/lib/stores/auth-store";
 import { useEffect } from "react";
 
 const donasiSchema = z.object({
-  nama_donatur: z.string().min(3, "Nama minimal 3 karakter"),
-  no_whatsapp: z.string().min(10, "Nomor WhatsApp tidak valid"),
+  nama_donatur: z.string().min(3, "Nama minimal 3 karakter").optional().or(z.literal("")),
+  no_whatsapp: z.string().min(10, "Nomor WhatsApp tidak valid").optional().or(z.literal("")),
   gross_amount: z.number({ message: "Nominal harus angka" }).min(10000, "Minimal donasi Rp 10.000"),
-  payment_type: z.string().min(1, "Metode pembayaran harus dipilih"),
 });
 
 type DonasiFormValues = z.infer<typeof donasiSchema>;
@@ -29,6 +29,7 @@ type DonasiFormValues = z.infer<typeof donasiSchema>;
 export interface DonationFormTemplateProps {
   /** The program/activity ID being donated to */
   activityId: string;
+  isUser?: boolean;
 }
 
 /**
@@ -37,7 +38,7 @@ export interface DonationFormTemplateProps {
  * Shared donation checkout form used by both the public (/donasi/[id])
  * and donatur (/home/aktivitas/program/[id]/donasi) routes.
  */
-export function DonationFormTemplate({ activityId }: DonationFormTemplateProps) {
+export function DonationFormTemplate({ activityId, isUser }: DonationFormTemplateProps) {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<DonasiFormValues>({
     resolver: zodResolver(donasiSchema),
   });
@@ -48,31 +49,76 @@ export function DonationFormTemplate({ activityId }: DonationFormTemplateProps) 
   // Fetch program data for display
   const program = useYamutiStore((s) => s.getProgramById(activityId));
   const fetchPrograms = useYamutiStore((s) => s.fetchPrograms);
+  const user = useAuthStore((s) => s.user);
+
   useEffect(() => {
     fetchPrograms();
   }, [fetchPrograms]);
 
   const onSubmit = async (data: DonasiFormValues) => {
     try {
-      const payload = {
+      const payload: any = {
         ...data,
-        activity_id: activityId,
+        kampanye_id: activityId,
       };
+      
+      if (isUser && user) {
+        payload.nama_donatur = user.name || data.nama_donatur;
+        payload.no_whatsapp = user.phone || data.no_whatsapp;
+      }
+
       const response = await apiClient.post("/donasi", payload);
-      const snapToken = response.data?.snap_token || "Simulasi-Token-123";
+      const snapToken = response.data?.data?.snap_token || response.data?.snap_token;
 
-      addToast({
-        variant: "success",
-        message: "Donasi berhasil dibuat!",
-      });
+      if (!snapToken) {
+        throw new Error("Gagal memuat pembayaran. Token tidak ditemukan dari server.");
+      }
 
-      const queryParams = new URLSearchParams({
-        name: data.nama_donatur,
-        amount: data.gross_amount.toString(),
-        method: data.payment_type,
-        token: snapToken,
+      // Memanggil Midtrans Snap Pop-up
+      window.snap.pay(snapToken, {
+        onSuccess: function(result: any) {
+          addToast({
+            variant: "success",
+            message: "Pembayaran donasi berhasil!",
+          });
+          const queryParams = new URLSearchParams({
+            name: payload.nama_donatur || "",
+            amount: payload.gross_amount.toString(),
+          });
+          if (isUser) {
+            router.push(`/user/aktivitas/program/${activityId}/donasi/success?${queryParams.toString()}`);
+          } else {
+            router.push(`/donasi/success?${queryParams.toString()}`);
+          }
+        },
+        onPending: function(result: any) {
+          addToast({
+            variant: "success",
+            message: "Menunggu pembayaran diselesaikan.",
+          });
+          const queryParams = new URLSearchParams({
+            name: payload.nama_donatur || "",
+            amount: payload.gross_amount.toString(),
+          });
+          if (isUser) {
+            router.push(`/user/aktivitas/program/${activityId}/donasi/success?${queryParams.toString()}`);
+          } else {
+            router.push(`/donasi/success?${queryParams.toString()}`);
+          }
+        },
+        onError: function(result: any) {
+          addToast({
+            variant: "error",
+            message: "Pembayaran gagal. Silakan coba lagi.",
+          });
+        },
+        onClose: function() {
+          addToast({
+            variant: "error",
+            message: "Anda menutup pop-up sebelum menyelesaikan pembayaran.",
+          });
+        }
       });
-      router.push(`/donasi/success?${queryParams.toString()}`);
     } catch (error: any) {
       console.error("Gagal mengirim donasi", error);
       const status = error?.response?.status;
@@ -89,43 +135,33 @@ export function DonationFormTemplate({ activityId }: DonationFormTemplateProps) 
     }
   };
 
-  return (
-    <main className="min-h-screen bg-gray-50 flex flex-col">
-      <LandingHeader />
-
-      <div className="flex-grow max-w-4xl w-full mx-auto pt-24 px-4 pb-24">
-        <Container className="text-center mb-10">
-          <Txt variant="h2" weight="bold" className="text-red-primary mb-4">
-            Mulai Berdonasi
-          </Txt>
-          <Txt variant="body" className="text-gray-600 max-w-2xl mx-auto">
-            Setiap rupiah yang Anda berikan akan sangat berarti bagi anak-anak asuh kami.
-          </Txt>
-        </Container>
-
-        <FormActionTemplate
-          onSubmit={handleSubmit(onSubmit)}
-          className="p-6 md:p-10 shadow-2xl shadow-black/10 border border-white/20 rounded-2xl bg-white relative z-20"
-        >
-          {/* Program Info */}
-          <div className="px-4 py-4 bg-gray-50 rounded-2xl mb-6 border border-gray-100">
-            <div className='flex items-center gap-4'>
-              <Img
-                src={program?.image || "/images/no-image.png"}
-                alt={program?.title || "Program Donasi"}
-                w={60}
-                h={60}
-                rounded="lg"
-                className="object-cover flex-shrink-0"
-              />
-              <div className="min-w-0">
-                <h1 className="text-lg font-bold text-gray-900 truncate">{program?.title || "Program Donasi"}</h1>
-                {program?.description && (
-                  <p className="text-sm text-gray-500 mt-1 line-clamp-2">{program.description}</p>
-                )}
-              </div>
-            </div>
+  const formContent = (
+    <FormActionTemplate
+      onSubmit={handleSubmit(onSubmit)}
+      className={isUser ? "" : "p-6 md:p-10 shadow-2xl shadow-black/10 border border-white/20 rounded-2xl bg-white relative z-20"}
+    >
+      {/* Program Info */}
+      <div className="px-4 py-4 bg-gray-50 rounded-2xl mb-6 border border-gray-100">
+        <div className='flex items-center gap-4'>
+          <Img
+            src={program?.image || "/images/no-image.png"}
+            alt={program?.title || "Program Donasi"}
+            w={60}
+            h={60}
+            rounded="lg"
+            className="object-cover flex-shrink-0"
+          />
+          <div className="min-w-0">
+            <h1 className="text-lg font-bold text-gray-900 truncate">{program?.title || "Program Donasi"}</h1>
+            {program?.description && (
+              <p className="text-sm text-gray-500 mt-1 line-clamp-2">{program.description}</p>
+            )}
           </div>
+        </div>
+      </div>
+      
+      {!isUser && (
+        <>
           <Input
             label="Nama Lengkap"
             placeholder="Masukkan Nama Anda"
@@ -140,41 +176,50 @@ export function DonationFormTemplate({ activityId }: DonationFormTemplateProps) 
             {...register("no_whatsapp")}
             error={errors.no_whatsapp?.message}
           />
+        </>
+      )}
 
-          <Input
-            label="Nominal Donasi (Rp)"
-            type="number"
-            placeholder="Contoh: 50000"
-            {...register("gross_amount", { valueAsNumber: true })}
-            error={errors.gross_amount?.message}
-          />
+      <Input
+        label="Nominal Donasi (Rp)"
+        type="number"
+        placeholder="Contoh: 50000"
+        {...register("gross_amount", { valueAsNumber: true })}
+        error={errors.gross_amount?.message}
+      />
 
-          <div className="flex flex-col gap-2">
-            <Txt variant="small" weight="bold" className="text-gray-700">Metode Pembayaran</Txt>
-            <select
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-primary/20 transition-all text-sm"
-              {...register("payment_type")}
-            >
-              <option value="">Pilih Metode Pembayaran</option>
-              <option value="bank_transfer">Transfer Bank (VA)</option>
-              <option value="gopay">GoPay</option>
-              <option value="qris">QRIS</option>
-            </select>
-            {errors.payment_type && (
-              <span className="text-red-500 text-xs mt-1">{errors.payment_type.message}</span>
-            )}
-          </div>
 
-          <Btn
-            type="submit"
-            variant="red"
-            size="lg"
-            className="mt-4 py-4 w-full text-lg shadow-xl shadow-red-primary/20"
-            isLoading={isSubmitting}
-          >
-            Donasi Sekarang
-          </Btn>
-        </FormActionTemplate>
+
+      <Btn
+        type="submit"
+        variant="red"
+        size="lg"
+        className="mt-4 py-4 w-full text-lg shadow-xl shadow-red-primary/20"
+        isLoading={isSubmitting}
+      >
+        Donasi Sekarang
+      </Btn>
+    </FormActionTemplate>
+  );
+
+  if (isUser) {
+    return formContent;
+  }
+
+  return (
+    <main className="min-h-screen bg-gray-50 flex flex-col">
+      <LandingHeader />
+
+      <div className="flex-grow max-w-4xl w-full mx-auto pt-24 px-4 pb-24">
+        <Container className="text-center mb-10">
+          <Txt variant="h2" weight="bold" className="text-red-primary mb-4">
+            Mulai Berdonasi
+          </Txt>
+          <Txt variant="body" className="text-gray-600 max-w-2xl mx-auto">
+            Setiap rupiah yang Anda berikan akan sangat berarti bagi anak-anak asuh kami.
+          </Txt>
+        </Container>
+
+        {formContent}
       </div>
 
       <LandingFooter />

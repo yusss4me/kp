@@ -6,7 +6,7 @@ import { Txt } from '@/app/ui/atoms/text';
 import { Btn } from '@/app/ui/atoms/button';
 import { StatCard } from '@/app/ui/molecules/stat-card';
 import { Share2, Plus, Image as ImageIcon, Send, Globe, MessageCircle, LucideIcon } from 'lucide-react';
-import { apiClient } from '@/app/lib/api/client';
+import { createArtikel } from '@/app/lib/api/services/artikel';
 
 export interface SocialMediaStat {
   label: string;
@@ -47,13 +47,11 @@ export function AdminSocialMediaTemplate({ stats, platforms }: AdminSocialMediaT
     
     setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('judul', title);
-      formData.append('konten', content);
-      formData.append('gambar', file);
-
-      await apiClient.post("/artikel", formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      await createArtikel({
+        judul: title,
+        konten: content,
+        kategori_id: '1', // Default category
+        thumbnail: file
       });
       alert("Artikel berhasil dipublikasikan!");
       setTitle('');

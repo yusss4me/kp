@@ -38,7 +38,7 @@ export interface AdminProfileMenuGroupProps {
  */
 export const AdminProfileMenuGroup: React.FC<AdminProfileMenuGroupProps> = ({ onLogout }) => {
   return (
-    <Container gap="lg" padding='md' className="flex-col pb-24 px-6 mt-8">
+    <Container gap="lg" padding='md' className="flex-col pb-24 px-6 mt-8 w-full">
       {/* Management Section */}
       <div className="space-y-4">
         <Txt weight="bold" color="dark" className=" ml-2">

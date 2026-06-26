@@ -12,7 +12,13 @@ export interface DashboardSummaryResponse {
   current_balance?: number;
 }
 
-/** GET /dashboard/summary — ringkasan statistik Admin & Owner (memerlukan Bearer token) */
+/**
+ * @api {get} /dashboard/summary GET Ringkasan Dashboard
+ * @description Mengambil ringkasan statistik untuk Admin & Owner (memerlukan Bearer token).
+ * 
+ * @returns {Promise<DashboardSummaryResponse>} Berisi data ringkasan statistik (total anak, donasi, kunjungan, saldo).
+ * @throws {Error} Jika terjadi kesalahan pada server atau network.
+ */
 export async function fetchDashboardSummary(): Promise<DashboardSummaryResponse> {
   const res = await apiClient.get("/dashboard/summary");
   const body = res.data as { data?: DashboardSummaryResponse } | DashboardSummaryResponse;

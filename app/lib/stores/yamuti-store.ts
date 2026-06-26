@@ -1,10 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { fetchAnakAsuh, createAnakAsuh } from "@/app/lib/api/services/anak-asuh";
-import { createDonasi } from "@/app/lib/api/services/donasi";
-import { approveKunjungan, createKunjungan } from "@/app/lib/api/services/kunjungan";
+import { createDonasi, verifyDonasi } from "@/app/lib/api/services/donasi";
+import { useFinanceStore } from "@/app/lib/stores/finance-store";
+import { approveKunjungan, createKunjungan, fetchKunjunganList, updateKunjunganStatus } from "@/app/lib/api/services/kunjungan";
 import { fetchPrograms } from "@/app/lib/api/services/programs";
 import { catatMutasiBarang } from "@/app/lib/api/services/logistik";
+import { fetchInventarisList, createInventaris } from "@/app/lib/api/services/inventaris";
+import { fetchTransaksiKeuanganList, mapTransaksiKeuangan, fetchKasSaldo } from "@/app/lib/api/services/keuangan";
 import type {
   ApprovalRequest,
   DonaturSummary,
@@ -31,6 +34,21 @@ import {
 import { getErrorMessage } from "./store-utils";
 import { useNotificationStore } from "./notification-store";
 
+/** Input form untuk tambah/edit anak asuh — sesuai field API Swagger */
+export type OrphanFormInput = {
+  name: string;
+  birthDate: string;
+  kategori_bayi: boolean;
+  status: OrphanStatus;
+  jenis_kelamin: "Laki-laki" | "Perempuan";
+  tempat_lahir: string;
+  no_kk: string;
+  no_akte: string;
+  nik: string;
+  notes?: string;
+  foto_identitas?: File | null;
+};
+
 interface YamutiStore {
   programs: Program[];
   pendingDonations: PendingDonation[];
@@ -39,6 +57,7 @@ interface YamutiStore {
   inventory: InventoryItem[];
   transactions: FinanceTransaction[];
   distributions: FundDistribution[];
+  saldoKas?: number;
   bookings: VisitBooking[];
   admins: OwnerAdmin[];
   approvalRequests: ApprovalRequest[];
@@ -49,6 +68,9 @@ interface YamutiStore {
 
   fetchPrograms: () => Promise<void>;
   fetchOrphans: () => Promise<void>;
+  fetchInventaris: () => Promise<void>;
+  fetchBookings: () => Promise<void>;
+  fetchTransaksiKeuangan: () => Promise<void>;
 
   getProgramById: (id: string) => Program | undefined;
   addProgram: (data: Omit<Program, "id" | "target" | "collected" | "progress">) => string;
@@ -60,7 +82,7 @@ interface YamutiStore {
   addPendingDonation: (donation: Omit<PendingDonation, "id">) => Promise<void>;
 
   getOrphanById: (id: number) => Orphan | undefined;
-  addOrphan: (data: Omit<Orphan, "id">) => Promise<number>;
+  addOrphan: (data: OrphanFormInput) => Promise<number>;
   updateOrphan: (id: number, data: Partial<Orphan>) => void;
   deleteOrphan: (id: number) => void;
 
@@ -157,6 +179,77 @@ export const useYamutiStore = create<YamutiStore>()(
         }
       },
 
+      /** GET /inventaris */
+      fetchInventaris: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          const inventory = await fetchInventarisList();
+          if (inventory.length > 0) {
+            set({ inventory });
+          }
+        } catch (error: any) {
+          console.error("Gagal mengambil data inventaris dari API:", error);
+          set({ error: getErrorMessage(error, "Gagal mengambil data inventaris") });
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      /** GET /kunjungan */
+      fetchBookings: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          const apiBookings = await fetchKunjunganList();
+          if (apiBookings.length > 0) {
+            // Map KunjunganRecord → VisitBooking shape for the store
+            const bookings = apiBookings.map((k, idx) => {
+              let mappedStatus = "Menunggu";
+              if (k.status === "APPROVED" || k.status === "Dikonfirmasi") mappedStatus = "Dikonfirmasi";
+              else if (k.status === "COMPLETED" || k.status === "Selesai") mappedStatus = "Selesai";
+              else if (k.status === "REJECTED" || k.status === "Dibatalkan") mappedStatus = "Dibatalkan";
+
+              return {
+                id: k.id != null ? k.id : idx + 1,
+                visitor: k.nama_tamu ?? k.nama_pengunjung ?? "—",
+                phone: k.no_whatsapp ?? k.nomor_telepon ?? "",
+                date: k.slot_waktu ? k.slot_waktu.split("T")[0] : "",
+                time: k.slot_waktu ? k.slot_waktu.split("T")[1]?.substring(0, 5) : "00:00",
+                type: k.maksud ?? k.tujuan_kunjungan ?? "Kunjungan",
+                status: mappedStatus,
+                notes: "",
+                jumlah_pengunjung: k.jumlah_pengunjung ?? 1,
+              };
+            }) as any[];
+            set({ bookings });
+          }
+        } catch (error: any) {
+          console.error("Gagal mengambil data kunjungan dari API:", error);
+          set({ error: getErrorMessage(error, "Gagal mengambil data kunjungan") });
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      /** GET /keuangan/laporan */
+      fetchTransaksiKeuangan: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          const [transactions, kasSaldo] = await Promise.all([
+            fetchTransaksiKeuanganList(),
+            fetchKasSaldo().catch(() => null),
+          ]);
+          set({ 
+            transactions: transactions.length > 0 ? transactions : get().transactions,
+            saldoKas: kasSaldo ? kasSaldo.saldo : undefined
+          });
+        } catch (error: any) {
+          console.error("Gagal mengambil data transaksi keuangan dari API:", error);
+          set({ error: getErrorMessage(error, "Gagal mengambil data transaksi") });
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
       getProgramById: (id) => get().programs.find((p) => p.id === id),
 
       addProgram: (data) => {
@@ -185,16 +278,73 @@ export const useYamutiStore = create<YamutiStore>()(
         set((s) => ({ programs: s.programs.filter((p) => p.id !== id) }));
       },
 
-      verifyDonation: (id) => {
+      verifyDonation: async (id) => {
+        const donation = get().pendingDonations.find((d) => d.id === id);
+        if (!donation) return;
+
+        // Optimistic UI Update
         set((s) => ({
           pendingDonations: s.pendingDonations.filter((d) => d.id !== id),
         }));
+
+        try {
+          // If the ID is a real backend ID, call verify API
+          if (!id.startsWith("don-")) {
+            await verifyDonasi(id);
+          }
+
+          const cleanAmount = parseInt(donation.jumlah.replace(/[^0-9]/g, "")) || 0;
+
+          // 1. Update Finance
+          get().addTransaction({
+             type: "Income",
+             category: "Donasi",
+             amountRaw: cleanAmount,
+             date: new Date().toLocaleDateString("id-ID"),
+             status: "Terverifikasi"
+          });
+
+          // 2. Increment Kampanye Collected Amount if associated
+          if (donation.kampanye_id) {
+            set((s) => ({
+              programs: s.programs.map((p) => {
+                if (p.id === donation.kampanye_id) {
+                  return { ...p, collectedAmount: p.collectedAmount + cleanAmount };
+                }
+                return p;
+              }),
+            }));
+          }
+
+          useNotificationStore.getState().addNotification({
+            title: "Verifikasi Berhasil",
+            message: `Donasi dari ${donation.nama} berhasil diverifikasi.`,
+            type: "donation",
+          });
+        } catch (error: any) {
+          console.error("Gagal verifikasi donasi:", error);
+          useNotificationStore.getState().addNotification({
+            title: "Gagal Verifikasi",
+            message: "Gagal memverifikasi donasi pada sistem server.",
+            type: "system",
+          });
+          // Rollback pending
+          set((s) => ({ pendingDonations: [donation, ...s.pendingDonations] }));
+        }
       },
 
       rejectDonation: (id) => {
+        const donation = get().pendingDonations.find((d) => d.id === id);
         set((s) => ({
           pendingDonations: s.pendingDonations.filter((d) => d.id !== id),
         }));
+        if (donation) {
+          useNotificationStore.getState().addNotification({
+            title: "Donasi Ditolak",
+            message: `Donasi dari ${donation.nama} telah ditolak.`,
+            type: "system",
+          });
+        }
       },
 
       /** POST /donasi — optimistic with rollback */
@@ -209,21 +359,10 @@ export const useYamutiStore = create<YamutiStore>()(
         try {
           const donasiPayload: Parameters<typeof createDonasi>[0] = {
             nama_donatur: donation.nama,
-            no_whatsapp: "081234567890",
-            payment_type: donation.tipe.toLowerCase(),
+            no_whatsapp: donation.no_hp || "081234567890", // fallback if donatur doesn't provide
+            gross_amount: cleanAmount,
+            kampanye_id: donation.kampanye_id || "default_id",
           };
-          // Pass gross_amount for money donations
-          if (donation.tipe.toLowerCase() !== "barang") {
-            donasiPayload.gross_amount = cleanAmount;
-          }
-          // Pass nama_barang for goods donations
-          if (donation.nama_barang) {
-            donasiPayload.nama_barang = donation.nama_barang;
-          }
-          // Pass kampanye_id if donating to a specific campaign
-          if (donation.kampanye_id) {
-            donasiPayload.kampanye_id = donation.kampanye_id;
-          }
           await createDonasi(donasiPayload);
           useNotificationStore.getState().addNotification({
             title: "Donasi Baru Diterima",
@@ -251,18 +390,26 @@ export const useYamutiStore = create<YamutiStore>()(
         set((s) => ({ orphans: [{ ...data, id }, ...s.orphans] }));
 
         try {
-          await createAnakAsuh({
-            nama_lengkap: data.name,
-            tempat_lahir: "Tasikmalaya",
-            tanggal_lahir,
-            jenis_kelamin: "L",
-            status_yatim_piatu: "Yatim Piatu",
-            tanggal_masuk: new Date().toISOString().split("T")[0],
-          });
+          const formData = new FormData();
+          formData.append("nama", data.name);
+          formData.append("nik", data.nik || "-");
+          formData.append("no_kk", data.no_kk || "-");
+          formData.append("no_akte", data.no_akte || "-");
+          formData.append("tempat_lahir", data.tempat_lahir || "Tasikmalaya");
+          formData.append("tanggal_lahir", tanggal_lahir || "");
+          formData.append("jenis_kelamin", data.jenis_kelamin || "Laki-laki");
+          formData.append("status", data.status);
+          formData.append("kategori_bayi", data.kategori_bayi ? "true" : "false");
+          if (data.foto_identitas) {
+            formData.append("foto_identitas", data.foto_identitas);
+          }
+          
+          await createAnakAsuh(formData);
         } catch (error: any) {
           console.error("Gagal menambah anak asuh via API:", error);
           // Rollback on failure
           set({ error: getErrorMessage(error, "Gagal menambah anak asuh"), orphans: prev });
+          throw error;
         }
 
         return id;
@@ -280,30 +427,27 @@ export const useYamutiStore = create<YamutiStore>()(
 
       getInventoryById: (id) => get().inventory.find((i) => i.id === id),
 
-      /** POST /mutasi-barang — currently local-only; backend GET /inventaris not yet available */
+      /** POST /inventaris — uses real API */
       addInventory: async (data) => {
         const id = generateNumericId(get().inventory);
 
-        // NOTE: POST /mutasi-barang requires an existing inventaris_id from the backend.
-        // Since there is no POST /inventaris endpoint yet, we store locally only.
-        // Once the backend supports inventory creation, re-enable the API call below.
-        /*
+        // Optimistic update
+        const prev = get().inventory;
+        set((s) => ({ inventory: [...s.inventory, { ...data, id }] }));
+
         try {
-          await catatMutasiBarang({
-            inventaris_id: id.toString(),
-            tipe: "masuk",
-            jumlah: parseInt(data.stock) || 1,
-            keterangan: `Penambahan barang: ${data.name}`,
+          await createInventaris({
+            nama_barang: data.name,
+            deskripsi: "",
+            stok_sekarang: parseInt(data.stock) || 0,
+            satuan: data.category || "Unit",
           });
-          set((s) => ({ inventory: [...s.inventory, { ...data, id }] }));
         } catch (error: any) {
           console.error("Gagal menambah inventory via API:", error);
-          set({ error: getErrorMessage(error, "Gagal menambah inventory") });
-          set((s) => ({ inventory: [...s.inventory, { ...data, id }] }));
+          // Rollback on failure
+          set({ error: getErrorMessage(error, "Gagal menambah inventory"), inventory: prev });
         }
-        */
 
-        set((s) => ({ inventory: [...s.inventory, { ...data, id }] }));
         return id;
       },
 
@@ -404,10 +548,25 @@ export const useYamutiStore = create<YamutiStore>()(
         return id;
       },
 
-      updateBooking: (id, data) => {
+      updateBooking: async (id, data) => {
+        // Optimistic update
         set((s) => ({
           bookings: s.bookings.map((b) => (b.id === id ? { ...b, ...data } : b)),
         }));
+
+        // Send update to backend if status changed
+        if (data.status) {
+          try {
+            let apiStatus = "PENDING";
+            if (data.status === "Dikonfirmasi") apiStatus = "APPROVED";
+            else if (data.status === "Selesai") apiStatus = "COMPLETED";
+            else if (data.status === "Dibatalkan") apiStatus = "REJECTED";
+            
+            await updateKunjunganStatus(id.toString(), apiStatus as any);
+          } catch (error) {
+            console.error("Gagal mengupdate status kunjungan ke API:", error);
+          }
+        }
       },
 
       deleteBooking: (id) => {
@@ -514,10 +673,3 @@ export function programFormToEntity(
   };
 }
 
-export type OrphanFormInput = {
-  name: string;
-  birthDate: string;
-  kategori_bayi: boolean;
-  status: OrphanStatus;
-  notes?: string;
-};

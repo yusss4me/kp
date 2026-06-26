@@ -144,7 +144,7 @@ export function NotificationBell({ className }: { className?: string }) {
 
       {/* Dropdown Panel */}
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 max-h-96 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-[70] animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute right-0 top-full mt-2 md:right-auto md:left-full md:top-0 md:mt-0 md:ml-4 w-80 max-h-96 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-[70] animate-in fade-in slide-in-from-top-2 md:slide-in-from-left-2 duration-200">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
             <Txt weight="bold" className="text-gray-800">
@@ -200,4 +200,3 @@ export function NotificationBell({ className }: { className?: string }) {
   );
 }
 
-export default NotificationBell;

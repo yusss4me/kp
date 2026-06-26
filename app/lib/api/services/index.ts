@@ -11,3 +11,4 @@ export * from "./keuangan";
 export * from "./broadcast";
 export * from "./dashboard";
 export * from "./admins";
+export * from "./donatur";

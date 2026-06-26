@@ -4,14 +4,19 @@ import { unwrapList } from "@/app/lib/api/response";
 export interface CreateDonasiPayload {
   nama_donatur: string;
   no_whatsapp: string;
-  gross_amount?: number;
-  nama_barang?: string;
-  payment_type?: string;
-  /** Optional: ID kampanye jika berdonasi untuk kampanye tertentu */
-  kampanye_id?: string;
+  gross_amount: number;
+  kampanye_id: string;
 }
 
-/** POST /donasi — buat donasi baru (public, tanpa auth) */
+/**
+ * @api {post} /donasi POST Buat Donasi
+ * @description Membuat donasi baru oleh donatur (public, tanpa auth).
+ * 
+ * @param {CreateDonasiPayload} payload - Data rincian donasi.
+ * 
+ * @returns {Promise<any>} Berisi status, pesan, dan data donasi yang dibuat.
+ * @throws {Error} Jika validasi gagal atau server error.
+ */
 export async function createDonasi(payload: CreateDonasiPayload) {
   try {
     const res = await apiClient.post("/donasi", payload);
@@ -24,7 +29,13 @@ export async function createDonasi(payload: CreateDonasiPayload) {
   }
 }
 
-/** GET /donasi — returns empty array on 404 (backend may not be ready) */
+/**
+ * @api {get} /donasi GET Daftar Donasi
+ * @description Mengambil daftar semua donasi.
+ * 
+ * @returns {Promise<any[]>} Berisi array data donasi, returns empty array on 404.
+ * @throws {Error} Jika terjadi kesalahan pada server atau network.
+ */
 export async function fetchDonasiList() {
   try {
     const res = await apiClient.get("/donasi");
@@ -35,7 +46,15 @@ export async function fetchDonasiList() {
   }
 }
 
-/** GET /donasi/riwayat/:donaturId — returns empty array on 404 */
+/**
+ * @api {get} /donasi/riwayat/:donaturId GET Riwayat Donasi
+ * @description Mengambil riwayat donasi berdasarkan ID donatur.
+ * 
+ * @param {string} donaturId - ID unik donatur.
+ * 
+ * @returns {Promise<any[]>} Berisi array riwayat donasi, returns empty array on 404.
+ * @throws {Error} Jika terjadi kesalahan pada server atau network.
+ */
 export async function fetchDonasiRiwayat(donaturId: string) {
   try {
     const res = await apiClient.get(`/donasi/riwayat/${donaturId}`);
@@ -46,7 +65,15 @@ export async function fetchDonasiRiwayat(donaturId: string) {
   }
 }
 
-/** PATCH /donasi/{id}/verify — verifikasi bukti transfer donasi (admin) */
+/**
+ * @api {patch} /donasi/:id/verify PATCH Verifikasi Donasi
+ * @description Memverifikasi bukti transfer untuk donasi tertentu (hanya admin).
+ * 
+ * @param {string} id - ID unik donasi yang akan diverifikasi.
+ * 
+ * @returns {Promise<any>} Berisi status sukses dan pesan verifikasi.
+ * @throws {Error} Jika ID tidak ditemukan atau gagal verifikasi.
+ */
 export async function verifyDonasi(id: string) {
   const res = await apiClient.patch(`/donasi/${id}/verify`);
   return res.data;

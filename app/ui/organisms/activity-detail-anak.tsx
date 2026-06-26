@@ -61,11 +61,9 @@ export const DetailAnak = ({ id, url }: DetailAnakProps) => {
         </div>
 
         <div className="flex flex-col items-center gap-4">
-          <Avatar
-            src="https://i.pravatar.cc/150?u=orphan"
-            size={96}
-            className="ring-4 ring-white/30"
-          />
+          <div className="w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center ring-4 ring-white/30">
+            <User size={48} className="text-white" />
+          </div>
           <div className="text-center">
             <Txt variant="h4" color="light" weight="bold">
               {orphan.name}
@@ -113,19 +111,19 @@ export const DetailAnak = ({ id, url }: DetailAnakProps) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-green-50 rounded-xl">
+          <a href="https://maps.app.goo.gl/RKtcchKJMf968yi66" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:bg-gray-50 p-2 -mx-2 rounded-xl transition-colors cursor-pointer group">
+            <div className="p-2 bg-green-50 rounded-xl group-hover:bg-green-100 transition-colors">
               <MapPin size={20} className="text-green-500" />
             </div>
             <div>
-              {/* <Txt variant="caption" className="text-gray-500">
-                Jenis Kelamin
+              <Txt variant="caption" className="text-gray-500 block">
+                Lokasi Asuh
               </Txt>
-              <Txt variant="body" weight="bold" className="text-gray-800">
-                {orphan.gender}
-              </Txt> */}
+              <Txt variant="body" weight="bold" className="text-gray-800 group-hover:text-green-600 transition-colors">
+                Yayasan Mutiara Titipan Ilahi
+              </Txt>
             </div>
-          </div>
+          </a>
 
           {/* {orphan.notes && (
             <div className="pt-2 border-t border-gray-100">

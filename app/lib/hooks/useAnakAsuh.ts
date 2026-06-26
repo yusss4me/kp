@@ -32,7 +32,7 @@ export function useAnakAsuh(id: string | number) {
 export function useCreateAnakAsuh() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (payload: CreateAnakAsuhPayload) => createAnakAsuh(payload),
+    mutationFn: (payload: FormData) => createAnakAsuh(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orphans"] });
       queryClient.invalidateQueries({ queryKey: ["anak-asuh"] });

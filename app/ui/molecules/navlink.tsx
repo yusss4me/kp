@@ -108,4 +108,3 @@ export const NavLink = ({
   );
 };
 
-export default NavLink;

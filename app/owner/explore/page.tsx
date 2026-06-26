@@ -54,5 +54,5 @@ export default function Page() {
     );
   }
 
-  return <ExploreTemplate campaigns={campaigns} role="owner" />;
+  return <ExploreTemplate campaigns={campaigns} role="super_admin" />;
 }

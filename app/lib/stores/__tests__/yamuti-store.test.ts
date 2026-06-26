@@ -9,10 +9,13 @@ vi.mock("@/app/lib/api/services/anak-asuh", () => ({
 }));
 vi.mock("@/app/lib/api/services/donasi", () => ({
   createDonasi: vi.fn().mockResolvedValue({}),
+  verifyDonasi: vi.fn().mockResolvedValue({}),
 }));
 vi.mock("@/app/lib/api/services/kunjungan", () => ({
   approveKunjungan: vi.fn().mockResolvedValue({}),
   createKunjungan: vi.fn().mockResolvedValue({}),
+  fetchKunjunganList: vi.fn().mockResolvedValue([]),
+  updateKunjunganStatus: vi.fn().mockResolvedValue({}),
 }));
 vi.mock("@/app/lib/api/services/programs", () => ({
   fetchPrograms: vi.fn().mockResolvedValue([]),

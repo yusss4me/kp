@@ -99,11 +99,11 @@ export default function LoginForm({ variant = "admin" }: LoginFormProps) {
         return;
       }
       const role = useAuthStore.getState().user?.role || "admin";
-      if (role === "owner") {
-        router.push(routes.owner.root());
-      } else if(role == "admin"){
+      if (role === "super_admin") {
+        router.push(routes.super_admin.root());
+      } else if (role == "admin") {
         router.push(routes.admin.root());
-      } else if(role == "donatur"){
+      } else if (role == "donatur") {
         router.push(routes.user.root());
       }
     } else {
@@ -144,9 +144,9 @@ export default function LoginForm({ variant = "admin" }: LoginFormProps) {
           {...register("email")}
           error={errors.email?.message}
         />
-        <PasswordField 
-          label={t("passwordLabel")} 
-          placeholder={t("passwordPlaceholder")} 
+        <PasswordField
+          label={t("passwordLabel")}
+          placeholder={t("passwordPlaceholder")}
           {...register("password")}
           error={errors.password?.message}
         />
@@ -172,7 +172,7 @@ export default function LoginForm({ variant = "admin" }: LoginFormProps) {
             </Txt>
           </Link>
         </Container>
-        
+
         <Btn
           type="submit"
           variant="red"

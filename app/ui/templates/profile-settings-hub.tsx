@@ -19,7 +19,7 @@ export interface ProfileSettingsHubTemplateProps {
 export function ProfileSettingsHubTemplate({ sections }: ProfileSettingsHubTemplateProps) {
   return (
     <ProfileSubpageTemplate
-      backHref="/home/profil"
+      backHref="/user/profil"
       title="Pengaturan Akun"
       description="Sesuaikan pengalaman dan keamanan akun Anda"
       icon={Settings}
@@ -52,7 +52,7 @@ export function ProfileSettingsHubTemplate({ sections }: ProfileSettingsHubTempl
           </Txt>
           <Txt className="text-white/80 mt-1">Tim dukungan kami siap membantu Anda 24/7</Txt>
         </div>
-        <Link href="/home/profil/contact">
+        <Link href="/user/profil/contact">
           <Btn variant="light" className="px-8 py-4 text-red-primary font-bold shadow-lg hover:scale-105 transition-transform bg-white rounded-xl">
             Hubungi Support
           </Btn>

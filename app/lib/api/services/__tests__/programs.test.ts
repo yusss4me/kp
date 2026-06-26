@@ -2,16 +2,16 @@ import { describe, it, expect } from "vitest";
 import { mapProgram } from "@/app/lib/api/services/programs";
 
 describe("mapProgram", () => {
-  it("maps English field names correctly", () => {
+  it("maps field names correctly", () => {
     const result = mapProgram({
       id: 1,
-      title: "Education Fund",
-      description: "Help students",
-      category: "Pendidikan",
-      location: "Tasikmalaya",
-      target_amount: 5000000,
+      judul: "Education Fund",
+      deskripsi: "Help students",
+      kategori: "Pendidikan",
+      lokasi: "Tasikmalaya",
+      target_donasi: 5000000,
       collected_amount: 2500000,
-      end_date: "2025-12-31",
+      tanggal_berakhir: "2025-12-31",
       thumbnail_url: "/img.jpg",
     });
 
@@ -23,7 +23,7 @@ describe("mapProgram", () => {
     expect(result.targetAmount).toBe(5000000);
     expect(result.collectedAmount).toBe(2500000);
     expect(result.deadline).toBe("2025-12-31");
-    expect(result.image).toBe("/img.jpg");
+    expect(result.image).toBe("https://yamuti-backend.onrender.com/img.jpg");
     expect(result.progress).toBe(50);
   });
 
@@ -34,7 +34,7 @@ describe("mapProgram", () => {
       deskripsi: "Bantuan kesehatan",
       kategori: "Kesehatan",
       lokasi: "Bandung",
-      target_amount: 1000000,
+      target_donasi: 1000000,
       collected_amount: 0,
     });
 
@@ -60,20 +60,18 @@ describe("mapProgram", () => {
   it("prefers snake_case over camelCase when both present", () => {
     const result = mapProgram({
       id: 4,
-      title: "CamelCase Title",
-      judul: "Snake Title",
-      targetAmount: 200,
-      target_amount: 100,
+      collectedAmount: 200,
+      collected_amount: 100,
     });
 
-    // snake_case (target_amount) is checked first via ??
-    expect(result.targetAmount).toBe(100);
+    // snake_case (collected_amount) is checked first via ??
+    expect(result.collectedAmount).toBe(100);
   });
 
   it("caps progress at 100", () => {
     const result = mapProgram({
       id: 5,
-      target_amount: 100,
+      target_donasi: 100,
       collected_amount: 200,
     });
 

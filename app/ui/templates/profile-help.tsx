@@ -11,7 +11,7 @@ export interface ProfileHelpTemplateProps {
 export function ProfileHelpTemplate({ faqs }: ProfileHelpTemplateProps) {
   return (
     <ProfileSubpageTemplate
-      backHref="/home/profil"
+      backHref="/user/profil"
       title="Pusat Bantuan"
       description="Cari solusi atau pelajari lebih lanjut tentang Yamuti"
       icon={HelpCircle}
@@ -53,7 +53,7 @@ export function ProfileHelpTemplate({ faqs }: ProfileHelpTemplateProps) {
           Masih butuh bantuan?
         </Txt>
         <Txt className="text-white/80">Tim kami siap membantu Anda secara langsung via chat atau email.</Txt>
-        <Link href="/home/profil/contact" className="inline-block px-8 py-4 bg-white text-red-primary font-bold rounded-2xl shadow-lg hover:scale-105 transition-transform mt-2">
+        <Link href="/user/profil/contact" className="inline-block px-8 py-4 bg-white text-red-primary font-bold rounded-2xl shadow-lg hover:scale-105 transition-transform mt-2">
           Hubungi Tim Support
         </Link>
       </Container>

@@ -14,11 +14,12 @@ import Image from 'next/image';
 
 export interface AdminProgramFormValues {
   title: string;
-  category: string;
-  location: string;
-  description: string;
+  category?: string;
+  location?: string;
+  description?: string;
   targetAmount: number;
-  deadline: string;
+  deadline?: string;
+  thumbnail?: File;
 }
 
 interface AdminProgramFormTemplateProps {
@@ -43,6 +44,15 @@ export function AdminProgramFormTemplate({
   backUrl,
 }: AdminProgramFormTemplateProps) {
   const { register, formState: { errors, isSubmitting } } = form;
+  const [previewImage, setPreviewImage] = React.useState<string | null>(programImage || null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      form.setValue("thumbnail", selectedFile);
+      setPreviewImage(URL.createObjectURL(selectedFile));
+    }
+  };
 
   return (
     <DashboardHeader headerTitle={isEdit ? `Edit: ${title}` : "Program Baru"}>
@@ -155,24 +165,25 @@ export function AdminProgramFormTemplate({
                 <Txt weight="bold">Media Program</Txt>
               </div>
 
-              {isEdit && programImage ? (
+              {previewImage ? (
                 <div className="relative aspect-video w-full rounded-2xl overflow-hidden group border-2 border-transparent hover:border-red-primary/30 transition-all cursor-pointer">
-                  <Image src={programImage} alt="Preview" fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={previewImage} alt="Preview" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="p-3 bg-white rounded-full shadow-lg">
                       <ImageIcon className="text-red-primary" size={24} />
                     </div>
                     <Txt variant="caption" weight="bold" className="text-white mt-3">Ganti Foto</Txt>
                   </div>
+                  <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleFileChange} />
                 </div>
               ) : (
-
-                <div className="aspect-video w-full rounded-2xl bg-gray-50 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-3 group hover:border-red-primary/30 hover:bg-red-50/10 transition-all cursor-pointer">
-                  
+                <div className="relative aspect-video w-full rounded-2xl bg-gray-50 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-3 group hover:border-red-primary/30 hover:bg-red-50/10 transition-all cursor-pointer">
                   <div className="p-3 bg-white rounded-full shadow-sm group-hover:scale-110 transition-transform">
                     <ImageIcon className="text-gray-400 group-hover:text-red-primary" size={24} />
                   </div>
                   <Txt variant="caption" weight="bold" className="text-gray-400 group-hover:text-red-primary">Klik untuk Unggah Foto</Txt>
+                  <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleFileChange} />
                 </div>
               )}
 

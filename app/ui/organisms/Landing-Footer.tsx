@@ -1,10 +1,11 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrandLight } from "@/app/ui/molecules/brand";
 import { Txt } from "@/app/ui/atoms/text";
 import { Lnk } from "@/app/ui/atoms/link";
 import { Icn } from "@/app/ui/atoms/Icn";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 
 export interface LandingFooterProps {
   className?: string;
@@ -22,6 +23,13 @@ export interface LandingFooterProps {
  * @returns {JSX.Element} Komponen LandingFooter
  */
 export const LandingFooter: React.FC<LandingFooterProps> = () => {
+  const { foundationProfile } = useYamutiStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <footer className="bg-lightdark-tertiary text-white pt-20 pb-10">
       <div className="max-w-7xl mx-auto px-6">
@@ -39,16 +47,16 @@ export const LandingFooter: React.FC<LandingFooterProps> = () => {
             <Txt variant="h6" weight="bold" color="light">Tautan Cepat</Txt>
             <ul className="space-y-4">
               <li>
-                <Lnk href="#programs" variant="muted" className="text-sm opacity-60 hover:opacity-100">Program Donasi</Lnk>
+                <Lnk href="#programs" variant="default" color="light" className="text-sm opacity-60 hover:opacity-100">Program Donasi</Lnk>
               </li>
               <li>
-                <Lnk href="#tentang-kami" variant="muted" className="text-sm opacity-60 hover:opacity-100">Tentang Kami</Lnk>
+                <Lnk href="#tentang-kami" variant="default" color="light" className="text-sm opacity-60 hover:opacity-100">Tentang Kami</Lnk>
               </li>
               <li>
-                <Lnk href="/donasi-rutin" variant="muted" className="text-sm opacity-60 hover:opacity-100">Donasi Rutin</Lnk>
+                <Lnk href="/donasi-rutin" variant="default" color="light" className="text-sm opacity-60 hover:opacity-100">Donasi Rutin</Lnk>
               </li>
               <li>
-                <Lnk href="/volunteer" variant="muted" className="text-sm opacity-60 hover:opacity-100">Jadi Relawan</Lnk>
+                <Lnk href="/volunteer" variant="default" color="light" className="text-sm opacity-60 hover:opacity-100">Jadi Relawan</Lnk>
               </li>
             </ul>
           </div>
@@ -65,9 +73,16 @@ export const LandingFooter: React.FC<LandingFooterProps> = () => {
                 <Icn icon={Phone} size={18} color="current" className="text-red-primary" />
                 +62 812-3456-7890
               </li>
-              <li className="flex items-start gap-3 text-sm opacity-60">
-                <Icn icon={MapPin} size={18} color="current" className="text-red-primary mt-1" />
-                Jl. Raya Cisarua No. 123, Bogor, Jawa Barat
+              <li>
+                <a 
+                  href="https://maps.app.goo.gl/RKtcchKJMf968yi66" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-start gap-3 text-sm opacity-60 hover:opacity-100 transition-opacity"
+                >
+                  <Icn icon={MapPin} size={18} color="current" className="text-red-primary mt-1 flex-shrink-0" />
+                  <span>{mounted && foundationProfile ? foundationProfile.address : 'Buka Peta'}</span>
+                </a>
               </li>
             </ul>
           </div>

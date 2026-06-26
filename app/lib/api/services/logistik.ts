@@ -5,18 +5,33 @@ import {
   type CatatMutasiPayload,
 } from "@/app/lib/api/services/inventaris";
 
-/** POST /inventaris/{id}/mutasi — catat mutasi barang (memerlukan Bearer token) */
+/**
+ * @api {post} /mutasi-barang POST Catat Mutasi Barang (Wrapper)
+ * @description Wrapper fungsional untuk mencatat mutasi stok barang (masuk/keluar/rusak).
+ * 
+ * @param {ApiMutasiBarangPayload} payload - Data mutasi stok.
+ * 
+ * @returns {Promise<any>} Berisi status sukses dan data mutasi.
+ */
 export async function catatMutasiBarang(payload: ApiMutasiBarangPayload) {
   const mutasiPayload: CatatMutasiPayload = {
-    tipe: payload.tipe,
+    inventaris_id: payload.inventaris_id,
+    tipe: payload.tipe as "masuk" | "keluar" | "rusak",
     jumlah: payload.jumlah,
-    tanggal_mutasi: payload.tanggal_mutasi,
     keterangan: payload.keterangan,
   };
-  return catatMutasiInventaris(payload.inventaris_id, mutasiPayload);
+  return catatMutasiInventaris(mutasiPayload);
 }
 
-/** GET /inventaris/{id}/mutasi — riwayat mutasi per item inventaris */
+/**
+ * @api {get} /inventaris/:id/mutasi GET Riwayat Mutasi Barang
+ * @description Mengambil riwayat mutasi per item inventaris berdasarkan ID.
+ * 
+ * @param {string} inventarisId - ID unik barang inventaris.
+ * 
+ * @returns {Promise<any[]>} Berisi array riwayat mutasi barang.
+ * @throws {Error} Jika terjadi kesalahan pada server.
+ */
 export async function fetchMutasiBarangList(inventarisId: string) {
   return fetchRiwayatMutasi(inventarisId);
 }

@@ -2,6 +2,7 @@ import type { Program } from "@/app/lib/types/entities";
 import { calcProgress, formatRupiah } from "@/app/lib/utils/crud-helpers";
 import { apiClient } from "@/app/lib/api/client";
 import { unwrapList } from "@/app/lib/api/response";
+import { getImageUrl } from "@/app/lib/utils/image";
 
 /**
  * Backend Kampanye entity shape — maps to frontend Program entity.
@@ -41,14 +42,22 @@ export function mapProgram(item: ApiKampanye): Program {
     targetAmount,
     collectedAmount,
     deadline: item.tanggal_berakhir ?? item.tanggal_akhir ?? "",
-    image: item.thumbnail ?? item.thumbnail_url,
+    image: getImageUrl(item.thumbnail_url || item.thumbnail),
     target: formatRupiah(targetAmount),
     collected: formatRupiah(collectedAmount),
     progress: calcProgress(collectedAmount, targetAmount),
   };
 }
 
-/** GET /kampanye — daftar kampanye (public, optional ?status=Aktif) */
+/**
+ * @api {get} /kampanye GET Daftar Kampanye
+ * @description Mengambil daftar kampanye program donasi (public).
+ * 
+ * @param {string} [status] - Opsional filter berdasarkan status (contoh: "Aktif").
+ * 
+ * @returns {Promise<Program[]>} Berisi array data program kampanye.
+ * @throws {Error} Jika terjadi kesalahan pada server.
+ */
 export async function fetchPrograms(status?: string): Promise<Program[]> {
   try {
     const res = await apiClient.get("/kampanye", {
@@ -62,7 +71,15 @@ export async function fetchPrograms(status?: string): Promise<Program[]> {
   }
 }
 
-/** GET /kampanye/{id} — detail kampanye (public, supports id or slug) */
+/**
+ * @api {get} /kampanye/:id GET Detail Kampanye
+ * @description Mengambil detail data kampanye berdasarkan ID atau slug (public).
+ * 
+ * @param {string} id - ID atau slug kampanye.
+ * 
+ * @returns {Promise<Program | null>} Berisi data detail program atau null jika tidak ditemukan.
+ * @throws {Error} Jika terjadi kesalahan pada server.
+ */
 export async function fetchProgramById(id: string): Promise<Program | null> {
   try {
     const res = await apiClient.get(`/kampanye/${id}`);
@@ -77,21 +94,35 @@ export async function fetchProgramById(id: string): Promise<Program | null> {
 
 export interface KampanyeFormInput {
   judul: string;
-  deskripsi: string;
+  deskripsi?: string;
   target_donasi: number;
-  tanggal_mulai: string;
-  tanggal_berakhir: string;
+  tanggal_mulai?: string;
+  tanggal_berakhir?: string;
   thumbnail?: File;
 }
 
-/** POST /kampanye — buat kampanye baru (admin, multipart/form-data for thumbnail) */
+/**
+ * @api {post} /kampanye POST Buat Kampanye
+ * @description Membuat kampanye donasi baru dengan unggahan thumbnail (hanya admin, multipart/form-data).
+ * 
+ * @param {KampanyeFormInput} payload - Data kampanye dan file thumbnail.
+ * 
+ * @returns {Promise<any>} Berisi status dan data kampanye yang baru dibuat.
+ * @throws {Error} Jika validasi gagal atau server error.
+ */
 export async function createKampanye(payload: KampanyeFormInput) {
   const formData = new FormData();
   formData.append("judul", payload.judul);
-  formData.append("deskripsi", payload.deskripsi);
+  if (payload.deskripsi) {
+    formData.append("deskripsi", payload.deskripsi);
+  }
   formData.append("target_donasi", String(payload.target_donasi));
-  formData.append("tanggal_mulai", payload.tanggal_mulai);
-  formData.append("tanggal_berakhir", payload.tanggal_berakhir);
+  if (payload.tanggal_mulai) {
+    formData.append("tanggal_mulai", payload.tanggal_mulai);
+  }
+  if (payload.tanggal_berakhir) {
+    formData.append("tanggal_berakhir", payload.tanggal_berakhir);
+  }
   if (payload.thumbnail) {
     formData.append("thumbnail", payload.thumbnail);
   }
@@ -107,7 +138,16 @@ export async function createKampanye(payload: KampanyeFormInput) {
   }
 }
 
-/** PUT /kampanye/{id} — update kampanye (admin, JSON sesuai api-collection) */
+/**
+ * @api {put} /kampanye/:id PUT Update Kampanye
+ * @description Memperbarui data kampanye berdasarkan ID (hanya admin). Mendukung pembaruan gambar via PUT (override method).
+ * 
+ * @param {string} id - ID unik kampanye yang akan diperbarui.
+ * @param {Partial<KampanyeFormInput>} payload - Data perubahan untuk kampanye.
+ * 
+ * @returns {Promise<any>} Berisi status dan data kampanye yang diperbarui.
+ * @throws {Error} Jika validasi gagal atau server error.
+ */
 export async function updateKampanye(id: string, payload: Partial<KampanyeFormInput>) {
   if (payload.thumbnail) {
     const formData = new FormData();
@@ -135,7 +175,15 @@ export async function updateKampanye(id: string, payload: Partial<KampanyeFormIn
   return res.data;
 }
 
-/** DELETE /kampanye/{id} — hapus kampanye (admin) */
+/**
+ * @api {delete} /kampanye/:id DELETE Hapus Kampanye
+ * @description Menghapus kampanye secara permanen berdasarkan ID (hanya admin).
+ * 
+ * @param {string} id - ID unik kampanye yang akan dihapus.
+ * 
+ * @returns {Promise<any>} Berisi status sukses dan pesan berhasil dihapus.
+ * @throws {Error} Jika gagal menghapus atau server error.
+ */
 export async function deleteKampanye(id: string) {
   const res = await apiClient.delete(`/kampanye/${id}`);
   return res.data;

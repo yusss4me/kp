@@ -2,7 +2,8 @@ import { Txt } from "../atoms/text";
 import { Img } from "../atoms/image";
 import { Statuscard } from "../molecules/landing-iconCard";
 import { Container } from "../atoms/container";
-import {LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react";
+import { ImpactStats, ImpactStatsProps } from "./impact-stats";
 
 export interface WhyUsSectionProps {
   benefit: {
@@ -14,7 +15,8 @@ export interface WhyUsSectionProps {
   title:string;
   subtitle:string;
   image:string;
-  experience: string
+  experience: string;
+  impact: ImpactStatsProps;
   className?: string;
 }
 
@@ -29,7 +31,7 @@ export interface WhyUsSectionProps {
  * @param {WhyUsSectionProps} props - Properti komponen
  * @returns {JSX.Element} Komponen WhyUsSection
  */
-export const WhyUsSection = ({ benefit, title, subtitle, image, experience}: WhyUsSectionProps) => {
+export const WhyUsSection = ({ benefit, title, subtitle, image, experience, impact }: WhyUsSectionProps) => {
   return (
     <section id="tentang-kami" className="py-16 md:py-24 bg-lightdark-tertiary text-white overflow-hidden relative">
       <div className="absolute top-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-red-primary/10 rounded-full blur-[80px] md:blur-[120px] -mr-32 md:-mr-48 -mt-32 md:-mt-48" />
@@ -44,16 +46,9 @@ export const WhyUsSection = ({ benefit, title, subtitle, image, experience}: Why
               </Txt>
             </div>
 
-            <Container className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {benefit.map((b)=>(
-                <Statuscard
-                key={b.id}
-                statusIcon={b.icon}
-                title={b.title}
-                description={b.description}
-                />
-              ))}
-            </Container>
+            <div className="bg-white/5 rounded-[24px] md:rounded-[32px] border border-white/10 p-6 md:p-8">
+              <ImpactStats {...impact} variant="dark" className="bg-transparent py-0" />
+            </div>
           </div>
 
           <div className="relative aspect-square md:aspect-video lg:aspect-square bg-white/5 rounded-[32px] md:rounded-[48px] border border-white/10 p-2 md:p-4">

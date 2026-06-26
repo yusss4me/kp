@@ -49,7 +49,6 @@ export interface NavLink {
 const DEFAULT_LINKS: NavLink[] = [
   { label: "Beranda", href: routes.user.root(), icon: Home },
   { label: "Aktivitas", href: routes.user.aktivitas.root(), icon: HandCoins },
-  { label: "Broadcast", href: routes.user.aktivitas.broadcast.root(), icon: MessageCircleMore },
   { label: "Profil", href: routes.user.aktivitas.profile.root(), icon: User, hideOnDesktop: true },
 ];
 
@@ -129,21 +128,24 @@ export const Navbar = ({
           </div>
 
           {/* Middle Section: Navigation Links */}
-          <nav aria-label="Navigasi utama" className="flex flex-col items-center w-full gap-2 overflow-y-auto custom-scrollbar">
+          <nav aria-label="Navigasi utama" className="flex flex-col items-center w-full gap-3 overflow-y-auto overflow-x-hidden custom-scrollbar">
             {desktopLinks.map((link) => (
-              <NavLinkMolecule
-                key={link.href}
-                href={link.href}
-                label={link.label}
-                icon={link.icon}
-                iconSize={15}
-                showLabel={false}
-                className={cn(
-                  "flex flex-col items-center justify-center gap-1 px-3 py-4 rounded-full transition-all duration-300 relative",
-                  "text-white/70 hover:bg-white/10 hover:text-white",
-                )}
-                activeClassName="bg-white text-red-primary shadow-xl shadow-black/10 hover:bg-white"
-              />
+              <div key={link.href} className="w-full flex justify-center">
+                <NavLinkMolecule
+                  href={link.href}
+                  label={link.label}
+                  icon={link.icon}
+                  iconSize={20}
+                  showLabel={true}
+                  direction="col"
+                  className={cn(
+                    "flex flex-col items-center justify-center gap-1.5 w-[76px] h-[76px] rounded-2xl transition-all duration-300",
+                    "text-white/70 hover:bg-white/15 hover:text-white",
+                  )}
+                  activeClassName="bg-white text-red-primary shadow-xl shadow-black/10 hover:bg-white"
+                  labelClassName="text-[10px] font-medium leading-none text-center"
+                />
+              </div>
             ))}
           </nav>
         </Container>
@@ -194,7 +196,7 @@ export const Navbar = ({
       {/* Mobile View: Top Header + Bottom Navigation */}
       <Container className="md:hidden flex flex-col">
         {/* Mobile Top Header: Logo + Notification Bell */}
-        <div className="sticky top-0 z-50 flex items-center justify-between px-4 py-3 bg-red-primary shadow-md">
+        <div className="sticky top-0 z-50 flex items-center justify-between px-4 py-3 bg-red-primary/90 backdrop-blur-xl border-b border-white/10 shadow-sm">
           <Img src="/logo/yamuti.png" alt="Logo" w={32} h={32} rounded="full" aspect="square" />
           <NotificationBell />
         </div>
@@ -203,8 +205,9 @@ export const Navbar = ({
         <nav
           aria-label="Navigasi mobile"
           className={cn(
-            "fixed bottom-0 left-0 w-full h-20 z-50 px-4 flex items-center justify-around",
-            "bg-red-primary border-t border-white/10 pb-2",
+            "fixed bottom-0 left-0 w-full z-50 px-2 flex items-center justify-around",
+            "bg-red-primary backdrop-blur-xl border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.15)]",
+            "h-[60px] pb-safe",
           )}
         >
           {links.slice(0, 5).map((link) => (
@@ -213,14 +216,14 @@ export const Navbar = ({
               href={link.href}
               label={link.label}
               icon={link.icon}
-              iconSize={22}
+              iconSize={20}
               direction="col"
               className={cn(
-                "p-2 rounded-xl transition-all duration-300 min-w-[64px]",
-                "text-white/60 hover:bg-white/5",
+                "flex-1 flex flex-col items-center justify-center gap-0.5 py-1.5 px-1 rounded-xl transition-all duration-300 min-w-0",
+                "text-white/60 hover:bg-white/10 active:scale-95",
               )}
-              activeClassName="bg-white text-red-primary shadow-lg hover:bg-white"
-              labelClassName="text-[9px] uppercase tracking-wider"
+              activeClassName="bg-white/15 text-white"
+              labelClassName="text-[9px] font-semibold uppercase tracking-wide truncate w-full text-center"
             />
           ))}
         </nav>

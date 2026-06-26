@@ -158,6 +158,7 @@ export default function TemplatesWireframePage() {
             whyUsSubtitle="Kami memastikan setiap rupiah yang Anda berikan dikelola dengan amanah dan profesional untuk dampak maksimal."
             whyUsImage="/images/slider-1.jpg"
             experience="12 Tahun"
+            programs={[]}
           />
         </div>
       </Section>

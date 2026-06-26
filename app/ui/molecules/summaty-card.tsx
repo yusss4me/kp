@@ -28,19 +28,19 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
 }) => {
   return (
     <Container
-      className="flex flex-col items-center gap-2 flex-1 text-center "
+      className="flex flex-col items-center gap-2 flex-1 text-center min-w-0"
       variant="light"
       padding="sm"
       radius="xl"
     >
-      <div className="w-10 h-10 rounded-full bg-red-primary/10 flex items-center justify-center text-red-primary transition-colors group-hover:bg-red-primary group-hover:text-white">
+      <div className="w-9 h-9 rounded-full bg-red-primary/10 flex items-center justify-center text-red-primary shrink-0">
         <Icn icon={Icon} />
       </div>
-      <div className="flex flex-col gap-0.5">
-        <Txt variant="h4" weight="bold" color="dark" font="jakarta" className="text-sm md:text-base leading-none">
+      <div className="flex flex-col gap-0.5 min-w-0 w-full">
+        <Txt variant="h4" weight="bold" color="dark" font="jakarta" className="text-xs md:text-sm leading-none truncate block">
           {title}
         </Txt>
-        <Txt variant="small" color="dark" font="jakarta" className="text-[10px] opacity-60 uppercase tracking-tight">
+        <Txt variant="small" color="dark" font="jakarta" className="text-[9px] md:text-[10px] opacity-60 uppercase tracking-tight truncate block">
           {value}
         </Txt>
       </div>

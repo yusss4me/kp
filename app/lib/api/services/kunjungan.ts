@@ -1,7 +1,9 @@
 import { apiClient } from "@/app/lib/api/client";
 import { unwrapList } from "@/app/lib/api/response";
 
-/** POST /kunjungan — payload sesuai api-collection */
+/**
+ * Data payload untuk mengajukan kunjungan baru.
+ */
 export interface CreateKunjunganPayload {
   nama_tamu: string;
   no_whatsapp: string;
@@ -26,6 +28,7 @@ export interface KunjunganRecord {
 }
 
 function mapKunjunganRecord(item: KunjunganRecord): KunjunganRecord {
+  if (!item) return {} as KunjunganRecord;
   return {
     ...item,
     nama_pengunjung: item.nama_pengunjung ?? item.nama_tamu,
@@ -34,7 +37,15 @@ function mapKunjunganRecord(item: KunjunganRecord): KunjunganRecord {
   };
 }
 
-/** POST /kunjungan — ajukan kunjungan (public, tanpa auth) */
+/**
+ * @api {post} /kunjungan POST Ajukan Kunjungan
+ * @description Mengajukan jadwal kunjungan ke panti asuhan (public, tanpa auth).
+ * 
+ * @param {CreateKunjunganPayload} payload - Data pengajuan kunjungan tamu.
+ * 
+ * @returns {Promise<any>} Berisi status, pesan, dan rincian kunjungan yang diajukan.
+ * @throws {Error} Jika validasi gagal atau server error.
+ */
 export async function createKunjungan(payload: CreateKunjunganPayload) {
   try {
     const res = await apiClient.post("/kunjungan", payload, {
@@ -58,20 +69,46 @@ export async function createKunjungan(payload: CreateKunjunganPayload) {
   }
 }
 
-/** PATCH /kunjungan/{id}/status — update status kunjungan (APPROVED, REJECTED, COMPLETED) */
-export type KunjunganStatus = "APPROVED" | "REJECTED" | "COMPLETED";
+/**
+ * Status kunjungan yang valid (PENDING, APPROVED, REJECTED, COMPLETED).
+ */
+export type KunjunganStatus = "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED";
 
+/**
+ * @api {patch} /kunjungan/:id/status PATCH Update Status Kunjungan
+ * @description Memperbarui status persetujuan atau penyelesaian kunjungan (hanya admin).
+ * 
+ * @param {string} id - ID unik kunjungan.
+ * @param {KunjunganStatus} status - Status baru untuk kunjungan (APPROVED, REJECTED, COMPLETED).
+ * 
+ * @returns {Promise<any>} Berisi status dan pesan pembaruan.
+ * @throws {Error} Jika ID tidak ditemukan atau gagal pembaruan.
+ */
 export async function updateKunjunganStatus(id: string, status: KunjunganStatus) {
   const res = await apiClient.patch(`/kunjungan/${id}/status`, { status });
   return res.data;
 }
 
-/** PATCH /kunjungan/{id}/status — setujui kunjungan (status = APPROVED) */
+/**
+ * @api {patch} /kunjungan/:id/status PATCH Setujui Kunjungan
+ * @description Memperbarui status kunjungan menjadi APPROVED (hanya admin).
+ * 
+ * @param {string} id - ID unik kunjungan.
+ * 
+ * @returns {Promise<any>} Berisi status dan pesan persetujuan.
+ * @throws {Error} Jika ID tidak ditemukan atau gagal pembaruan.
+ */
 export async function approveKunjungan(id: string) {
   return updateKunjunganStatus(id, "APPROVED");
 }
 
-/** GET /kunjungan — returns empty array on 404 (backend may not be ready) */
+/**
+ * @api {get} /kunjungan GET Daftar Kunjungan
+ * @description Mengambil daftar semua pengajuan kunjungan.
+ * 
+ * @returns {Promise<KunjunganRecord[]>} Berisi array data kunjungan, returns empty array on 404.
+ * @throws {Error} Jika terjadi kesalahan pada server atau network.
+ */
 export async function fetchKunjunganList(): Promise<KunjunganRecord[]> {
   try {
     const res = await apiClient.get("/kunjungan");
@@ -82,10 +119,29 @@ export async function fetchKunjunganList(): Promise<KunjunganRecord[]> {
   }
 }
 
-/** GET /kunjungan/{id} — fetches single kunjungan detail (throws on error) */
+/**
+ * @api {get} /kunjungan/:id GET Detail Kunjungan
+ * @description Mengambil detail data pengajuan kunjungan berdasarkan ID.
+ * 
+ * @param {string} id - ID unik kunjungan.
+ * 
+ * @returns {Promise<KunjunganRecord>} Berisi data detail kunjungan.
+ * @throws {Error} Jika ID tidak ditemukan atau server error.
+ */
 export async function getKunjunganById(id: string): Promise<KunjunganRecord> {
   const res = await apiClient.get(`/kunjungan/${id}`);
-  const body = res.data as { data?: KunjunganRecord } | KunjunganRecord;
-  const item = (body as { data?: KunjunganRecord }).data || (body as KunjunganRecord);
-  return mapKunjunganRecord(item);
+  let item = res.data as any;
+  
+  if (item && typeof item === 'object') {
+    if (item.data) item = item.data;
+    if (item.kunjungan) item = item.kunjungan;
+    if (item.data) item = item.data; // Just in case it's deeply wrapped
+  }
+  
+  // Jika backend mengembalikan array satu elemen secara tidak sengaja
+  if (Array.isArray(item) && item.length > 0) {
+    item = item[0];
+  }
+  
+  return mapKunjunganRecord(item as KunjunganRecord);
 }

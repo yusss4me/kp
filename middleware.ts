@@ -51,8 +51,8 @@ export function middleware(request: NextRequest) {
   const role = request.cookies.get('yamuti-auth-role')?.value;
 
   const isAdminRoute = pathname.startsWith('/admin');
-  const isOwnerRoute = pathname.startsWith('/owner');
-  const isHomeRoute = pathname.startsWith('/home');
+  const isSuperAdminRoute = pathname.startsWith('/super_admin');
+  const isHomeRoute = pathname.startsWith('/user');
 
   // ── HOME (Donatur) Routes ──────────────────────────────────────────
   if (isHomeRoute) {
@@ -63,26 +63,14 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // Token expired → clear cookies, redirect ke login donatur
-    if (isTokenExpired(token)) {
-      const loginUrl = new URL('/auth/donatur', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      loginUrl.searchParams.set('reason', 'session_expired');
-
-      const response = NextResponse.redirect(loginUrl);
-      response.cookies.set('yamuti-auth-token', '', { maxAge: 0, path: '/' });
-      response.cookies.set('yamuti-auth-role', '', { maxAge: 0, path: '/' });
-      return response;
-    }
-
-    // RBAC: Hanya role donatur yang boleh akses /home
+    // RBAC: Hanya role donatur yang boleh akses /user
     if (role !== 'donatur') {
-      // Admin/owner yang mencoba akses /home → redirect ke dashboard mereka
+      // Admin/super_admin/owner yang mencoba akses /user → redirect ke dashboard mereka
       if (role === 'admin') {
         return NextResponse.redirect(new URL('/admin', request.url));
       }
-      if (role === 'owner') {
-        return NextResponse.redirect(new URL('/owner', request.url));
+      if (role === 'super_admin' || role === 'owner') {
+        return NextResponse.redirect(new URL('/super_admin', request.url));
       }
       // Role tidak dikenali → paksa login ulang donatur
       const loginUrl = new URL('/auth/donatur', request.url);
@@ -93,10 +81,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // ── ADMIN / OWNER Routes ───────────────────────────────────────────
-  const isAdminOrOwnerRoute = isAdminRoute || isOwnerRoute;
+  // ── ADMIN / SUPER_ADMIN Routes ───────────────────────────────────────
+  const isAdminOrSuperAdminRoute = isAdminRoute || isSuperAdminRoute;
 
-  if (isAdminOrOwnerRoute) {
+  if (isAdminOrSuperAdminRoute) {
     // Belum login → redirect ke login admin
     if (!token) {
       const loginUrl = new URL('/auth', request.url);
@@ -104,36 +92,24 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    // Token expired → clear cookies, redirect ke login admin
-    // if (isTokenExpired(token)) {
-    //   const loginUrl = new URL('/auth', request.url);
-    //   loginUrl.searchParams.set('redirect', pathname);
-    //   loginUrl.searchParams.set('reason', 'session_expired');
-
-    //   const response = NextResponse.redirect(loginUrl);
-    //   response.cookies.set('yamuti-auth-token', '', { maxAge: 0, path: '/' });
-    //   response.cookies.set('yamuti-auth-role', '', { maxAge: 0, path: '/' });
-    //   return response;
-    // }
-
     // RBAC: Admin hanya bisa akses /admin
     if (isAdminRoute && role !== 'admin') {
-      if (role === 'owner') {
-        return NextResponse.redirect(new URL('/owner', request.url));
+      if (role === 'super_admin' || role === 'owner') {
+        return NextResponse.redirect(new URL('/super_admin', request.url));
       }
       if (role === 'donatur') {
-        return NextResponse.redirect(new URL('/home', request.url));
+        return NextResponse.redirect(new URL('/user', request.url));
       }
       return NextResponse.redirect(new URL('/auth', request.url));
     }
 
-    // RBAC: Owner hanya bisa akses /owner
-    if (isOwnerRoute && role !== 'owner') {
+    // RBAC: Super Admin hanya bisa akses /super_admin
+    if (isSuperAdminRoute && role !== 'super_admin' && role !== 'owner') {
       if (role === 'admin') {
         return NextResponse.redirect(new URL('/admin', request.url));
       }
       if (role === 'donatur') {
-        return NextResponse.redirect(new URL('/home', request.url));
+        return NextResponse.redirect(new URL('/user', request.url));
       }
       return NextResponse.redirect(new URL('/auth', request.url));
     }
@@ -146,5 +122,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/owner/:path*', '/home/:path*'],
+  matcher: ['/admin/:path*', '/super_admin/:path*', '/user/:path*'],
 };

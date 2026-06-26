@@ -10,9 +10,14 @@ import { routes } from "@/app/lib/constants/routes";
 
 const schema = z.object({
   name: z.string().min(2),
+  nik: z.string().min(1, "NIK wajib diisi"),
   birthDate: z.string().min(1, "Tanggal lahir wajib diisi"),
   kategori_bayi: z.boolean(),
   status: z.enum(["Baru", "Aktif", "Alumni"]),
+  jenis_kelamin: z.enum(["Laki-laki", "Perempuan"]),
+  tempat_lahir: z.string().min(1, "Tempat lahir wajib diisi"),
+  no_kk: z.string().min(1, "No. KK wajib diisi"),
+  no_akte: z.string().min(1, "No. Akte wajib diisi"),
   notes: z.string().optional(),
 });
 
@@ -27,7 +32,18 @@ export default function EditOrphanPage() {
   const form = useForm<OrphanFormInput>({
     resolver: zodResolver(schema),
     values: orphan
-      ? { name: orphan.name, birthDate: orphan.birthDate, kategori_bayi: orphan.kategori_bayi, status: orphan.status, notes: "" }
+      ? {
+          name: orphan.name,
+          nik: orphan.nik || "",
+          birthDate: orphan.birthDate,
+          kategori_bayi: orphan.kategori_bayi,
+          status: orphan.status,
+          jenis_kelamin: "Laki-laki",
+          tempat_lahir: "",
+          no_kk: "",
+          no_akte: "",
+          notes: "",
+        }
       : undefined,
   });
 

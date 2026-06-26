@@ -16,8 +16,8 @@ export interface LandingTemplateProps {
   slide: { id: string; src: string; alt: string }[];
   title: string;
   desc: string;
-  impact: { jiwaterbantu: number; danatersalurkan: number; programberjalan: number; pengabdian: number };
-  // programs: { id: string; title: string; category: string; image: string }[];
+  impact: { jiwaterbantu: number | string; danatersalurkan: number | string; programberjalan: number | string; pengabdian: number | string };
+  programs: { id: string; title: string; category: string; image: string }[];
   benefits: { id: string; title: string; description: string; icon: LucideIcon }[];
   whyUsTitle: string;
   whyUsSubtitle: string;
@@ -32,7 +32,7 @@ export function LandingTemplate({
   title,
   desc,
   impact,
-  // programs,
+  programs,
   benefits,
   whyUsTitle,
   whyUsSubtitle,
@@ -51,15 +51,15 @@ export function LandingTemplate({
           desc={desc}
         />
         <LandingFoundationProfile />
-        <ImpactStats {...impact} />
         <LandingNewsSection />
-        {/* <ProgramsSection items={programs} /> */}
+        <ProgramsSection items={programs} />
         <WhyUsSection
           benefit={benefits}
           title={whyUsTitle}
           subtitle={whyUsSubtitle}
           image={whyUsImage}
           experience={experience}
+          impact={impact}
         />
         <CTASection />
       </main>

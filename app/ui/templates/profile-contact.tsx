@@ -31,7 +31,7 @@ export interface ProfileContactTemplateProps {
 }
 
 export function ProfileContactTemplate({ contact }: ProfileContactTemplateProps) {
-  const [submitMessage, setSubmitMessage] = useState<{type: 'success'|'error', text: string} | null>(null);
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
   const {
     register,
@@ -58,7 +58,7 @@ export function ProfileContactTemplate({ contact }: ProfileContactTemplateProps)
 
   return (
     <ProfileSubpageTemplate
-      backHref="/home/profil"
+      backHref="/user/profil"
       backLabel="Kembali ke Profil"
       title="Hubungi Kami"
       description="Kami siap mendengar pertanyaan, saran, atau masukan Anda"
@@ -87,15 +87,15 @@ export function ProfileContactTemplate({ contact }: ProfileContactTemplateProps)
                 <Txt weight="bold">{contact.phone}</Txt>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-red-50 text-red-primary rounded-xl flex items-center justify-center">
+            <a href="https://maps.app.goo.gl/RKtcchKJMf968yi66" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 hover:bg-gray-50 p-2 -mx-2 rounded-xl transition-colors cursor-pointer group">
+              <div className="w-10 h-10 bg-red-50 text-red-primary rounded-xl flex items-center justify-center group-hover:bg-red-100 transition-colors">
                 <MapPin size={20} />
               </div>
               <div>
-                <Txt className="text-gray-400 text-xs font-bold uppercase tracking-widest">Alamat</Txt>
-                <Txt weight="bold">{contact.address}</Txt>
+                <Txt className="text-gray-400 text-xs font-bold uppercase tracking-widest block">Alamat</Txt>
+                <Txt weight="bold" className="group-hover:text-red-primary transition-colors">{contact.address}</Txt>
               </div>
-            </div>
+            </a>
           </Container>
         </div>
 
@@ -107,7 +107,7 @@ export function ProfileContactTemplate({ contact }: ProfileContactTemplateProps)
                 <Input label="Alamat Email" placeholder="nama@email.com" {...register("email")} error={errors.email?.message} />
               </div>
               <Textarea label="Pesan Anda" placeholder="Tuliskan pesan Anda di sini..." {...register("message")} error={errors.message?.message} />
-              
+
               {submitMessage && (
                 <div className={`p-4 rounded-xl text-sm font-bold ${submitMessage.type === 'success' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-primary'}`}>
                   {submitMessage.text}

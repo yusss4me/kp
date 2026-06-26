@@ -37,7 +37,7 @@ export const CTASection = ({}: CTASectionProps) => {
                     Daftar Sekarang
                   </Btn>
                 </Link>
-                <Link href="#bantuan" className="w-full sm:w-auto">
+                <Link href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
                   <Btn variant="red" size="lg" border="border" borderColor="light"  shape="circle" className="w-full sm:w-auto px-12 h-14 md:h-16 border border-white/20 text-sm md:text-base">
                     Tanya Kami
                   </Btn>

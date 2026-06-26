@@ -5,9 +5,11 @@ import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   Compass,
+  Grip
 } from "lucide-react";
 import { routes } from "@/app/lib/constants/routes";
 import { ADMIN_PROFILE_MENU_GROUPS } from "@/app/lib/constants/profile-constants";
+import { BroadcastBubble } from "@/app/ui/organisms/broadcast-bubble";
 
 export default function Layout({
   children,
@@ -19,7 +21,7 @@ export default function Layout({
 
   const ADMIN_LINKS: NavLink[] = [
     { label: t("dashboard"), href: routes.admin.root(), icon: LayoutDashboard },
-    { label: t("activity"), href: routes.admin.quickAccess.root(), icon: Compass },
+    { label: t("activity"), href: routes.admin.quickAccess.root(), icon: Grip },
     { label: t("explore"), href: routes.admin.explore.root(), icon: Compass },
   ];
 
@@ -34,8 +36,9 @@ export default function Layout({
         }}
         profileMenuGroups={ADMIN_PROFILE_MENU_GROUPS}
       />
-      <main className="flex-grow pb-24 md:pb-0">
+      <main className="flex-grow pb-24 md:pb-0 relative">
         {children}
+        <BroadcastBubble />
       </main>
     </div>
   );

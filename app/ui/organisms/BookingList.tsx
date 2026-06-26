@@ -9,9 +9,9 @@ import type { VisitBooking } from "@/app/lib/types/entities";
 
 export interface BookingListProps {
   bookings: VisitBooking[];
-  onDelete?: (id: number) => void;
+  onDelete?: (id: number | string) => void;
   className?: string;
-  editUrl?: (id: number) => string;
+  editUrl?: (id: number | string) => string;
 }
 
 export const BookingList = ({ bookings, onDelete, editUrl }: BookingListProps) => {
@@ -35,7 +35,7 @@ export const BookingList = ({ bookings, onDelete, editUrl }: BookingListProps) =
               {editUrl && (
                 <Link href={editUrl(booking.id)} className="flex-1">
                   <Btn variant="light" size="sm" shape="rounded" className="w-full gap-1 text-xs font-bold">
-                    <Pencil size={14} /> Edit
+                    <Pencil size={14} /> Proses
                   </Btn>
                 </Link>
               )}

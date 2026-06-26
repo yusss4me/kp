@@ -70,13 +70,10 @@ describe("buildFinanceStats", () => {
     ];
 
     const stats = buildFinanceStats(transactions);
-    expect(stats).toHaveLength(5);
+    expect(stats).toHaveLength(3);
     expect(stats[0].value).toContain("800");
     expect(stats[1].value).toContain("200");
     expect(stats[2].value).toContain("600");
-    // Distribution stats (branch 10%, central 90%) default to 0 when no distributions
-    expect(stats[3].value).toContain("0");
-    expect(stats[4].value).toContain("0");
   });
 
   it("returns zero stats for empty transactions", () => {

@@ -184,4 +184,3 @@ export function NotificationListTemplate({
   );
 }
 
-export default NotificationListTemplate;

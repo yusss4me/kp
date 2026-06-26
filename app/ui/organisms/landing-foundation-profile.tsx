@@ -50,12 +50,17 @@ export function LandingFoundationProfile() {
           </div>
 
           <div className="flex flex-wrap gap-6 pt-6 border-t border-gray-100">
-            <div className="flex items-center gap-3 text-gray-600">
-              <div className="p-2 bg-red-50 text-red-primary rounded-full">
+            <a 
+              href="https://maps.app.goo.gl/RKtcchKJMf968yi66" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center gap-3 text-gray-600 hover:text-red-primary transition-colors cursor-pointer group"
+            >
+              <div className="p-2 bg-red-50 text-red-primary rounded-full group-hover:bg-red-100 transition-colors">
                 <MapPin size={18} />
               </div>
-              <Txt variant="caption">{foundationProfile.address}</Txt>
-            </div>
+              <Txt variant="caption" className="underline-offset-4 group-hover:underline">{foundationProfile.address}</Txt>
+            </a>
             <div className="flex items-center gap-3 text-gray-600">
               <div className="p-2 bg-red-50 text-red-primary rounded-full">
                 <Mail size={18} />
@@ -70,6 +75,35 @@ export function LandingFoundationProfile() {
             </div>
           </div>
         </div>
+      </div>
+      
+      {/* Lokasi Peta Iframe */}
+      <div className="mt-8 bg-white rounded-[40px] p-8 md:p-12 shadow-xl border border-gray-100">
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <Txt variant="h4" weight="bold" className="text-gray-900 mb-1">Lokasi Kami</Txt>
+            <Txt variant="body" className="text-gray-500">Kunjungi yayasan kami di alamat berikut.</Txt>
+          </div>
+          <a href="https://maps.app.goo.gl/RKtcchKJMf968yi66" target="_blank" rel="noopener noreferrer" className="hidden md:flex items-center gap-2 px-6 py-3 bg-red-50 text-red-600 rounded-full font-bold hover:bg-red-100 transition-colors">
+            <MapPin size={18} /> Buka di Google Maps
+          </a>
+        </div>
+        <div className="w-full h-80 md:h-96 rounded-3xl overflow-hidden border border-gray-100 shadow-inner bg-gray-50 relative">
+           <iframe 
+            src="https://maps.google.com/maps?q=Yayasan+Mutiara+Titipan+Ilahi+Tasikmalaya&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+            width="100%" 
+            height="100%" 
+            style={{ border: 0 }} 
+            allowFullScreen={false} 
+            loading="lazy" 
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Peta Lokasi Yayasan"
+            className="absolute inset-0"
+          />
+        </div>
+        <a href="https://maps.app.goo.gl/RKtcchKJMf968yi66" target="_blank" rel="noopener noreferrer" className="mt-6 w-full flex md:hidden items-center justify-center gap-2 px-6 py-4 bg-red-50 text-red-600 rounded-2xl font-bold hover:bg-red-100 transition-colors">
+          <MapPin size={18} /> Buka di Google Maps
+        </a>
       </div>
     </section>
   );

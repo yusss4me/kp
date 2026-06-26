@@ -74,8 +74,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Whitelist allowed roles
-    const ALLOWED_ROLES = ["admin", "owner", "donatur"];
-    const safeRole = ALLOWED_ROLES.includes(role) ? role : "donatur";
+    const ALLOWED_ROLES = ["admin", "super_admin", "donatur", "owner"];
+    let safeRole = ALLOWED_ROLES.includes(role) ? role : "donatur";
+    if (safeRole === "owner") {
+      safeRole = "super_admin";
+    }
 
     const isSecure = request.nextUrl.protocol === "https:";
 

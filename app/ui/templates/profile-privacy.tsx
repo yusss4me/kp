@@ -7,7 +7,7 @@ import { Shield, ChevronLeft, FileText, Trash2 } from "lucide-react";
 export function ProfilePrivacyTemplate() {
   return (
     <ProfileSubpageTemplate
-      backHref="/home/profil/settings"
+      backHref="/user/profil/settings"
       backLabel="Kembali ke Pengaturan"
       title="Privasi & Data"
       icon={Shield}

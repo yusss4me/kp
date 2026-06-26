@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { DonationDetailTemplate } from '../templates/donationDetail';
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -75,130 +76,21 @@ export const DetailProgram = ({ id, url, donateUrl }: DetailProgramProps) => {
       .format(amount)
       .replace('IDR', 'Rp');
 
-  const progress = Math.min((data.raised / data.target) * 100, 100);
   const donasiHref = donateUrl || (id ? routes.visitor.donasi(id) : routes.explore());
 
   return (
-    <Container className="flex flex-col min-h-screen bg-gray-50 pb-24">
-      <div className="relative h-[450px] w-full overflow-hidden">
-        <Image src={data.image} alt={data.title} fill className="object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-        <div className="absolute top-6 left-0 right-0 px-6 flex justify-between items-center">
-          <button type="button" onClick={() => router.back()} className="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md text-white">
-            <ArrowLeft size={20} />
-          </button>
-          <div className="flex gap-3">
-            <button type="button" className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-red-500 shadow-lg">
-              <Heart size={20} fill="currentColor" />
-            </button>
-            <button type="button" className="w-10 h-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md text-white">
-              <Share2 size={20} />
-            </button>
-          </div>
-        </div>
-
-        <div className="absolute bottom-10 left-0 right-0 px-6 space-y-3">
-          <Badge variant="solid" color="primary" className="bg-red-500 border-none text-xs">
-            {data.category}
-          </Badge>
-          <div className="flex items-center gap-2 text-white/80">
-            <MapPin size={16} />
-            <Txt variant="caption" color="light" className="opacity-80">
-              {data.location}
-            </Txt>
-          </div>
-          <Txt variant="h3" color="light" weight="bold" className="leading-tight">
-            {data.title}
-          </Txt>
-
-          <div className="space-y-2 pt-1">
-            <div className="flex justify-between items-baseline">
-              <Txt color="light" variant="h6" className="font-bold">
-                {formatCurrency(data.raised)}
-              </Txt>
-              <Txt variant="caption" color="light" className="opacity-60">
-                dari {formatCurrency(data.target)}
-              </Txt>
-            </div>
-            <div className="w-full bg-white/20 h-2 rounded-full overflow-hidden">
-              <div className="h-full bg-red-500 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
-            </div>
-          </div>
-
-          
-        </div>
-      </div>
-
-      <div className="relative -mt-6 bg-white rounded-t-[32px] px-6 pt-8 pb-10 flex-grow shadow-2xl">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Avatar src={data.author.avatar} size="sm" />
-            <div className="flex items-center gap-1">
-              <Txt color="grey" variant="caption">
-                Oleh
-              </Txt>
-              <Txt color="dark" variant="caption" className="font-bold">
-                {data.author.name}
-              </Txt>
-            </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5 text-gray-500">
-              <Users size={18} />
-              <Txt variant="caption" weight="bold">
-                {data.donorsCount}
-              </Txt>
-            </div>
-            <div className="flex items-center gap-1.5 text-gray-500">
-              <Clock size={18} />
-              <Txt variant="caption" weight="bold">
-                {data.daysRemaining} hari
-              </Txt>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 mb-6 p-4 bg-red-50 rounded-2xl">
-          <Target size={20} className="text-red-500" />
-          <div>
-            <Txt variant="caption" className="text-gray-500">
-              Target Program
-            </Txt>
-            <Txt variant="body" weight="bold" className="text-red-500">
-              {formatCurrency(data.target)}
-            </Txt>
-          </div>
-        </div>
-
-        <div className="space-y-3 mb-8">
-          <Txt color="grey" variant="h6" weight="bold">
-            Tentang Program
-          </Txt>
-          <div className={cn('text-gray-400 text-sm leading-relaxed', !isDescExpanded && 'line-clamp-5')}>{data.description}</div>
-          <button type="button" onClick={() => setIsDescExpanded(!isDescExpanded)} className="flex items-center gap-1 text-red-500 text-sm font-bold">
-            {isDescExpanded ? 'Lihat Lebih Sedikit' : 'Baca Selengkapnya'}
-            <ChevronDown size={16} className={cn('transition-transform', isDescExpanded && 'rotate-180')} />
-          </button>
-        </div>
-
-        <div className="flex gap-3 overflow-x-auto pb-4">
-          {data.gallery.map((img, idx) => (
-            <div key={idx} className="relative flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden shadow-sm">
-              <Image src={img} alt={`Galeri ${idx + 1}`} fill className="object-cover" />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-4 flex items-center gap-4">
-        
-        <Link href={donasiHref} className="flex-grow">
-          <Btn color="red" textColor="light" className="w-full h-14 font-bold rounded-2xl flex items-center justify-center transition-colors">
-            DONASI SEKARANG
-          </Btn>
-        </Link>
-      </div>
-    </Container>
+    <DonationDetailTemplate
+      image={data.image}
+      location={data.location}
+      title={data.title}
+      currentAmount={data.raised}
+      targetAmount={data.target}
+      author={data.author}
+      donorsCount={data.donorsCount}
+      daysRemaining={data.daysRemaining}
+      description={data.description}
+      gallery={data.gallery}
+      donateFormUrl={donasiHref}
+    />
   );
 };

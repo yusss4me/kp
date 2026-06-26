@@ -9,5 +9,5 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return <ActivityDetailTemplate type="kunjungan" id={id} url={routes.admin.kunjungan.root()} />;
+  return <ActivityDetailTemplate type="kunjungan" id={id} url={routes.admin.kunjungan.root()} isAdmin={true} />;
 }

@@ -6,9 +6,16 @@ import { LandingFooter } from "@/app/ui/organisms/Landing-Footer";
 import { Container } from "@/app/ui/atoms/container";
 import { Txt } from "@/app/ui/atoms/text";
 import { Btn } from "@/app/ui/atoms/button";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import Link from "next/link";
 import { CheckCircle } from "lucide-react";
+import Script from "next/script";
+
+declare global {
+  interface Window {
+    snap: any;
+  }
+}
 
 function SuccessContent() {
   const searchParams = useSearchParams();
@@ -17,6 +24,26 @@ function SuccessContent() {
   const amount = searchParams.get("amount") || "0";
   const method = searchParams.get("method") || "-";
   const token = searchParams.get("token");
+
+  useEffect(() => {
+    if (token && token !== "Simulasi-Token-123" && window.snap) {
+      // Trigger Midtrans Snap popup
+      window.snap.pay(token, {
+        onSuccess: function (result: any) {
+          console.log("Payment success:", result);
+        },
+        onPending: function (result: any) {
+          console.log("Payment pending:", result);
+        },
+        onError: function (result: any) {
+          console.error("Payment error:", result);
+        },
+        onClose: function () {
+          console.log("Customer closed the popup without finishing the payment");
+        },
+      });
+    }
+  }, [token]);
 
   return (
     <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-12 text-center max-w-2xl w-full mx-auto relative overflow-hidden">
@@ -99,6 +126,13 @@ export default function SuccessPage() {
       </div>
 
       <LandingFooter />
+
+      {/* Load Midtrans Snap Script */}
+      <Script
+        src={process.env.NEXT_PUBLIC_MIDTRANS_SNAP_URL || "https://app.sandbox.midtrans.com/snap/snap.js"}
+        data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
+        strategy="lazyOnload"
+      />
     </main>
   );
 }

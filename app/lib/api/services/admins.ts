@@ -23,7 +23,13 @@ export function mapAdmin(item: ApiAdminResponse): OwnerAdmin {
   };
 }
 
-/** GET /admins — daftar admin (Owner only, memerlukan Bearer token) */
+/**
+ * @api {get} /admins GET Daftar Admin
+ * @description Mengambil daftar admin (Owner only, memerlukan Bearer token).
+ * 
+ * @returns {Promise<OwnerAdmin[]>} Berisi array data admin.
+ * @throws {Error} Jika terjadi kesalahan pada server atau network.
+ */
 export async function fetchAdminsList(): Promise<OwnerAdmin[]> {
   try {
     const res = await apiClient.get("/admins");
@@ -42,13 +48,29 @@ export interface CreateAdminPayload {
   role: string;
 }
 
-/** POST /admins — tambah admin baru (Owner only, memerlukan Bearer token) */
+/**
+ * @api {post} /admins POST Tambah Admin Baru
+ * @description Menambahkan data admin baru ke server (Owner only, memerlukan Bearer token).
+ * 
+ * @param {CreateAdminPayload} payload - Data body admin yang akan ditambahkan.
+ * 
+ * @returns {Promise<any>} Berisi status, pesan, dan data admin yang baru dibuat.
+ * @throws {Error} Jika validasi gagal atau server error.
+ */
 export async function createAdmin(payload: CreateAdminPayload) {
   const res = await apiClient.post("/admins", payload);
   return res.data;
 }
 
-/** GET /admins/{id} — detail admin (Owner only, memerlukan Bearer token) */
+/**
+ * @api {get} /admins/:id GET Detail Admin
+ * @description Mengambil detail data admin berdasarkan ID (Owner only, memerlukan Bearer token).
+ * 
+ * @param {string|number} id - ID unik admin.
+ * 
+ * @returns {Promise<OwnerAdmin>} Berisi data detail admin.
+ * @throws {Error} Jika ID tidak ditemukan atau server error.
+ */
 export async function fetchAdminById(id: string | number): Promise<OwnerAdmin> {
   const res = await apiClient.get(`/admins/${id}`);
   const body = res.data as { data?: ApiAdminResponse } | ApiAdminResponse;
@@ -64,13 +86,30 @@ export interface UpdateAdminPayload {
   role?: string;
 }
 
-/** PUT /admins/{id} — update admin (Owner only, memerlukan Bearer token) */
+/**
+ * @api {put} /admins/:id PUT Update Admin
+ * @description Memperbarui data admin berdasarkan ID (Owner only, memerlukan Bearer token).
+ * 
+ * @param {string|number} id - ID unik admin yang akan diperbarui.
+ * @param {UpdateAdminPayload} payload - Data perubahan untuk admin.
+ * 
+ * @returns {Promise<any>} Berisi status, pesan, dan data admin yang telah diperbarui.
+ * @throws {Error} Jika ID tidak ditemukan atau validasi gagal.
+ */
 export async function updateAdmin(id: string | number, payload: UpdateAdminPayload) {
   const res = await apiClient.put(`/admins/${id}`, payload);
   return res.data;
 }
 
-/** DELETE /admins/{id} — hapus admin (Owner only, memerlukan Bearer token) */
+/**
+ * @api {delete} /admins/:id DELETE Hapus Admin
+ * @description Menghapus data admin secara permanen berdasarkan ID (Owner only, memerlukan Bearer token).
+ * 
+ * @param {string|number} id - ID unik admin yang akan dihapus.
+ * 
+ * @returns {Promise<any>} Berisi status sukses dan pesan berhasil dihapus.
+ * @throws {Error} Jika ID tidak ditemukan atau gagal dihapus.
+ */
 export async function deleteAdmin(id: string | number) {
   const res = await apiClient.delete(`/admins/${id}`);
   return res.data;

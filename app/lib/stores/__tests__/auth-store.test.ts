@@ -39,14 +39,14 @@ describe("auth-store", () => {
   });
 
   describe("logout", () => {
-    it("clears all auth state", () => {
+    it("clears all auth state", async () => {
       useAuthStore.setState({
         token: "some-token",
         user: { email: "test@test.com", role: "admin" },
         isAuthenticated: true,
       });
 
-      useAuthStore.getState().logout();
+      await useAuthStore.getState().logout();
 
       const state = useAuthStore.getState();
       expect(state.token).toBeNull();
@@ -69,7 +69,7 @@ describe("auth-store", () => {
         user: { email: "admin@test.com", role: "admin" },
       });
 
-      expect(useAuthStore.getState().hasRole("owner")).toBe(false);
+      expect(useAuthStore.getState().hasRole("super_admin")).toBe(false);
     });
 
     it("returns false when user is null", () => {
@@ -119,7 +119,7 @@ describe("auth-store", () => {
       (loginAdmin as ReturnType<typeof vi.fn>).mockResolvedValue({
         data: {
           token: "nested-token",
-          user: { id: "2", email: "owner@test.com", name: "Owner", role: "owner" },
+          user: { id: "2", email: "owner@test.com", name: "Owner", role: "super_admin" },
         },
       });
 
@@ -127,7 +127,7 @@ describe("auth-store", () => {
 
       expect(result.success).toBe(true);
       expect(useAuthStore.getState().token).toBe("nested-token");
-      expect(useAuthStore.getState().user?.role).toBe("owner");
+      expect(useAuthStore.getState().user?.role).toBe("super_admin");
     });
 
     it("supports access_token response shape", async () => {

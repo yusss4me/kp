@@ -1,7 +1,8 @@
 import { create, type StateCreator } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { getErrorMessage } from "@/app/lib/stores/store-utils";
 
-export type UserRole = "admin" | "owner" | "donatur";
+export type UserRole = "admin" | "super_admin" | "donatur";
 
 interface AuthUser {
   email: string;
@@ -10,6 +11,8 @@ interface AuthUser {
   image?: string;
   phone?: string;
   address?: string;
+  nik?: string;
+  no_hp?: string;
 }
 
 interface AuthState {
@@ -23,11 +26,11 @@ interface AuthState {
   setRememberMe: (value: boolean) => void;
   loginApi: (email: string, password: string, rememberMe?: boolean) => Promise<{ success: boolean; error?: string }>;
   loginDonaturApi: (email: string, password: string, rememberMe?: boolean) => Promise<{ success: boolean; error?: string }>;
-  registerDonaturApi: (name: string, email: string, password: string, password_confirmation: string, no_whatsapp: string) => Promise<{ success: boolean; error?: string }>;
+  registerDonaturApi: (name: string, email: string, password: string, password_confirmation: string, no_hp?: string, nik?: string, foto_identitas?: File | null) => Promise<{ success: boolean; error?: string }>;
   forgotPasswordApi: (email: string) => Promise<{ success: boolean; message?: string; error?: string }>;
   resetPasswordApi: (token: string, email: string, password: string, passwordConfirmation: string) => Promise<{ success: boolean; message?: string; error?: string }>;
   fetchProfileApi: () => Promise<{ success: boolean; error?: string }>;
-  updateProfileApi: (data: { name?: string; phone?: string; address?: string }) => Promise<{ success: boolean; message?: string; error?: string }>;
+  updateProfileApi: (data: { name?: string; no_hp?: string; foto_identitas?: File | null }) => Promise<{ success: boolean; message?: string; error?: string }>;
   changePasswordApi: (currentPassword: string, newPassword: string) => Promise<{ success: boolean; message?: string; error?: string }>;
   updateUser: (data: Partial<AuthUser>) => void;
 }
@@ -75,26 +78,24 @@ const REMEMBER_ME_KEY = "yamuti-remember-me";
 
 const dynamicStorage = {
   getItem: (name: string): string | null => {
-    // If rememberMe is false, read from sessionStorage
+    if (typeof window === "undefined") return null;
     const rememberMe = localStorage.getItem(REMEMBER_ME_KEY) === "true";
     const storage = rememberMe ? localStorage : sessionStorage;
     return storage.getItem(name);
   },
   setItem: (name: string, value: string): void => {
+    if (typeof window === "undefined") return;
     const rememberMe = localStorage.getItem(REMEMBER_ME_KEY) === "true";
-    const storage = rememberMe ? localStorage : sessionStorage;
-    // Always save the rememberMe flag in localStorage so it can be read on hydration
     if (rememberMe) {
       localStorage.setItem(name, value);
-      // Also clear any sessionStorage version
       sessionStorage.removeItem(name);
     } else {
       sessionStorage.setItem(name, value);
-      // Clear any localStorage version
       localStorage.removeItem(name);
     }
   },
   removeItem: (name: string): void => {
+    if (typeof window === "undefined") return;
     localStorage.removeItem(name);
     sessionStorage.removeItem(name);
   },
@@ -143,7 +144,7 @@ export const useAuthStore = create<AuthState>()(
           get().setRememberMe(rememberMe);
 
           const { loginAdmin } = await import("@/app/lib/api/services/auth");
-          const data = await loginAdmin({ email, password });
+          const data = await loginAdmin({ email, password, role: "admin" });
 
           const token =
             data?.token ||
@@ -162,7 +163,20 @@ export const useAuthStore = create<AuthState>()(
             userObj?.role ||
             data?.role ||
             data?.data?.role;
-          let role: UserRole = (roleFromApi as UserRole) || "admin";
+
+          // DEBUG: lihat response role dari backend
+          console.log("[LOGIN DEBUG] Full API response:", JSON.stringify(data, null, 2));
+          console.log("[LOGIN DEBUG] userObj:", userObj);
+          console.log("[LOGIN DEBUG] roleFromApi:", JSON.stringify(roleFromApi));
+
+          let role: UserRole = "admin";
+          if (roleFromApi === "super_admin" || roleFromApi === "owner") {
+            role = "super_admin";
+          } else if (roleFromApi === "donatur") {
+            role = "donatur";
+          } else if (roleFromApi === "admin") {
+            role = "admin";
+          }
 
           // Admin/Owner login should reject donatur role
           if (role === "donatur") {
@@ -173,13 +187,15 @@ export const useAuthStore = create<AuthState>()(
             userObj?.name ||
             data?.name ||
             data?.data?.name ||
-            (role === "owner" ? "Owner" : "Administrator");
+            (role === "super_admin" ? "Super Admin" : "Administrator");
 
-          await get().setAuth(token, { email, role, name });
+          const image = userObj?.photo || userObj?.image || userObj?.foto_identitas || data?.data?.photo || data?.data?.foto_identitas;
+
+          await get().setAuth(token, { email, role, name, image });
           return { success: true };
         } catch (error: any) {
           console.error("Login Error:", error);
-          const message = error?.message || error.response?.data?.message || "Terjadi kesalahan pada server.";
+          const message = getErrorMessage(error, "Terjadi kesalahan pada server.");
           return { success: false, error: message };
         }
       },
@@ -190,7 +206,7 @@ export const useAuthStore = create<AuthState>()(
           get().setRememberMe(rememberMe);
 
           const { loginDonatur } = await import("@/app/lib/api/services/auth");
-          const data = await loginDonatur({ email, password });
+          const data = await loginDonatur({ email, password, role: "donatur" });
 
           const token =
             data?.token ||
@@ -209,7 +225,15 @@ export const useAuthStore = create<AuthState>()(
             userObj?.role ||
             data?.role ||
             data?.data?.role;
-          let role: UserRole = (roleFromApi as UserRole) || "donatur";
+
+          let role: UserRole = "donatur";
+          if (roleFromApi === "super_admin" || roleFromApi === "owner") {
+            role = "super_admin";
+          } else if (roleFromApi === "admin") {
+            role = "admin";
+          } else if (roleFromApi === "donatur") {
+            role = "donatur";
+          }
 
           // Donatur login should only accept donatur role
           if (role !== "donatur") {
@@ -222,24 +246,42 @@ export const useAuthStore = create<AuthState>()(
             data?.data?.name ||
             "Donatur";
 
-          await get().setAuth(token, { email, role, name });
+          const image = userObj?.photo || userObj?.image || userObj?.foto_identitas || data?.data?.photo || data?.data?.foto_identitas;
+
+          await get().setAuth(token, { email, role, name, image });
           return { success: true };
         } catch (error: any) {
           console.error("Donatur Login Error:", error);
-          const message = error?.message || error.response?.data?.message || "Terjadi kesalahan pada server.";
+          const message = getErrorMessage(error, "Terjadi kesalahan pada server.");
           return { success: false, error: message };
         }
       },
 
-      registerDonaturApi: async (name, email, password, password_confirmation, no_whatsapp) => {
+      registerDonaturApi: async (name, email, password, password_confirmation, no_hp, nik, foto_identitas) => {
         try {
           const { registerDonatur } = await import("@/app/lib/api/services/auth");
-          const data = await registerDonatur({ name, email, password, password_confirmation, no_whatsapp,  });
+          
+          const formData = new FormData();
+          formData.append("name", name);
+          formData.append("email", email);
+          formData.append("password", password);
+          formData.append("password_confirmation", password_confirmation);
+          formData.append("role", "donatur");
+          if (no_hp) formData.append("no_hp", no_hp);
+          if (nik) formData.append("nik", nik);
+          if (foto_identitas) formData.append("foto_identitas", foto_identitas);
+
+          const data = await registerDonatur(formData);
 
           // Auto-login after registration if token is returned
-          const token = data?.token;
+          const token =
+            (data as any)?.token ||
+            (data as any)?.access_token ||
+            (data as any)?.data?.token ||
+            (data as any)?.data?.access_token;
+
           if (token) {
-            const userObj = data?.data?.user;
+            const userObj = data?.data?.user || (data as any)?.user;
             await get().setAuth(token, {
               email,
               role: "donatur",
@@ -250,7 +292,7 @@ export const useAuthStore = create<AuthState>()(
           return { success: true };
         } catch (error: any) {
           console.error("Register Error:", error);
-          const message = error?.message || error.response?.data?.message || "Terjadi kesalahan pada server.";
+          const message = getErrorMessage(error, "Terjadi kesalahan pada server.");
           return { success: false, error: message };
         }
       },
@@ -292,8 +334,8 @@ export const useAuthStore = create<AuthState>()(
 
       fetchProfileApi: async () => {
         try {
-          const { fetchProfile } = await import("@/app/lib/api/services/auth");
-          const data = await fetchProfile();
+          const { getCurrentUser } = await import("@/app/lib/api/services/auth");
+          const data = await getCurrentUser();
           const currentUser = get().user;
           if (currentUser) {
             set({
@@ -301,9 +343,9 @@ export const useAuthStore = create<AuthState>()(
                 ...currentUser,
                 name: data.name || currentUser.name,
                 email: data.email || currentUser.email,
-                phone: data.phone || currentUser.phone,
-                address: data.address || currentUser.address,
-                image: data.photo || data.image || currentUser.image,
+                // no_hp dari /auth/me disimpan ke phone
+                phone: (data as any).no_hp || currentUser.phone,
+                image: data.photo || data.image || (data as any).foto_identitas || currentUser.image,
               },
             });
           }
@@ -318,15 +360,21 @@ export const useAuthStore = create<AuthState>()(
       updateProfileApi: async (payload) => {
         try {
           const { updateProfile } = await import("@/app/lib/api/services/auth");
-          const data = await updateProfile(payload);
+          const formData = new FormData();
+          if (payload.name) formData.append("name", payload.name);
+          if (payload.no_hp) formData.append("no_hp", payload.no_hp);
+          if (payload.foto_identitas) formData.append("foto_identitas", payload.foto_identitas);
+
+          const data = await updateProfile(formData);
           const currentUser = get().user;
           if (currentUser) {
             set({
               user: {
                 ...currentUser,
                 name: data.name || currentUser.name,
-                phone: data.phone || currentUser.phone,
+                phone: data.phone || currentUser.phone || payload.no_hp,
                 address: data.address || currentUser.address,
+                image: data.photo || data.image || (data as any).foto_identitas || currentUser.image,
               },
             });
           }

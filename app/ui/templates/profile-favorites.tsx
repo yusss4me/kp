@@ -12,7 +12,7 @@ export interface ProfileFavoritesTemplateProps {
 export function ProfileFavoritesTemplate({ items }: ProfileFavoritesTemplateProps) {
   return (
     <ProfileSubpageTemplate
-      backHref="/home/profil"
+      backHref="/user/profil"
       title="Program Favorit"
       description="Program donasi yang Anda simpan untuk dibantu nanti"
       icon={Heart}
@@ -33,7 +33,7 @@ export function ProfileFavoritesTemplate({ items }: ProfileFavoritesTemplateProp
             </Txt>
             <Txt className="text-gray-400">Mulai jelajahi program kebaikan dan simpan yang Anda sukai</Txt>
           </div>
-          <Link href="/home/explore" className="inline-block pt-4">
+          <Link href="/user/explore" className="inline-block pt-4">
             <Txt className="text-red-primary font-bold flex items-center gap-2 hover:gap-3 transition-all">
               Cari Program <ArrowRight size={18} />
             </Txt>

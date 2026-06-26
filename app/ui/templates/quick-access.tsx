@@ -51,7 +51,7 @@ export const QuickAccessTemplate = ({
       <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 pb-10">
         {/* Summary Stats — Quick glance */}
         {summaryStats && summaryStats.length > 0 && (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {summaryStats.map((stat, i) => {
               const StatIcon = stat.icon;
               const colorClasses: Record<string, string> = {
@@ -92,14 +92,15 @@ export const QuickAccessTemplate = ({
         {/* Action Sections */}
         <div className="space-y-6">
           {sections.map((section, idx) => (
-            <section key={section.id} className="space-y-3" style={{ animationDelay: `${idx * 100}ms` }}>
+            <section key={section.id} className="space-y-3" style={{ animationDelay: `${idx * 25}ms` }}>
               <Container className="px-1 flex items-center justify-between">
                 <Txt variant="h5" weight="bold" className="text-gray-900">
                   {section.title}
                 </Txt>
               </Container>
 
-              <div className="space-y-2.5">
+              {/* Grid Responsif: menyesuaikan ukuran kotak di desktop agar tidak terlalu besar */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                 {section.items.map((item, i) => (
                   <QuickActionCard
                     key={`${section.id}-${i}`}
@@ -109,12 +110,14 @@ export const QuickAccessTemplate = ({
                     href={item.href}
                     color={item.color || 'primary'}
                     badge={item.badge}
+                    variant="grid"
                   />
                 ))}
               </div>
             </section>
           ))}
         </div>
+
 
         {/* Footer CTA — Desktop hint */}
         <div className="hidden md:flex flex-col items-center justify-center gap-2 py-8 mt-4 text-center">

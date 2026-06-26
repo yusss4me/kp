@@ -12,11 +12,12 @@ import { Txt } from "../atoms/text";
 import { Input } from "../atoms/input";
 import { Btn } from "../atoms/button";
 import { createKunjungan } from "@/app/lib/api/services/kunjungan";
+import { useAuthStore } from "@/app/lib/stores/auth-store";
 import { InteractiveCalendar } from "./interactive-calendar";
 
 const visitSchema = z.object({
-  fullName: z.string().min(3, "Nama lengkap minimal 3 karakter"),
-  phone: z.string().min(10, "Nomor telepon tidak valid"),
+  fullName: z.string().min(3, "Nama lengkap minimal 3 karakter").optional().or(z.literal("")),
+  phone: z.string().min(10, "Nomor telepon tidak valid").optional().or(z.literal("")),
   
   purpose: z.string().min(5, "Keperluan minimal 5 karakter"),
   visitDate: z.string().min(1, "Tanggal harus dipilih"),
@@ -50,6 +51,7 @@ export interface KunjunganClientTemplateProps {
  */
 export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
   const router = useRouter();
+  const user = useAuthStore((s) => s.user);
   const {
     register,
     handleSubmit,
@@ -66,8 +68,8 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
   const onSubmit = async (data: VisitFormValues) => {
     try {
       const payload = {
-        nama_tamu: data.fullName,
-        no_whatsapp: data.phone,
+        nama_tamu: isUser && user ? user.name || "Donatur" : data.fullName || "Donatur",
+        no_whatsapp: isUser && user ? user.phone || "080000000000" : data.phone || "",
         jumlah_pengunjung: 1,
         maksud: data.purpose,
         slot_waktu: `${data.visitDate}T${data.visitTime}:00Z`,
@@ -76,12 +78,24 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
       const response = await createKunjungan(payload);
       
       // Redirect to the detail page (which acts as pending initially)
-      if (response && response.data && response.data.id) {
-        router.push(`/kunjungan/${response.data.id}`);
+      const visitId = response?.id || response?.data?.id || response?.kunjungan?.id;
+      
+      if (visitId) {
+        if (isUser) {
+          router.push(`/user/aktivitas/kunjungan/${visitId}`);
+        } else {
+          router.push(`/kunjungan/${visitId}`);
+        }
+      } else if (response) {
+        // Fallback if response is successful but no ID is returned
+        alert("Pengajuan kunjungan berhasil dikirim! Kami akan menghubungi Anda.");
+        if (isUser) {
+          router.push("/user/aktivitas/kunjungan");
+        } else {
+          router.push("/");
+        }
       } else {
-        // Fallback if no ID is returned
-        alert("Pengajuan kunjungan berhasil dikirim!");
-        router.push("/");
+        throw new Error("Gagal terhubung ke server. Silakan coba lagi nanti.");
       }
     } catch (error: any) {
       console.error("Visit request failed", error);
@@ -110,23 +124,25 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
             <div className="flex flex-col gap-6">
               <div className="space-y-4">
-                <Input 
-                  label="Nama Lengkap" 
-                  placeholder="Masukkan Nama Lengkap Anda" 
-                  className="focus:ring-2 focus:ring-red-primary/10 transition-all"
-                  {...register("fullName")}
-                  error={errors.fullName?.message}
-                  disabled={isUser}
-                />
-                <Input 
-                  label="No. WhatsApp / Telepon" 
-                  type="tel"
-                  placeholder="081234567890" 
-                  className="focus:ring-2 focus:ring-red-primary/10 transition-all"
-                  {...register("phone")}
-                  error={errors.phone?.message}
-                  disabled={isUser}
-                />
+                {!isUser && (
+                  <>
+                    <Input 
+                      label="Nama Lengkap" 
+                      placeholder="Masukkan Nama Lengkap Anda" 
+                      className="focus:ring-2 focus:ring-red-primary/10 transition-all"
+                      {...register("fullName")}
+                      error={errors.fullName?.message}
+                    />
+                    <Input 
+                      label="No. WhatsApp / Telepon" 
+                      type="tel"
+                      placeholder="081234567890" 
+                      className="focus:ring-2 focus:ring-red-primary/10 transition-all"
+                      {...register("phone")}
+                      error={errors.phone?.message}
+                    />
+                  </>
+                )}
                 
                 <Input 
                   label="Keperluan Kunjungan" 
@@ -172,7 +188,7 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
             
             <div className="text-center p-4 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
               <Txt variant="caption" className="text-lightdark-neutral">
-                Pengajuan Anda akan diproses dalam waktu maksimal 1x24 jam. Kami akan menghubungi Anda melalui nomor terdaftar.
+                Pengajuan Anda akan diproses dalam waktu maksimal 1x24 jam. Kami akan menghubungi Anda melalui nomor yang Anda berikan.
               </Txt>
             </div>
           </form>

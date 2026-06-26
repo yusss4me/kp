@@ -16,7 +16,7 @@ export function ProfileAboutTemplate({ stats, vision, missions }: ProfileAboutTe
   return (
     <Container className="min-h-screen bg-white p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
-        <Link href="/home/profil" className="flex items-center gap-2 text-gray-500 hover:text-red-primary transition-colors mb-8 group">
+        <Link href="/user/profil" className="flex items-center gap-2 text-gray-500 hover:text-red-primary transition-colors mb-8 group">
           <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
           <span className="font-medium">Kembali ke Profil</span>
         </Link>
@@ -74,7 +74,7 @@ export function ProfileAboutTemplate({ stats, vision, missions }: ProfileAboutTe
           <Txt className="text-gray-600 max-w-2xl mx-auto mb-8">
             Setiap bantuan Anda sangat berarti bagi masa depan mereka. Mari terus menebar benih kebaikan bersama YAMUTI.
           </Txt>
-          <Link href="/home/explore">
+          <Link href="/user/explore">
             <Btn className="bg-red-primary text-white px-10 py-4 font-bold shadow-xl shadow-red-primary/30 rounded-xl hover:scale-105 transition-transform">
               Mulai Berdonasi
             </Btn>

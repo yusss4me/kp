@@ -20,7 +20,7 @@ export interface ProfilePaymentTemplateProps {
 export function ProfilePaymentTemplate({ methods }: ProfilePaymentTemplateProps) {
   return (
     <ProfileSubpageTemplate
-      backHref="/home/profil"
+      backHref="/user/profil"
       title="Metode Pembayaran"
       description="Kelola sumber dana untuk donasi Anda"
       icon={CreditCard}

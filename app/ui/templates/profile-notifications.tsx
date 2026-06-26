@@ -39,7 +39,7 @@ export function ProfileNotificationsTemplate({ settings: defaultSettings }: Prof
 
   return (
     <ProfileSubpageTemplate
-      backHref="/home/profil/settings"
+      backHref="/user/profil/settings"
       backLabel="Kembali ke Pengaturan"
       title="Notifikasi"
       icon={Bell}

@@ -33,7 +33,7 @@ export interface AdminProfileHeaderProps {
 export const AdminProfileHeader: React.FC<AdminProfileHeaderProps> = (props) => {
     const { title, subtitle, image, totalDonasi, programAktif, menungguVerifikasi, className } = props;
   return (
-    <Container variant='red' padding='md' radius='lg' shadow='xl' className="relative overflow-hidden">
+    <Container variant='red' padding='md' radius='lg' shadow='xl' className="relative overflow-hidden w-full">
       {/* Decorative element */}
       
       
@@ -45,7 +45,7 @@ export const AdminProfileHeader: React.FC<AdminProfileHeaderProps> = (props) => 
       </Container>
 
       {/* Admin Quick Stats Card */}
-      <Container className="mt-8 grid grid-cols-2 gap-4">
+      <Container className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-4">
         
         <Container className="flex-col bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10">
           <Icn icon={Wallet} size={16} color="light"  />
@@ -61,7 +61,7 @@ export const AdminProfileHeader: React.FC<AdminProfileHeaderProps> = (props) => 
             Program Aktif
           </Txt>
         </Container>
-        <Container className="col-span-2 bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10 flex items-center justify-between">
+        <Container className="col-span-2 sm:col-span-1 bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/10 flex items-center justify-between">
           
           <Container className="flex items-center gap-3">
             <Container className="bg-warning/20 p-2 rounded-xl">

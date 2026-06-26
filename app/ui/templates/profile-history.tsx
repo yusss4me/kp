@@ -18,7 +18,7 @@ export interface ProfileHistoryTemplateProps {
 export function ProfileHistoryTemplate({ donations }: ProfileHistoryTemplateProps) {
   return (
     <ProfileSubpageTemplate
-      backHref="/home/profil"
+      backHref="/user/profil"
       title="Riwayat Donasi"
       description="Lacak semua kontribusi kebaikan yang telah Anda lakukan"
       icon={History}

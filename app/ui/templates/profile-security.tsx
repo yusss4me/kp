@@ -44,7 +44,7 @@ export function ProfileSecurityTemplate() {
 
   return (
     <ProfileSubpageTemplate
-      backHref="/home/profil/settings"
+      backHref="/user/profil/settings"
       backLabel="Kembali ke Pengaturan"
       title="Keamanan Akun"
       icon={Lock}

@@ -34,7 +34,7 @@ export const LandingHeader: React.FC<LandingHeaderProps> = () => {
   ];
 
   return (
-    <div className="sticky top-0 z-50 backdrop-blur-md bg-red-primary">
+    <div className="sticky top-0 z-50 backdrop-blur-xl bg-red-primary/90 border-b border-white/10 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link href="/">
           <BrandLight />

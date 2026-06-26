@@ -22,7 +22,7 @@ export interface ProfileWalletTemplateProps {
 export function ProfileWalletTemplate({ balance, transactions }: ProfileWalletTemplateProps) {
   return (
     <ProfileSubpageTemplate
-      backHref="/home/profil"
+      backHref="/user/profil"
       title="Dana Tersimpan"
       description="Kelola saldo dan riwayat transaksi dompet donasi"
       icon={Wallet}
@@ -52,7 +52,7 @@ export function ProfileWalletTemplate({ balance, transactions }: ProfileWalletTe
           <Txt variant="h3" weight="bold">
             Transaksi Terakhir
           </Txt>
-          <Link href="/home/profil/history" className="text-red-primary font-bold text-sm hover:underline">
+          <Link href="/user/profil/history" className="text-red-primary font-bold text-sm hover:underline">
             Lihat Semua
           </Link>
         </div>

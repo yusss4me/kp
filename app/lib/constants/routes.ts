@@ -1,8 +1,41 @@
 /** Helper path navigasi detail berbasis ID — ganti prefix jika struktur URL berubah */
 
+const super_admin_routes = {
+  root: () => `/super_admin`,
+  admins: {
+    root: () => `/super_admin/admins`,
+    add: () => `/super_admin/admins/tambah`,
+    edit: (id: string | number) => `/super_admin/admins/${id}/edit`,
+  },
+  donations: {
+    root: () => `/super_admin/donations`,
+  },
+  foundation: {
+    root: () => `/super_admin/foundation`,
+  },
+  quickAccess: {
+    root: () => `/super_admin/quick-access`,
+  },
+  reports: {
+    root: () => `/super_admin/reports`,
+  },
+  settings: {
+    root: () => `/super_admin/settings`,
+  },
+  profile: {
+    root: () => `/super_admin/profile`,
+  },
+  explore: {
+    root: () => `/super_admin/explore`,
+  },
+  notifications: {
+    root: () => `/super_admin/notifications`,
+  },
+} as const;
+
 export const routes = {
-  donasi: (id: string) => `/home/donasi/${id}`,
-  explore: () => `/home/explore`,
+  donasi: (id: string) => `/user/donasi/${id}`,
+  explore: () => `/user/explore`,
   visitor: {
     donasi: (id: string) => `/donasi/${id}`,
     donasiDetail: (id: string) => `/donasi/${id}/detail`,
@@ -11,69 +44,36 @@ export const routes = {
     kunjungan: () => `/kunjungan`,
   },
   user: {
-    root: () => `/home`,
+    root: () => `/user`,
     aktivitas: {
-      root: () => `/home/aktivitas`,
+      root: () => `/user/aktivitas`,
       program: {
-        root: () => `/home/aktivitas/program`,
-        detail: (id: string) => `/home/aktivitas/program/${id}`,
-        donation : (id: string) => `/home/aktivitas/program/${id}/donasi`,
+        root: () => `/user/aktivitas/program`,
+        detail: (id: string) => `/user/aktivitas/program/${id}`,
+        donation : (id: string) => `/user/aktivitas/program/${id}/donasi`,
       },
       kunjungan : {
-        root: () => `/home/aktivitas/kunjungan`,
-        detail: (id: string) => `/home/aktivitas/kunjungan/${id}`,
+        root: () => `/user/aktivitas/kunjungan`,
+        detail: (id: string) => `/user/aktivitas/kunjungan/${id}`,
       },
       explore: {
-        root: () => `/home/explore`,
+        root: () => `/user/explore`,
         
       },
-      broadcast: {
-        root: () => `/home/broadcast`,
-      },
       profile: {
-        root: () => `/home/profil`,
+        root: () => `/user/profil`,
       },
 
     },
     notifications: {
-      root: () => `/home/profil/notifications`,
+      root: () => `/user/profil/notifications`,
     },
     
     
   },
 
-  owner: {
-    root: () => `/owner`,
-    admins: {
-      root: () => `/owner/admins`,
-      add: () => `/owner/admins/tambah`,
-      edit: (id: string | number) => `/owner/admins/${id}/edit`,
-    },
-    donations: {
-      root: () => `/owner/donations`,
-    },
-    foundation: {
-      root: () => `/owner/foundation`,
-    },
-    quickAccess: {
-      root: () => `/owner/quick-access`,
-    },
-    reports: {
-      root: () => `/owner/reports`,
-    },
-    settings: {
-      root: () => `/owner/settings`,
-    },
-    profile: {
-      root: () => `/owner/profile`,
-    },
-    explore: {
-      root: () => `/owner/explore`,
-    },
-    notifications: {
-      root: () => `/owner/notifications`,
-    },
-  },
+  super_admin: super_admin_routes,
+  owner: super_admin_routes,
   
   admin: {
     root: () => `/admin`,
@@ -96,11 +96,7 @@ export const routes = {
       root: () => `/admin/kunjungan`,
       add: () => `/admin/kunjungan/tambah`,
       edit: (id: string | number) => `/admin/kunjungan/${id}/edit`,
-    },
-    broadcast: {
-      root: () => `/admin/broadcast`,
-      add: () => `/admin/broadcast/tambah`,
-      edit: (id: string | number) => `/admin/broadcast/${id}/edit`,
+      detail: (id: string | number) => `/admin/kunjungan/${id}/detail`,
     },
     profile: {
       root: () => `/admin/profile`,

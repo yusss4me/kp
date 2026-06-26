@@ -170,13 +170,6 @@ export default function AdminQuickAccessPage() {
           title: "Komunikasi & Konten",
           items: [
             {
-              Icon: MessageSquareText,
-              label: "Broadcast",
-              description: "Kirim pesan ke donatur",
-              href: routes.admin.broadcast.root(),
-              color: "warning",
-            },
-            {
               Icon: Share2,
               label: "CMS & Media Sosial",
               description: "Kelola konten & artikel",

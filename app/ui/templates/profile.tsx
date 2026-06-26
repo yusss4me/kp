@@ -66,7 +66,7 @@ export const ProfileTemplate = ({
             )}
 
             {/* Main Content */}
-            <div className={`flex-1 overflow-y-auto custom-scrollbar ${isFlyout ? 'p-6' : 'p-8 md:p-12'} flex flex-col gap-10`}>
+            <div className={`flex-1 ${embedded ? '' : 'overflow-y-auto custom-scrollbar'} ${isFlyout ? 'p-6' : embedded ? 'pt-4' : 'p-8 md:p-12'} flex flex-col gap-10`}>
                 {/* Profile Section */}
                 <div className="animate-in slide-in-from-top-4 duration-700">
                     <ProfileCard

@@ -75,7 +75,7 @@ export function useCatatMutasiInventaris() {
     }: {
       inventarisId: string | number;
       payload: CatatMutasiPayload;
-    }) => catatMutasiInventaris(inventarisId, payload),
+    }) => catatMutasiInventaris(payload),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["inventaris"] });
       queryClient.invalidateQueries({ queryKey: ["inventaris", variables.inventarisId, "mutasi"] });

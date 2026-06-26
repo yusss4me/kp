@@ -45,18 +45,10 @@ export const useDonationStore = create<DonationStore>()(
         try {
           const donasiPayload: Parameters<typeof createDonasi>[0] = {
             nama_donatur: donation.nama,
-            no_whatsapp: "081234567890",
-            payment_type: donation.tipe.toLowerCase(),
+            no_whatsapp: donation.no_hp || "081234567890",
+            gross_amount: cleanAmount,
+            kampanye_id: donation.kampanye_id || "default_id",
           };
-          if (donation.tipe.toLowerCase() !== "barang") {
-            donasiPayload.gross_amount = cleanAmount;
-          }
-          if (donation.nama_barang) {
-            donasiPayload.nama_barang = donation.nama_barang;
-          }
-          if (donation.kampanye_id) {
-            donasiPayload.kampanye_id = donation.kampanye_id;
-          }
           await createDonasi(donasiPayload);
         } catch (error: any) {
           console.error("Gagal menambah donasi via API:", error);

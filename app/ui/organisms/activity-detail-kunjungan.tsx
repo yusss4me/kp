@@ -6,7 +6,7 @@ import { ArrowLeft, Calendar, Clock, MapPin, Info, CheckCircle, User, Phone, Fil
 import { Txt } from '../atoms/text';
 import { Btn } from '../atoms/button';
 import { Container } from '../atoms/container';
-import { getKunjunganById } from '@/app/lib/api/services/kunjungan';
+import { getKunjunganById, KunjunganRecord, updateKunjunganStatus } from '@/app/lib/api/services/kunjungan';
 import { format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
 
@@ -23,21 +23,14 @@ export interface DetailKunjunganProps {
     id?: string;
     url: string;
     data?: DetailKunjunganData;
+    isAdmin?: boolean;
 }
 
-interface KunjunganRecord {
-    nama_pengunjung: string;
-    nomor_telepon: string;
-    tujuan_kunjungan: string;
-    slot_waktu: string;
-    status: string;
-    jumlah_peserta?: number;
-}
-
-export const DetailKunjungan = ({ id, url, data }: DetailKunjunganProps) => {
+export const DetailKunjungan = ({ id, url, data, isAdmin }: DetailKunjunganProps) => {
     const router = useRouter();
     const [record, setRecord] = useState<KunjunganRecord | null>(null);
     const [loading, setLoading] = useState(!!id);
+    const [isUpdating, setIsUpdating] = useState(false);
 
     const defaultData: DetailKunjunganData = data ?? {
         image: '/images/hero.png',
@@ -63,6 +56,21 @@ export const DetailKunjungan = ({ id, url, data }: DetailKunjunganProps) => {
         fetchData();
     }, [id]);
 
+    const handleUpdateStatus = async (status: string) => {
+        if (!id || !record) return;
+        try {
+            setIsUpdating(true);
+            await updateKunjunganStatus(id as string, status as any);
+            setRecord({ ...record, status });
+            alert(`Status berhasil diubah menjadi ${status}`);
+        } catch (err) {
+            console.error('Failed to update status', err);
+            alert('Gagal mengubah status kunjungan. Periksa koneksi atau hak akses.');
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
     return (
         <Container className="flex flex-col min-h-screen bg-gray-50 pb-24">
             {/* Header */}
@@ -85,10 +93,15 @@ export const DetailKunjungan = ({ id, url, data }: DetailKunjunganProps) => {
                         </Txt>
                     </div>
                     <Txt variant="h3" color="light" weight="bold" className="leading-tight">{defaultData.title}</Txt>
-                    <div className="flex items-center gap-2 text-white/70">
+                    <a 
+                        href={`https://maps.google.com/?q=${encodeURIComponent(defaultData.address)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-white/70 hover:text-white transition-colors hover:underline underline-offset-4"
+                    >
                         <MapPin size={14} />
                         <Txt variant="caption" color="light" className="opacity-70">{defaultData.address}</Txt>
-                    </div>
+                    </a>
                 </div>
             </div>
 
@@ -135,11 +148,11 @@ export const DetailKunjungan = ({ id, url, data }: DetailKunjunganProps) => {
                         <div className="p-6 text-center">
                             <Txt className="text-gray-400">Memuat data pengunjung...</Txt>
                         </div>
-                    ) : record ? (
+                    ) : record && Object.keys(record).length > 0 ? (
                         <div className="space-y-4">
                             {/* Status Badge */}
                             <div className="flex items-center gap-2">
-                                {record.status === 'approved' || record.status === 'Disetujui' ? (
+                                {record.status === 'APPROVED' || record.status === 'approved' || record.status === 'Disetujui' || record.status === 'Dikonfirmasi' ? (
                                     <div className="flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">
                                         <CheckCircle size={16} /> Disetujui
                                     </div>
@@ -194,14 +207,14 @@ export const DetailKunjungan = ({ id, url, data }: DetailKunjunganProps) => {
                                     </div>
                                 </div>
 
-                                {record.jumlah_peserta && (
+                                {record.jumlah_pengunjung && (
                                     <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-2xl">
                                         <div className="p-2 bg-white rounded-xl shadow-sm text-red-500">
                                             <Users size={20} />
                                         </div>
                                         <div>
                                             <Txt variant="caption" className="text-gray-500">Jumlah Peserta</Txt>
-                                            <Txt variant="body" weight="bold" className="text-gray-800">{record.jumlah_peserta} orang</Txt>
+                                            <Txt variant="body" weight="bold" className="text-gray-800">{record.jumlah_pengunjung} orang</Txt>
                                         </div>
                                     </div>
                                 )}
@@ -222,6 +235,39 @@ export const DetailKunjungan = ({ id, url, data }: DetailKunjunganProps) => {
                         </div>
                     )}
                 </div>
+
+                {/* Admin Actions */}
+                {isAdmin && record && Object.keys(record).length > 0 && (
+                    <div className="pt-8 border-t border-gray-100">
+                        <Txt variant="h6" weight="bold" className="text-gray-800 mb-4">Aksi Admin</Txt>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <Btn 
+                                onClick={() => handleUpdateStatus('APPROVED')}
+                                isLoading={isUpdating}
+                                variant="red" 
+                                className="flex-1 bg-green-600 hover:bg-green-700 active:scale-95 shadow-lg shadow-green-500/20"
+                            >
+                                <CheckCircle size={18} className="mr-2" /> Terima Kunjungan
+                            </Btn>
+                            <Btn 
+                                onClick={() => handleUpdateStatus('REJECTED')}
+                                isLoading={isUpdating}
+                                variant="light" 
+                                className="flex-1 text-red-600 bg-red-50 hover:bg-red-100 active:scale-95"
+                            >
+                                Tolak Kunjungan
+                            </Btn>
+                            <Btn 
+                                onClick={() => handleUpdateStatus('COMPLETED')}
+                                isLoading={isUpdating}
+                                variant="light" 
+                                className="flex-1 text-blue-600 bg-blue-50 hover:bg-blue-100 active:scale-95"
+                            >
+                                Tandai Selesai
+                            </Btn>
+                        </div>
+                    </div>
+                )}
             </div>
         </Container>
     );

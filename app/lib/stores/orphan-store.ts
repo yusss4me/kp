@@ -35,7 +35,7 @@ interface OrphanStore {
 
   fetchOrphans: () => Promise<void>;
   getOrphanById: (id: number) => Orphan | undefined;
-  addOrphan: (data: Omit<Orphan, "id">) => Promise<number>;
+  addOrphan: (data: Omit<Orphan, "id"> & { foto_identitas?: File | null }) => Promise<number>;
   updateOrphan: (id: number, data: Partial<Orphan>) => void;
   deleteOrphan: (id: number) => void;
 }
@@ -73,14 +73,21 @@ export const useOrphanStore = create<OrphanStore>()(
         set({ orphans: [{ ...data, id }, ...prev] });
 
         try {
-          await createAnakAsuh({
-            nama_lengkap: data.name,
-            tempat_lahir: "Tasikmalaya",
-            tanggal_lahir,
-            jenis_kelamin: "L",
-            status_yatim_piatu: "Yatim Piatu",
-            tanggal_masuk: new Date().toISOString().split("T")[0],
-          });
+          const formData = new FormData();
+          formData.append("nama", data.name);
+          formData.append("nik", data.nik || "-");
+          formData.append("no_kk", (data as any).no_kk || "-");
+          formData.append("no_akte", (data as any).no_akte || "-");
+          formData.append("tempat_lahir", (data as any).tempat_lahir || "Tasikmalaya");
+          formData.append("tanggal_lahir", tanggal_lahir || "");
+          formData.append("jenis_kelamin", ((data as any).jenis_kelamin as "Laki-laki" | "Perempuan") || "Laki-laki");
+          formData.append("status", data.status);
+          formData.append("kategori_bayi", data.kategori_bayi ? "true" : "false");
+          if (data.foto_identitas) {
+            formData.append("foto_identitas", data.foto_identitas);
+          }
+          
+          await createAnakAsuh(formData);
         } catch (error: any) {
           console.error("Gagal menambah anak asuh via API:", error);
           set({ error: getErrorMessage(error, "Gagal menambah anak asuh"), orphans: prev });

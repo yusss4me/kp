@@ -5,6 +5,7 @@ import { ToastProvider } from "@/app/ui/providers/toast-provider";
 import { QueryProvider } from "@/app/ui/providers/query-provider";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import Script from "next/script";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
@@ -85,6 +86,11 @@ export default async function RootLayout({
             </ToastProvider>
           </QueryProvider>
         </NextIntlClientProvider>
+        <Script 
+          src="https://app.sandbox.midtrans.com/snap/snap.js" 
+          data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || "SB-Mid-client-T0E4y-123456"}
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );

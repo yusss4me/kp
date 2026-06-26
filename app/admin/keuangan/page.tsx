@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { AdminFinanceTemplate } from "@/app/ui/templates/admin-finance";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { buildFinanceStats } from "@/app/lib/utils/dashboard-stats";
@@ -9,8 +10,15 @@ export default function FinancePage() {
   const transactions = useYamutiStore((s) => s.transactions);
   const distributions = useYamutiStore((s) => s.distributions);
   const deleteTransaction = useYamutiStore((s) => s.deleteTransaction);
+  const fetchTransaksiKeuangan = useYamutiStore((s) => s.fetchTransaksiKeuangan);
+  const saldoKas = useYamutiStore((s) => s.saldoKas);
 
-  const stats = buildFinanceStats(transactions, distributions);
+  // API: GET /keuangan/laporan
+  useEffect(() => {
+    fetchTransaksiKeuangan();
+  }, [fetchTransaksiKeuangan]);
+
+  const stats = buildFinanceStats(transactions, distributions, saldoKas);
 
   return (
     <AdminFinanceTemplate

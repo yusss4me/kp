@@ -33,7 +33,13 @@ export function mapInventaris(item: ApiInventarisResponse): InventoryItem {
   };
 }
 
-/** GET /inventaris — daftar barang inventaris (memerlukan Bearer token) */
+/**
+ * @api {get} /inventaris GET Daftar Inventaris
+ * @description Mengambil daftar barang inventaris (memerlukan Bearer token).
+ * 
+ * @returns {Promise<InventoryItem[]>} Berisi array data barang inventaris.
+ * @throws {Error} Jika terjadi kesalahan pada server atau network.
+ */
 export async function fetchInventarisList(): Promise<InventoryItem[]> {
   try {
     const res = await apiClient.get("/inventaris");
@@ -44,7 +50,9 @@ export async function fetchInventarisList(): Promise<InventoryItem[]> {
   }
 }
 
-/** POST /inventaris — payload sesuai api-collection */
+/**
+ * Data payload untuk membuat master barang inventaris baru.
+ */
 export interface CreateInventarisPayload {
   nama_barang: string;
   deskripsi?: string;
@@ -52,13 +60,29 @@ export interface CreateInventarisPayload {
   satuan?: string;
 }
 
-/** POST /inventaris — tambah master barang (memerlukan Bearer token) */
+/**
+ * @api {post} /inventaris POST Tambah Inventaris
+ * @description Menambahkan master barang inventaris baru ke server (memerlukan Bearer token).
+ * 
+ * @param {CreateInventarisPayload} payload - Data rincian barang inventaris.
+ * 
+ * @returns {Promise<any>} Berisi status dan data barang yang baru dibuat.
+ * @throws {Error} Jika validasi gagal atau server error.
+ */
 export async function createInventaris(payload: CreateInventarisPayload) {
   const res = await apiClient.post("/inventaris", payload);
   return res.data;
 }
 
-/** GET /inventaris/{id} — detail barang (memerlukan Bearer token) */
+/**
+ * @api {get} /inventaris/:id GET Detail Inventaris
+ * @description Mengambil detail data barang inventaris berdasarkan ID (memerlukan Bearer token).
+ * 
+ * @param {string|number} id - ID unik barang inventaris.
+ * 
+ * @returns {Promise<InventoryItem>} Berisi data detail barang inventaris.
+ * @throws {Error} Jika ID tidak ditemukan atau server error.
+ */
 export async function fetchInventarisById(id: string | number): Promise<InventoryItem> {
   const res = await apiClient.get(`/inventaris/${id}`);
   const body = res.data as { data?: ApiInventarisResponse } | ApiInventarisResponse;
@@ -66,7 +90,9 @@ export async function fetchInventarisById(id: string | number): Promise<Inventor
   return mapInventaris(item);
 }
 
-/** PUT /inventaris/{id} — payload sesuai api-collection */
+/**
+ * Data payload untuk memperbarui data barang inventaris.
+ */
 export interface UpdateInventarisPayload {
   nama_barang?: string;
   deskripsi?: string;
@@ -74,35 +100,70 @@ export interface UpdateInventarisPayload {
   satuan?: string;
 }
 
-/** PUT /inventaris/{id} — update barang (memerlukan Bearer token) */
+/**
+ * @api {put} /inventaris/:id PUT Update Inventaris
+ * @description Memperbarui data master barang inventaris berdasarkan ID (memerlukan Bearer token).
+ * 
+ * @param {string|number} id - ID unik barang inventaris yang akan diperbarui.
+ * @param {UpdateInventarisPayload} payload - Data perubahan untuk barang inventaris.
+ * 
+ * @returns {Promise<any>} Berisi status dan data barang yang telah diperbarui.
+ * @throws {Error} Jika ID tidak ditemukan atau validasi gagal.
+ */
 export async function updateInventaris(id: string | number, payload: UpdateInventarisPayload) {
   const res = await apiClient.put(`/inventaris/${id}`, payload);
   return res.data;
 }
 
-/** DELETE /inventaris/{id} — hapus barang (memerlukan Bearer token) */
+/**
+ * @api {delete} /inventaris/:id DELETE Hapus Inventaris
+ * @description Menghapus data barang inventaris secara permanen berdasarkan ID (memerlukan Bearer token).
+ * 
+ * @param {string|number} id - ID unik barang inventaris yang akan dihapus.
+ * 
+ * @returns {Promise<any>} Berisi status sukses dan pesan berhasil dihapus.
+ * @throws {Error} Jika ID tidak ditemukan atau gagal dihapus.
+ */
 export async function deleteInventaris(id: string | number) {
   const res = await apiClient.delete(`/inventaris/${id}`);
   return res.data;
 }
 
-/** POST /inventaris/{id}/mutasi — catat mutasi stok (memerlukan Bearer token) */
+/**
+ * Data payload untuk mencatat mutasi stok barang (masuk/keluar/rusak).
+ */
 export interface CatatMutasiPayload {
-  tipe: "masuk" | "keluar";
+  inventaris_id: string;
+  tipe: "masuk" | "keluar" | "rusak";
   jumlah: number;
-  tanggal_mutasi?: string;
   keterangan?: string;
 }
 
+/**
+ * @api {post} /mutasi-barang POST Catat Mutasi
+ * @description Mencatat transaksi mutasi stok barang inventaris (memerlukan Bearer token).
+ * 
+ * @param {CatatMutasiPayload} payload - Data mutasi stok (tipe, jumlah, inventaris_id).
+ * 
+ * @returns {Promise<any>} Berisi status sukses dan data mutasi yang dicatat.
+ * @throws {Error} Jika validasi gagal atau stok tidak mencukupi.
+ */
 export async function catatMutasiInventaris(
-  inventarisId: string | number,
   payload: CatatMutasiPayload
 ) {
-  const res = await apiClient.post(`/inventaris/${inventarisId}/mutasi`, payload);
+  const res = await apiClient.post(`/mutasi-barang`, payload);
   return res.data;
 }
 
-/** GET /inventaris/{id}/mutasi — riwayat mutasi barang (memerlukan Bearer token) */
+/**
+ * @api {get} /inventaris/:id/mutasi GET Riwayat Mutasi
+ * @description Mengambil riwayat mutasi stok untuk suatu barang inventaris (memerlukan Bearer token).
+ * 
+ * @param {string|number} inventarisId - ID unik barang inventaris.
+ * 
+ * @returns {Promise<any[]>} Berisi array riwayat mutasi barang, returns empty array on 404.
+ * @throws {Error} Jika terjadi kesalahan pada server atau network.
+ */
 export async function fetchRiwayatMutasi(inventarisId: string | number) {
   try {
     const res = await apiClient.get(`/inventaris/${inventarisId}/mutasi`);

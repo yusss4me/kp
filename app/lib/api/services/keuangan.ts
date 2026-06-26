@@ -5,26 +5,44 @@ import { formatRupiah } from "@/app/lib/utils/crud-helpers";
 
 export interface ApiTransaksiKeuanganResponse {
   id: string | number;
+  // Field dari backend riil (Laravel)
+  tipe_transaksi?: "Debit" | "Kredit";
+  jenis_kas?: "Pusat" | "Cabang";
+  nominal?: string | number;   // Backend mengembalikan string: "450000.00"
+  deskripsi?: string;
+  donasi_id?: string | null;
+  // Field alternatif (backward-compat)
   jenis?: "pemasukan" | "pengeluaran";
   type?: string;
   kategori?: string;
-  category?: string;
-  nominal?: number;
   amount?: number;
   keterangan?: string;
-  description?: string;
   tanggal?: string;
   date?: string;
   created_at?: string;
 }
 
 export function mapTransaksiKeuangan(item: ApiTransaksiKeuanganResponse): FinanceTransaction {
-  const amountRaw = item.nominal ?? item.amount ?? 0;
-  const txType = item.jenis ?? (item.type as string);
+  let amountRaw = 0;
+  const rawValue = item.nominal ?? item.amount;
+  if (typeof rawValue === "string") {
+    amountRaw = parseFloat(rawValue) || 0;
+  } else if (typeof rawValue === "number") {
+    amountRaw = rawValue;
+  }
+
+  // Tentukan jenis: tipe_transaksi (Debit=pemasukan, Kredit=pengeluaran) atau jenis lama
+  let txType: string;
+  if (item.tipe_transaksi) {
+    txType = item.tipe_transaksi === "Kredit" ? "pengeluaran" : "pemasukan";
+  } else {
+    txType = item.jenis ?? (item.type as string) ?? "pemasukan";
+  }
+
   return {
-    id: Number(item.id),
+    id: item.id,
     type: txType === "pengeluaran" ? "Expense" : "Income",
-    category: item.kategori ?? item.category ?? "Umum",
+    category: item.deskripsi ?? item.kategori ?? item.keterangan ?? "Transaksi",
     amount: formatRupiah(amountRaw),
     amountRaw,
     date: item.tanggal ?? item.date ?? item.created_at ?? "",
@@ -40,18 +58,36 @@ export interface CreateTransaksiKeuanganPayload {
   tanggal?: string;
 }
 
-/** GET /transaksi-keuangan — riwayat transaksi (memerlukan Bearer token) */
+/**
+ * @api {get} /transaksi-keuangan GET Riwayat Transaksi Keuangan
+ * @description Mengambil daftar riwayat transaksi keuangan (memerlukan Bearer token).
+ * 
+ * @returns {Promise<FinanceTransaction[]>} Berisi array data riwayat transaksi.
+ * @throws {Error} Jika terjadi kesalahan pada server atau network.
+ */
 export async function fetchTransaksiKeuanganList(): Promise<FinanceTransaction[]> {
   try {
-    const res = await apiClient.get("/transaksi-keuangan");
-    return unwrapList<ApiTransaksiKeuanganResponse>(res.data).map(mapTransaksiKeuangan);
+    // Backend uses /keuangan/laporan instead of /transaksi-keuangan
+    const res = await fetchLaporanKeuangan();
+    // The real backend returns the array directly inside the `data` wrapper
+    // which is returned by fetchLaporanKeuangan as the whole object or array
+    const rawList = (res as any).data || res || [];
+    return unwrapList<ApiTransaksiKeuanganResponse>(rawList).map(mapTransaksiKeuangan);
   } catch (error: any) {
     if (error?.response?.status === 404) return [];
     throw error;
   }
 }
 
-/** POST /transaksi-keuangan — tambah pemasukan/pengeluaran kas (memerlukan Bearer token) */
+/**
+ * @api {post} /transaksi-keuangan POST Tambah Transaksi Keuangan
+ * @description Mencatat transaksi pemasukan atau pengeluaran kas (memerlukan Bearer token).
+ * 
+ * @param {CreateTransaksiKeuanganPayload} payload - Data rincian transaksi kas.
+ * 
+ * @returns {Promise<any>} Berisi status dan data transaksi yang baru dicatat.
+ * @throws {Error} Jika validasi gagal atau server error.
+ */
 export async function createTransaksiKeuangan(payload: CreateTransaksiKeuanganPayload) {
   const res = await apiClient.post("/transaksi-keuangan", payload);
   return res.data;
@@ -70,7 +106,15 @@ export interface LaporanKeuanganResponse {
   transaksi?: ApiTransaksiKeuanganResponse[];
 }
 
-/** GET /keuangan/laporan — laporan keuangan dengan filter (memerlukan Bearer token) */
+/**
+ * @api {get} /keuangan/laporan GET Laporan Keuangan
+ * @description Mengambil data laporan keuangan berdasarkan filter bulan dan tahun (memerlukan Bearer token).
+ * 
+ * @param {LaporanKeuanganFilter} [filter] - Filter laporan keuangan.
+ * 
+ * @returns {Promise<LaporanKeuanganResponse>} Berisi data ringkasan dan transaksi laporan keuangan.
+ * @throws {Error} Jika terjadi kesalahan pada server atau network.
+ */
 export async function fetchLaporanKeuangan(filter?: LaporanKeuanganFilter): Promise<LaporanKeuanganResponse> {
   const params = new URLSearchParams();
   if (filter?.bulan) params.append("bulan", filter.bulan);
@@ -87,9 +131,15 @@ export interface KasSaldoResponse {
   total_pengeluaran?: number;
 }
 
-/** GET /kas/saldo — cek saldo kas saat ini (memerlukan Bearer token) */
+/**
+ * @api {get} /kas/saldo GET Saldo Kas
+ * @description Mengambil info saldo kas terkini beserta total pemasukan dan pengeluaran (memerlukan Bearer token).
+ * 
+ * @returns {Promise<KasSaldoResponse>} Berisi nominal saldo kas saat ini.
+ * @throws {Error} Jika terjadi kesalahan pada server atau network.
+ */
 export async function fetchKasSaldo(): Promise<KasSaldoResponse> {
   const res = await apiClient.get("/kas/saldo");
-  const body = res.data as { data?: KasSaldoResponse } | KasSaldoResponse;
-  return (body as { data?: KasSaldoResponse }).data || (body as KasSaldoResponse);
+  const body = res.data;
+  return body?.data || body;
 }

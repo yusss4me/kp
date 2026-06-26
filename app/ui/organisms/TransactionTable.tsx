@@ -35,8 +35,8 @@ export const TransactionTable = ({ transactions, onDelete }: TransactionTablePro
             </TR>
           </THead>
           <TBody>
-            {transactions.map((tx) => (
-              <TR key={tx.id}>
+            {transactions.map((tx, index) => (
+              <TR key={tx.id ?? `tx-${index}`}>
                 <TD>
                   <Container className="flex items-center gap-3">
                     <Container

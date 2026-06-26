@@ -9,6 +9,7 @@ export interface Orphan {
   kategori_bayi: boolean;
   // gender: OrphanGender;
   status: OrphanStatus;
+  nik?: string;
   // notes?: string;
 }
 
@@ -38,6 +39,8 @@ export interface PendingDonation {
   nama_barang?: string;
   /** Optional: ID kampanye jika donasi ditujukan ke kampanye tertentu */
   kampanye_id?: string;
+  /** Optional: nomor handphone donatur */
+  no_hp?: string;
 }
 
 export interface InventoryItem {
@@ -49,7 +52,7 @@ export interface InventoryItem {
 }
 
 export interface FinanceTransaction {
-  id: number;
+  id: number | string;
   type: "Income" | "Expense";
   category: string;
   amount: string;
@@ -59,7 +62,7 @@ export interface FinanceTransaction {
 }
 
 export interface VisitBooking {
-  id: number;
+  id: number | string;
   visitor: string;
   phone: string;
   date: string;

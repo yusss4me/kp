@@ -45,18 +45,18 @@ export default function Home({user, discover, headerTitle = "Beranda"}: HomeProp
         >
             <div className="space-y-10">
                 {/* Welcome Section */}
-                <div className="bg-red-primary/5 rounded-[40px] p-8 md:p-12 border border-red-primary/10 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+                <div className="bg-red-primary/5 rounded-[32px] p-6 md:p-10 border border-red-primary/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative overflow-hidden">
                     <div className="absolute -top-10 -right-10 w-40 h-40 bg-red-primary/5 rounded-full blur-3xl" />
                     <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-red-primary/5 rounded-full blur-3xl" />
 
-                    <div className="space-y-3 relative z-10">
+                    <div className="space-y-2 relative z-10">
                         <Txt variant="caption" className="text-red-primary/60 uppercase tracking-[0.2em] font-bold">
                             Selamat Datang
                         </Txt>
-                        <Txt variant="h2" weight="bold" className="text-red-primary">
-                            Halo, {user?.name}
+                        <Txt variant="h2" weight="bold" className="text-red-primary text-2xl md:text-3xl">
+                            Halo, {user?.name} 👋
                         </Txt>
-                        <Txt variant="body" className="text-gray-500 max-w-xl">
+                        <Txt variant="body" className="text-gray-500 max-w-xl text-sm md:text-base">
                             Terima kasih telah menjadi bagian dari perjalanan kebaikan Yayasan Yamuti. Pantau dampak donasi Anda dan jelajahi program yang tersedia.
                         </Txt>
                     </div>
@@ -79,20 +79,20 @@ export default function Home({user, discover, headerTitle = "Beranda"}: HomeProp
                 </div>
 
                 {/* Quick Actions */}
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <Link href={routes.user.aktivitas.root()} className="flex-1">
-                        <Btn variant="red" size="sm" shape="rounded" className="w-full gap-2 text-xs font-bold">
-                            <Activity size={14} /> Aktivitas Donasi
+                        <Btn variant="red" size="md" shape="rounded" className="w-full gap-2 font-bold text-sm md:text-base py-3.5">
+                            <Activity size={16} /> Aktivitas Donasi
                         </Btn>
                     </Link>
                     <Link href={routes.user.aktivitas.kunjungan.root()} className="flex-1">
-                        <Btn variant="light" size="sm" shape="rounded" className="w-full gap-2 text-xs font-bold text-red-primary border border-red-primary/20">
-                            <Pencil size={14} /> Ajukan Kunjungan
+                        <Btn variant="outline" size="md" shape="rounded" className="w-full gap-2 font-bold text-sm md:text-base py-3.5 hover:text-white">
+                            <Pencil size={16} /> Ajukan Kunjungan
                         </Btn>
                     </Link>
-                    <Link href={`/home/berita`} className="flex-1">
-                        <Btn variant="light" size="sm" shape="rounded" className="w-full gap-2 text-xs font-bold text-red-primary border border-red-primary/20">
-                            <Newspaper size={14} /> Kabar Yamuti
+                    <Link href={`/user/berita`} className="flex-1">
+                        <Btn variant="outline" size="md" shape="rounded" className="w-full gap-2 font-bold text-sm md:text-base py-3.5 hover:text-white">
+                            <Newspaper size={16} /> Kabar Yamuti
                         </Btn>
                     </Link>
                 </div>

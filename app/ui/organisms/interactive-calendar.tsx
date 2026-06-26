@@ -81,7 +81,7 @@ export const InteractiveCalendar: React.FC<InteractiveCalendarProps> = ({
   const renderDays = () => {
     const dateFormat = "EEEE";
     const days = [];
-    let startDate = startOfWeek(currentMonth, { weekStartsOn: 1 }); // Start on Monday
+    const startDate = startOfWeek(currentMonth, { weekStartsOn: 1 }); // Start on Monday
 
     for (let i = 0; i < 7; i++) {
       days.push(

@@ -10,20 +10,30 @@ export interface AdminProfileTemplateProps {
   onLogout?: () => void;
   fileInputRef?: React.RefObject<HTMLInputElement | null>;
   onImageUpload?: () => void;
+  /** Statistik admin — diambil dari API dashboard/summary */
+  totalDonasi?: string;
+  programAktif?: string;
+  menungguVerifikasi?: string;
+  /** Profile Image URL */
+  image?: string;
 }
 
-export function AdminProfileTemplate({ onLogout, ...props }: AdminProfileTemplateProps) {
+export function AdminProfileTemplate({ onLogout, image, ...props }: AdminProfileTemplateProps) {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <AdminProfileHeader
-        title={props.name || "Administrator"}
-        subtitle="Panel Admin YAMUTI"
-        image="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&auto=format&fit=crop"
-        totalDonasi="Rp 12.5jt"
-        programAktif="8"
-        menungguVerifikasi="3"
-      />
-      <AdminProfileMenuGroup onLogout={onLogout} />
+      {/* Pembatas lebar agar konten tidak melar di layar widescreen */}
+      <div className="w-full max-w-3xl mx-auto">
+        <AdminProfileHeader
+          title={props.name || "Administrator"}
+          subtitle="Panel Admin YAMUTI"
+          image={image || ""}
+          totalDonasi={props.totalDonasi ?? "-"}
+          programAktif={props.programAktif ?? "-"}
+          menungguVerifikasi={props.menungguVerifikasi ?? "-"}
+        />
+        <AdminProfileMenuGroup onLogout={onLogout} />
+      </div>
     </div>
   );
 }
+

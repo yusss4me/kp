@@ -5,6 +5,8 @@ import { AdminDashboard } from "@/app/ui/templates/admin-dashboardTemplate";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
 import { useOrphans } from "@/app/lib/hooks/useOrphans";
 import { usePrograms } from "@/app/lib/hooks/usePrograms";
+import { useTransaksiKeuangan } from "@/app/lib/hooks/useKeuangan";
+import { useInventoryStore } from "@/app/lib/stores/inventory-store";
 import { Skeleton } from "@/app/ui/atoms/skeleton";
 import { ErrorDisplay } from "@/app/ui/molecules/error-display";
 
@@ -13,6 +15,8 @@ export default function Page() {
   const authUser = useAuthStore((s) => s.user);
   const { data: orphans = [], isLoading: orphansLoading, error: orphansError, refetch: refetchOrphans } = useOrphans();
   const { data: programs = [], isLoading: programsLoading, error: programsError, refetch: refetchPrograms } = usePrograms();
+  const { data: transaksiKeuangan = [] } = useTransaksiKeuangan();
+  const inventory = useInventoryStore((s) => s.inventory);
 
   const isLoading = orphansLoading || programsLoading;
   const error = orphansError || programsError;
@@ -75,9 +79,9 @@ export default function Page() {
       }}
       headerTitle="Dashboard Utama"
       anak={anak}
-      donasi={[]}
+      donasi={transaksiKeuangan.map((t) => ({ id: String(t.id), jumlah: t.amountRaw || 0 }))}
       program={programs.map((p) => ({ id: p.id }))}
-      stokBarang={[]}
+      stokBarang={inventory.map((i) => ({ id: String(i.id), jumlah: parseInt(i.stock) || 0 }))}
     />
   );
 }

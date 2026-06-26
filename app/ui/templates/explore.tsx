@@ -16,7 +16,7 @@ export interface ExploreCampaign {
   raised: number;
 }
 
-export type ExploreRole = "visitor" | "donatur" | "admin" | "owner";
+export type ExploreRole = "visitor" | "donatur" | "admin" | "super_admin";
 
 export interface ExploreTemplateProps {
   campaigns: ExploreCampaign[];
@@ -31,7 +31,7 @@ function getDetailHref(role: ExploreRole, id: string): string {
       return routes.user.aktivitas.program.detail(id);
     case "admin":
       return routes.visitor.donasiDetail(id);
-    case "owner":
+    case "super_admin":
       return routes.visitor.donasiDetail(id);
     default:
       return routes.visitor.donasiDetail(id);
@@ -44,7 +44,7 @@ function getDonateHref(role: ExploreRole, id: string): string | undefined {
       return routes.user.aktivitas.program.donation(id);
     case "visitor":
       return routes.visitor.donasi(id);
-    // admin and owner: read-only, no donate action
+    // admin and super_admin: read-only, no donate action
     default:
       return undefined;
   }
@@ -110,4 +110,3 @@ export function ExploreTemplate({ campaigns, className = "", role = "visitor" }:
   );
 }
 
-export default ExploreTemplate;

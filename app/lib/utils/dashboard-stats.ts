@@ -23,10 +23,7 @@ import type {
 
 type StatColor = "primary" | "success" | "warning" | "danger" | "info" | "secondary";
 
-export function buildFinanceStats(
-  transactions: FinanceTransaction[],
-  distributions: FundDistribution[] = [],
-) {
+export function buildFinanceStats(transactions: FinanceTransaction[], distributions: FundDistribution[] = [], saldoKas?: number) {
   const income = transactions
     .filter((t) => t.type === "Income")
     .reduce((sum, t) => sum + t.amountRaw, 0);
@@ -39,13 +36,13 @@ export function buildFinanceStats(
 
   const format = (n: number) =>
     `Rp ${n.toLocaleString("id-ID")}`;
+    
+  const currentSaldo = saldoKas !== undefined ? saldoKas : (income - expense);
 
   return [
-    { label: "Total Pemasukan (Bulan Ini)", value: format(income), icon: TrendingUp, color: "success" as StatColor, trend: { value: 0, isUp: true } },
-    { label: "Total Pengeluaran (Bulan Ini)", value: format(expense), icon: TrendingDown, color: "danger" as StatColor, trend: { value: 0, isUp: false } },
-    { label: "Saldo Kas Saat Ini", value: format(income - expense), icon: DollarSign, color: "primary" as StatColor },
-    { label: "Dana Cabang (10%)", value: format(totalBranch), icon: Building2, color: "info" as StatColor },
-    { label: "Dana Yayasan Pusat (90%)", value: format(totalCentral), icon: Building2, color: "warning" as StatColor },
+    { label: "Total Pemasukan (Semua)", value: format(income), icon: TrendingUp, color: "success" as StatColor, trend: { value: 0, isUp: true } },
+    { label: "Total Pengeluaran (Semua)", value: format(expense), icon: TrendingDown, color: "danger" as StatColor, trend: { value: 0, isUp: false } },
+    { label: "Saldo Kas Saat Ini", value: format(currentSaldo), icon: DollarSign, color: "primary" as StatColor },
   ];
 }
 

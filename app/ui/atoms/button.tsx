@@ -3,8 +3,8 @@ import { cn } from '@/app/lib/utils'; // Menggunakan helper cn yang kita bahas s
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: 'red' | 'light' | 'transparent';
-  textColor?: 'red' | 'light' | 'dark' | 'darkred';
+  variant?: 'red' | 'light' | 'transparent' | 'outline';
+  textColor?: 'red' | 'light' | 'dark' | 'darkred' | 'outlineHover';
   size?: 'sm' | 'md' | 'lg';
   shape?: 'square' | 'circle' | 'rounded';
   borderColor?: 'red' | 'light' | 'dark';
@@ -43,22 +43,28 @@ export const Btn = ({
   ...props 
 }: ButtonProps) => {
   
+  // light variant = terang, teks harus gelap/merah agar kontras
+  // red variant = merah, teks harus terang (putih)
+  // transparent & outline = teks gelap secara default
   const computedTextColor = textColor || (
-    variant === 'red' || variant === 'light' ? 'light' : 'dark'
+    variant === 'red' ? 'light'
+    : variant === 'light' ? 'darkred'
+    : 'dark'
   );
 
   const variants = {
-    red: 'bg-red-primary hover:bg-red-secondary',
-    light: 'bg-red-secondary hover:bg-red-primary',
+    red: 'bg-red-primary hover:bg-red-700',
+    light: 'bg-red-secondary hover:bg-red-primary/10',
     transparent: 'bg-transparent',
+    outline: 'bg-transparent border border-red-primary hover:bg-red-primary',
   };
 
   const textVariants = {
     red: 'text-red-primary hover:text-red-secondary',
     light: 'text-lightdark-primary hover:text-lightdark-tertiary',
     dark: 'text-lightdark-tertiary hover:text-lightdark-primary',
-    darkred: 'text-lightdark-tertiary hover:text-red-primary',
-    
+    darkred: 'text-red-primary hover:text-red-700',
+    outlineHover: 'text-red-primary hover:text-white',
   }
 
   const sizes = {

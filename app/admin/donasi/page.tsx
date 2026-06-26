@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AdminProgramTemplate } from "@/app/ui/templates/admin-program";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
@@ -13,6 +13,11 @@ export default function DonationsPage() {
   const verifyDonation = useYamutiStore((s) => s.verifyDonation);
   const rejectDonation = useYamutiStore((s) => s.rejectDonation);
   const deleteProgram = useYamutiStore((s) => s.deleteProgram);
+  const fetchPrograms = useYamutiStore((s) => s.fetchPrograms);
+
+  useEffect(() => {
+    fetchPrograms();
+  }, [fetchPrograms]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [programToDelete, setProgramToDelete] = useState<string | null>(null);
