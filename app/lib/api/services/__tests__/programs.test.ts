@@ -23,7 +23,7 @@ describe("mapProgram", () => {
     expect(result.targetAmount).toBe(5000000);
     expect(result.collectedAmount).toBe(2500000);
     expect(result.deadline).toBe("2025-12-31");
-    expect(result.image).toBe("https://yamuti-backend.onrender.com/img.jpg");
+    expect(result.image).toBe("https://yamuti-backend.onrender.com/storage/img.jpg");
     expect(result.progress).toBe(50);
   });
 

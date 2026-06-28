@@ -7,6 +7,8 @@ import * as z from "zod";
 import { OwnerAdminFormTemplate, OwnerAdminFormInput } from "@/app/ui/templates/owner-admin-form";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { routes } from "@/app/lib/constants/routes";
+import { useState } from "react";
+import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
 
 const schema = z.object({
   name: z.string().min(2),
@@ -23,6 +25,8 @@ export default function EditAdminPage() {
   const updateAdmin = useYamutiStore((s) => s.updateAdmin);
   const deleteAdmin = useYamutiStore((s) => s.deleteAdmin);
 
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
   const form = useForm<OwnerAdminFormInput>({
     resolver: zodResolver(schema),
     values: admin ? { name: admin.name, role: admin.role, email: admin.email, status: admin.status } : undefined,
@@ -38,20 +42,35 @@ export default function EditAdminPage() {
   };
 
   const onDelete = () => {
-    if (confirm(`Hapus admin ${admin.name}?`)) {
-      deleteAdmin(id);
-      router.push(routes.owner.admins.root());
-    }
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setIsConfirmOpen(false);
+    deleteAdmin(id);
+    router.push(routes.owner.admins.root());
   };
 
   return (
-    <OwnerAdminFormTemplate 
-      title={admin.name} 
-      isEdit 
-      form={form} 
-      onSubmit={onSubmit} 
-      onDelete={onDelete} 
-      backUrl={routes.owner.admins.root()}
-    />
+    <>
+      <OwnerAdminFormTemplate 
+        title={admin.name} 
+        isEdit 
+        form={form} 
+        onSubmit={onSubmit} 
+        onDelete={onDelete} 
+        backUrl={routes.owner.admins.root()}
+      />
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title="Konfirmasi Hapus"
+        message={`Apakah Anda yakin ingin menghapus admin ${admin.name}? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Hapus"
+        cancelText="Batal"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
+    </>
   );
 }

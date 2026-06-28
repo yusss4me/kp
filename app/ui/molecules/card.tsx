@@ -10,6 +10,7 @@ export interface CardProps {
   width: number;
   height: number;
   alt: string;
+  className?: string;
 }
 /**
  * Card

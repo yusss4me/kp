@@ -7,6 +7,8 @@ import * as z from "zod";
 import { AdminOrphanFormTemplate } from "@/app/ui/templates/admin-orphan-form";
 import { useYamutiStore, type OrphanFormInput } from "@/app/lib/stores/yamuti-store";
 import { routes } from "@/app/lib/constants/routes";
+import { useState } from "react";
+import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
 
 const schema = z.object({
   name: z.string().min(2),
@@ -28,6 +30,8 @@ export default function EditOrphanPage() {
   const orphan = useYamutiStore((s) => s.getOrphanById(id));
   const updateOrphan = useYamutiStore((s) => s.updateOrphan);
   const deleteOrphan = useYamutiStore((s) => s.deleteOrphan);
+
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const form = useForm<OrphanFormInput>({
     resolver: zodResolver(schema),
@@ -57,21 +61,36 @@ export default function EditOrphanPage() {
   };
 
   const onDelete = () => {
-    if (confirm(`Hapus data ${orphan.name}?`)) {
-      deleteOrphan(id);
-      router.push(routes.admin.anakAsuh.root());
-    }
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setIsConfirmOpen(false);
+    deleteOrphan(id);
+    router.push(routes.admin.anakAsuh.root());
   };
 
   return (
-    <AdminOrphanFormTemplate
-      title={orphan.name}
-      subtitle={`ID: ${id}`}
-      isEdit
-      form={form}
-      onSubmit={onSubmit}
-      onDelete={onDelete}
-      backUrl={routes.admin.anakAsuh.root()}
-    />
+    <>
+      <AdminOrphanFormTemplate
+        title={orphan.name}
+        subtitle={`ID: ${id}`}
+        isEdit
+        form={form}
+        onSubmit={onSubmit}
+        onDelete={onDelete}
+        backUrl={routes.admin.anakAsuh.root()}
+      />
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title="Konfirmasi Hapus"
+        message={`Apakah Anda yakin ingin menghapus data anak asuh ${orphan.name}? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Hapus"
+        cancelText="Batal"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
+    </>
   );
 }

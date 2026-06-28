@@ -25,7 +25,7 @@ export function mapInventaris(item: ApiInventarisResponse): InventoryItem {
   const status =
     stockNum > 10 ? "Cukup" : stockNum > 0 ? "Menipis" : "Habis";
   return {
-    id: Number(item.id),
+    id: item.id != null ? Number(item.id) : Date.now() + Math.floor(Math.random() * 10000),
     name: item.nama_barang ?? item.nama ?? item.name ?? "—",
     category: item.kategori ?? item.category ?? item.satuan ?? "Umum",
     stock: String(stockRaw),

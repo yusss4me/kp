@@ -10,6 +10,7 @@ import { Btn } from '@/app/ui/atoms/button';
 import { Pencil } from 'lucide-react';
 import type { Orphan } from '@/app/lib/types/entities';
 import { routes } from '@/app/lib/constants/routes';
+import { ConfirmationModal } from '@/app/ui/molecules/confirmation-modal';
 
 export type { Orphan as OrphanData };
 
@@ -22,10 +23,24 @@ interface AdminOrphansTemplateProps {
 
 export function AdminOrphansTemplate({ orphans, onDelete, addUrl, editUrl }: AdminOrphansTemplateProps) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<{id: number, name: string} | null>(null);
 
   const filteredOrphans = orphans.filter((orphan) =>
     orphan.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleDeleteClick = (id: number, name: string) => {
+    setPendingDelete({ id, name });
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (pendingDelete && onDelete) {
+      setIsConfirmOpen(false);
+      onDelete(pendingDelete.id);
+    }
+  };
 
   return (
     <DashboardHeader headerTitle="Manajemen Anak Asuh">
@@ -68,9 +83,7 @@ export function AdminOrphansTemplate({ orphans, onDelete, addUrl, editUrl }: Adm
                       size="sm"
                       shape="rounded"
                       className="flex-1 text-red-primary bg-red-50 text-xs font-bold"
-                      onClick={() => {
-                        if (confirm(`Hapus data ${orphan.name}?`)) onDelete(orphan.id);
-                      }}
+                      onClick={() => handleDeleteClick(orphan.id, orphan.name)}
                     >
                       Hapus
                     </Btn>
@@ -87,6 +100,16 @@ export function AdminOrphansTemplate({ orphans, onDelete, addUrl, editUrl }: Adm
           </div>
         )}
       </div>
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title="Konfirmasi Hapus"
+        message={`Apakah Anda yakin ingin menghapus data ${pendingDelete?.name}? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Hapus"
+        cancelText="Batal"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
     </DashboardHeader>
   );
 }

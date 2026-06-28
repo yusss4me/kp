@@ -52,7 +52,7 @@ interface BaseReportDocumentProps {
   startDate: string;
   endDate: string;
   headers: ReportField[];
-  data: any[];
+  data: Record<string, unknown>[];
 }
 
 export default function BaseReportDocument({ title, startDate, endDate, headers, data }: BaseReportDocumentProps) {

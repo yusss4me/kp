@@ -29,24 +29,35 @@ apiClient.interceptors.request.use(
   }
 );
 
+let isLoggingOut = false;
+
 // Response interceptor to handle token expiration/401
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && !isLoggingOut) {
+      isLoggingOut = true;
       const store = useAuthStore.getState();
-      // Clear auth state (Zustand + cookies)
-      await store.logout();
-      console.warn('Unauthorized access — auth state cleared, redirecting to login');
-
-      // Redirect to the correct login page based on current route
-      if (typeof window !== 'undefined') {
-        const { pathname } = window.location;
-        if (pathname.startsWith('/user')) {
-          window.location.href = `/auth/donatur?redirect=${encodeURIComponent(pathname)}&reason=session_expired`;
-        } else if (pathname.startsWith('/admin') || pathname.startsWith('/super_admin')) {
-          window.location.href = `/auth?redirect=${encodeURIComponent(pathname)}&reason=session_expired`;
+      
+      try {
+        // Clear auth state (Zustand + cookies)
+        await store.logout();
+        console.warn('Unauthorized access — auth state cleared, redirecting to login');
+      } catch (err) {
+        console.error('Logout error during 401 handling:', err);
+      } finally {
+        // Redirect to the correct login page based on current route
+        if (typeof window !== 'undefined') {
+          const { pathname } = window.location;
+          if (pathname.startsWith('/user')) {
+            window.location.href = `/auth/donatur?redirect=${encodeURIComponent(pathname)}&reason=session_expired`;
+          } else if (pathname.startsWith('/admin') || pathname.startsWith('/super_admin')) {
+            window.location.href = `/auth?redirect=${encodeURIComponent(pathname)}&reason=session_expired`;
+          } else {
+             window.location.href = `/auth?reason=session_expired`;
+          }
         }
+        isLoggingOut = false;
       }
     }
     return Promise.reject(error);

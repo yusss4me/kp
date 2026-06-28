@@ -19,9 +19,9 @@ export interface KunjunganStat {
 interface AdminKunjunganTemplateProps {
   stats: KunjunganStat[];
   bookings: VisitBooking[];
-  onDeleteBooking?: (id: number) => void;
+  onDeleteBooking?: (id: number | string) => void;
   addUrl?: string;
-  editUrl?: (id: number) => string;
+  editUrl?: (id: number | string) => string;
 }
 
 export function AdminKunjunganTemplate({ stats, bookings, onDeleteBooking, addUrl, editUrl }: AdminKunjunganTemplateProps) {

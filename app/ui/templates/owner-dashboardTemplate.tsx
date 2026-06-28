@@ -39,7 +39,7 @@ interface OwnerDashboardTemplateProps {
         title: string;
         date: string;
         type: string;
-        icon: any;
+        icon: unknown;
     }[];
 
     anak: {

@@ -11,6 +11,7 @@ import { Container } from '@/app/ui/atoms/container';
 import { ChevronLeft, Save, Image as ImageIcon, Target, Info, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ConfirmationModal } from '@/app/ui/molecules/confirmation-modal';
 
 export interface AdminProgramFormValues {
   title: string;
@@ -45,6 +46,20 @@ export function AdminProgramFormTemplate({
 }: AdminProgramFormTemplateProps) {
   const { register, formState: { errors, isSubmitting } } = form;
   const [previewImage, setPreviewImage] = React.useState<string | null>(programImage || null);
+  const [isConfirmOpen, setIsConfirmOpen] = React.useState(false);
+  const [pendingData, setPendingData] = React.useState<AdminProgramFormValues | null>(null);
+
+  const onFormSubmit = (data: AdminProgramFormValues) => {
+    setPendingData(data);
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirm = () => {
+    if (pendingData) {
+      setIsConfirmOpen(false);
+      onSubmit(pendingData);
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -56,7 +71,7 @@ export function AdminProgramFormTemplate({
 
   return (
     <DashboardHeader headerTitle={isEdit ? `Edit: ${title}` : "Program Baru"}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-4xl mx-auto space-y-8 pb-20">
+      <form onSubmit={form.handleSubmit(onFormSubmit)} className="max-w-4xl mx-auto space-y-8 pb-20">
         {/* Navigation */}
         <div className="flex justify-between items-center">
           <Link href={backUrl} className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary transition-colors group">
@@ -219,6 +234,16 @@ export function AdminProgramFormTemplate({
           </div>
         </div>
       </form>
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title={isEdit ? "Konfirmasi Perubahan" : "Konfirmasi Simpan"}
+        message={isEdit ? "Apakah Anda yakin ingin menyimpan perubahan pada program ini?" : "Apakah Anda yakin ingin menyimpan program baru ini?"}
+        confirmText="Ya, Simpan"
+        cancelText="Batal"
+        variant="info"
+        onConfirm={handleConfirm}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
     </DashboardHeader>
   );
 }

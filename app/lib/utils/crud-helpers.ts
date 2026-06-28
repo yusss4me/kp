@@ -2,9 +2,10 @@ export function generateId(prefix = ""): string {
   return `${prefix}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 7)}`;
 }
 
-export function generateNumericId(items: { id: number }[]): number {
+export function generateNumericId(items: { id: number | string }[]): number {
   if (items.length === 0) return 1;
-  return Math.max(...items.map((i) => i.id)) + 1;
+  const maxId = Math.max(...items.map((i) => typeof i.id === 'number' ? i.id : parseInt(i.id, 10) || 0));
+  return maxId + 1;
 }
 
 export function formatRupiah(amount: number): string {
@@ -26,4 +27,14 @@ export function programToListItem(program: {
     collected: formatRupiah(program.collectedAmount),
     progress: calcProgress(program.collectedAmount, program.targetAmount),
   };
+}
+
+export function parseAmount(value: any): number {
+  if (typeof value === "number") return value;
+  if (!value) return 0;
+  const str = String(value);
+  // Remove trailing decimal zeroes (.00 or ,00) that typically come from SQL decimals
+  const cleanStr = str.replace(/\.\d{2}$/, "").replace(/,\d{2}$/, "");
+  // Extract only the numbers
+  return parseInt(cleanStr.replace(/[^0-9]/g, "")) || 0;
 }

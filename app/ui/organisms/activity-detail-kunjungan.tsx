@@ -63,9 +63,10 @@ export const DetailKunjungan = ({ id, url, data, isAdmin }: DetailKunjunganProps
             await updateKunjunganStatus(id as string, status as any);
             setRecord({ ...record, status });
             alert(`Status berhasil diubah menjadi ${status}`);
-        } catch (err) {
-            console.error('Failed to update status', err);
-            alert('Gagal mengubah status kunjungan. Periksa koneksi atau hak akses.');
+        } catch (err: any) {
+            const errorDetail = err.response?.data;
+            console.error('Failed to update status', errorDetail || err);
+            alert(`Gagal mengubah status kunjungan. Pesan dari server: ${errorDetail?.message || JSON.stringify(errorDetail) || 'Error Internal'}`);
         } finally {
             setIsUpdating(false);
         }

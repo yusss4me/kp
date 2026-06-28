@@ -51,11 +51,11 @@ export const OrphanCard = ({
   return (
     <Container
       variant="light"
-      shadow="sm"
+      shadow="none"
       padding="md"
-      radius="xl"
+      radius="2xl"
       className={cn(
-        "border border-gray-100 hover:shadow-lg transition-all duration-300 group",
+        "bg-white border border-gray-100/80 shadow-md shadow-gray-200/40 hover:shadow-2xl hover:shadow-red-primary/10 hover:-translate-y-1 transition-all duration-300 group",
         className,
       )}
     >
@@ -96,13 +96,13 @@ export const OrphanCard = ({
         </Container>
 
         {detailHref ? (
-          <Lnk href={detailHref} className="w-full mt-2 block">
-            <Btn variant="light" textColor="dark" size="sm" shape="rounded" className="w-full py-2.5 text-xs font-bold rounded-xl">
+          <Lnk href={detailHref} className="w-full mt-4 block">
+            <Btn variant="light" textColor="dark" size="sm" shape="rounded" className="w-full py-2.5 text-xs font-bold rounded-xl border border-gray-100 group-hover:bg-red-primary group-hover:text-white group-hover:border-red-primary transition-colors duration-300">
               Lihat Profil Lengkap
             </Btn>
           </Lnk>
         ) : (
-          <Btn variant="light" textColor="dark" size="sm" shape="rounded" className="w-full mt-2 py-2.5 text-xs font-bold rounded-xl">
+          <Btn variant="light" textColor="dark" size="sm" shape="rounded" className="w-full mt-4 py-2.5 text-xs font-bold rounded-xl border border-gray-100 group-hover:bg-red-primary group-hover:text-white group-hover:border-red-primary transition-colors duration-300">
             Lihat Profil Lengkap
           </Btn>
         )}

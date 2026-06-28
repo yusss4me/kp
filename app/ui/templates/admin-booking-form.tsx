@@ -11,6 +11,8 @@ import { ChevronLeft, Save, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import type { VisitBooking } from "@/app/lib/types/entities";
 import { InteractiveCalendar } from "@/app/ui/organisms/interactive-calendar";
+import { useState } from "react";
+import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
 
 export type BookingFormInput = {
   visitor: string;
@@ -42,9 +44,24 @@ export function AdminBookingFormTemplate({
   const visitDate = watch("date");
   const visitTime = watch("time");
 
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [pendingData, setPendingData] = useState<BookingFormInput | null>(null);
+
+  const onFormSubmit = (data: BookingFormInput) => {
+    setPendingData(data);
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirm = () => {
+    if (pendingData) {
+      setIsConfirmOpen(false);
+      onSubmit(pendingData);
+    }
+  };
+
   return (
     <DashboardHeader headerTitle={isEdit ? `Edit: ${title}` : "Booking Kunjungan Baru"}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-2xl mx-auto space-y-8 pb-20">
+      <form onSubmit={form.handleSubmit(onFormSubmit)} className="max-w-2xl mx-auto space-y-8 pb-20">
         <div className="flex justify-between items-center">
           <Link href={backUrl} className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary group">
             <div className="p-2 rounded-xl bg-gray-100 group-hover:bg-red-50"><ChevronLeft size={20} /></div>
@@ -95,6 +112,16 @@ export function AdminBookingFormTemplate({
           {isEdit ? "Simpan Perubahan" : "Buat Booking"}
         </Btn>
       </form>
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title={isEdit ? "Konfirmasi Perubahan" : "Konfirmasi Simpan"}
+        message={isEdit ? "Apakah Anda yakin ingin menyimpan perubahan pada data kunjungan ini?" : "Apakah Anda yakin ingin menyimpan data kunjungan baru ini?"}
+        confirmText="Ya, Simpan"
+        cancelText="Batal"
+        variant="info"
+        onConfirm={handleConfirm}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
     </DashboardHeader>
   );
 }

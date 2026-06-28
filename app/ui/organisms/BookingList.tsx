@@ -6,6 +6,8 @@ import { Btn } from "../atoms/button";
 import { VisitingCard } from "../molecules/visitingCard";
 import { Pencil, Trash2 } from "lucide-react";
 import type { VisitBooking } from "@/app/lib/types/entities";
+import { useState } from "react";
+import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
 
 export interface BookingListProps {
   bookings: VisitBooking[];
@@ -15,6 +17,21 @@ export interface BookingListProps {
 }
 
 export const BookingList = ({ bookings, onDelete, editUrl }: BookingListProps) => {
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<{id: number | string, name: string} | null>(null);
+
+  const handleDeleteClick = (id: number | string, name: string) => {
+    setPendingDelete({ id, name });
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (pendingDelete && onDelete) {
+      setIsConfirmOpen(false);
+      onDelete(pendingDelete.id);
+    }
+  };
+
   return (
     <Container className="space-y-6 flex flex-col">
       <Txt variant="h4" weight="bold" className="px-2">
@@ -46,9 +63,7 @@ export const BookingList = ({ bookings, onDelete, editUrl }: BookingListProps) =
                   size="sm"
                   shape="rounded"
                   className="flex-1 text-red-primary bg-red-50 text-xs font-bold gap-1"
-                  onClick={() => {
-                    if (confirm(`Batalkan kunjungan ${booking.visitor}?`)) onDelete(booking.id);
-                  }}
+                  onClick={() => handleDeleteClick(booking.id, booking.visitor)}
                 >
                   <Trash2 size={14} /> Hapus
                 </Btn>
@@ -57,6 +72,16 @@ export const BookingList = ({ bookings, onDelete, editUrl }: BookingListProps) =
           </div>
         ))}
       </Container>
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title="Konfirmasi Batal/Hapus"
+        message={`Apakah Anda yakin ingin membatalkan dan menghapus data kunjungan ${pendingDelete?.name}? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Hapus"
+        cancelText="Batal"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
     </Container>
   );
 };

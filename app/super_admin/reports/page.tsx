@@ -11,6 +11,12 @@ import { pdf } from "@react-pdf/renderer";
 import BaseReportDocument from "@/app/ui/templates/reportDocument";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
+import dynamic from "next/dynamic";
+
+const PDFViewer = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFViewer),
+  { ssr: false }
+);
 
 export default function ReportsPage() {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -18,6 +24,10 @@ export default function ReportsPage() {
   const [exportFormat, setExportFormat] = useState("pdf");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [previewData, setPreviewData] = useState<Record<string, string | number>[]>([]);
+  const [previewHeaders, setPreviewHeaders] = useState<{ label: string; key: string; width: string }[]>([]);
+  const [reportTitle, setReportTitle] = useState("");
 
   const orphans = useYamutiStore((s) => s.orphans);
   const pendingDonations = useYamutiStore((s) => s.pendingDonations);
@@ -94,13 +104,27 @@ export default function ReportsPage() {
         return;
       }
 
+      setReportTitle(title);
+      setPreviewHeaders(headers);
+      setPreviewData(sourceData);
+      setIsPreviewMode(true);
+    } catch (error) {
+      console.error("Gagal menyiapkan preview laporan:", error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    setIsGenerating(true);
+    try {
       const blob = await pdf(
         <BaseReportDocument
-          title={title}
+          title={reportTitle}
           startDate={startDate}
           endDate={endDate}
-          headers={headers}
-          data={sourceData}
+          headers={previewHeaders}
+          data={previewData}
         />
       ).toBlob();
 
@@ -185,12 +209,41 @@ export default function ReportsPage() {
             </div>
 
             <div className="pt-4 border-t border-gray-100 flex justify-end">
-              <Btn type="submit" variant="red" size="lg" className="px-8 shadow-lg shadow-red-primary/20 gap-2" isLoading={isGenerating}>
-                <Download size={20} />
-                {isGenerating ? "Menyusun PDF..." : "Generate Laporan"}
-              </Btn>
+              {!isPreviewMode ? (
+                <Btn type="submit" variant="red" size="lg" className="px-8 shadow-lg shadow-red-primary/20 gap-2" isLoading={isGenerating}>
+                  <FileText size={20} />
+                  Tampilkan Pratinjau
+                </Btn>
+              ) : (
+                <div className="flex gap-4">
+                  <Btn type="button" variant="light" size="lg" onClick={() => setIsPreviewMode(false)}>
+                    Tutup Pratinjau
+                  </Btn>
+                  <Btn type="button" variant="red" size="lg" className="px-8 shadow-lg shadow-red-primary/20 gap-2" isLoading={isGenerating} onClick={handleDownload}>
+                    <Download size={20} />
+                    {isGenerating ? "Menyusun PDF..." : "Download PDF"}
+                  </Btn>
+                </div>
+              )}
             </div>
           </form>
+
+          {isPreviewMode && (
+            <div className="mt-8 border-t border-gray-100 pt-8">
+              <Txt variant="h5" weight="bold" className="text-gray-900 mb-4">Pratinjau Data: {reportTitle}</Txt>
+              <div className="w-full h-[600px] rounded-2xl overflow-hidden border border-gray-200 shadow-inner">
+                <PDFViewer width="100%" height="100%" className="border-none" showToolbar={true}>
+                  <BaseReportDocument
+                    title={reportTitle}
+                    startDate={startDate}
+                    endDate={endDate}
+                    headers={previewHeaders}
+                    data={previewData}
+                  />
+                </PDFViewer>
+              </div>
+            </div>
+          )}
         </Container>
       </div>
     </DashboardHeader>

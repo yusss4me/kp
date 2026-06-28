@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { OwnerDashboard } from "@/app/ui/templates/owner-dashboardTemplate";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
@@ -14,6 +15,8 @@ import { ErrorDisplay } from "@/app/ui/molecules/error-display";
 
 export default function Page() {
   const router = useRouter();
+  const now = useMemo(() => Date.now(), []);
+  const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const authUser = useAuthStore((s) => s.user);
   const admins = useYamutiStore((s) => s.admins);
   const inventory = useInventoryStore((s) => s.inventory);
@@ -70,10 +73,10 @@ export default function Page() {
         role: "Pemilik Yayasan",
       }}
       headerTitle="Dashboard Eksekutif"
-      donasi={transaksiKeuangan.map((t) => ({ id: String(t.id), jumlah: t.amountRaw || 0, tgl_donasi: new Date(t.date || Date.now()) }))}
+      donasi={transaksiKeuangan.map((t) => ({ id: String(t.id), jumlah: t.amountRaw || 0, tgl_donasi: new Date(t.date || now) }))}
       adminData={adminData}
       reportData={[
-        { id: "1", title: "Laporan Keuangan", date: new Date().toISOString().slice(0, 10), type: "Bulanan", icon: FilePieChart },
+        { id: "1", title: "Laporan Keuangan", date: todayStr, type: "Bulanan", icon: FilePieChart },
       ]}
       anak={orphans.map((o) => ({ id: String(o.id) }))}
       asset={inventory.map((i) => ({ id: String(i.id) }))}

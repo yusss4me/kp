@@ -21,7 +21,7 @@ interface AdminFinanceTemplateProps {
   stats: FinanceStat[];
   transactions: FinanceTransaction[];
   distributions?: FundDistribution[];
-  onDeleteTransaction?: (id: number) => void;
+  onDeleteTransaction?: (id: number | string) => void;
   addUrl?: string;
 }
 

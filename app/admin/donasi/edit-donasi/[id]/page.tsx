@@ -9,6 +9,8 @@ import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { routes } from "@/app/lib/constants/routes";
 import { updateKampanye, deleteKampanye } from "@/app/lib/api/services/programs";
 import { useToast } from "@/app/ui/providers/toast-provider";
+import { useState } from "react";
+import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
 
 const programSchema = z.object({
   title: z.string().min(1, "Judul harus diisi"),
@@ -29,6 +31,8 @@ export default function EditDonasiPage() {
   const { addToast } = useToast();
   const program = useYamutiStore((s) => s.getProgramById(id));
   const fetchPrograms = useYamutiStore((s) => s.fetchPrograms);
+
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const form = useForm<ProgramFormValues>({
     resolver: zodResolver(programSchema),
@@ -80,43 +84,58 @@ export default function EditDonasiPage() {
     }
   };
 
-  const onDelete = async () => {
-    if (confirm("Hapus program ini?")) {
-      try {
-        const response = await deleteKampanye(id);
-        if (response && response.success) {
-          addToast({
-            variant: "success",
-            message: response.message || "Kampanye berhasil dihapus",
-          });
-          await fetchPrograms();
-          router.push(routes.admin.donasi.root());
-        } else {
-          addToast({
-            variant: "error",
-            message: "Gagal menghapus kampanye",
-          });
-        }
-      } catch (err: any) {
-        console.error(err);
+  const onDelete = () => {
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsConfirmOpen(false);
+    try {
+      const response = await deleteKampanye(id);
+      if (response && response.success) {
+        addToast({
+          variant: "success",
+          message: response.message || "Kampanye berhasil dihapus",
+        });
+        await fetchPrograms();
+        router.push(routes.admin.donasi.root());
+      } else {
         addToast({
           variant: "error",
-          message: err.message || "Terjadi kesalahan saat menghapus kampanye",
+          message: "Gagal menghapus kampanye",
         });
       }
+    } catch (err: any) {
+      console.error(err);
+      addToast({
+        variant: "error",
+        message: err.message || "Terjadi kesalahan saat menghapus kampanye",
+      });
     }
   };
 
   return (
-    <AdminProgramFormTemplate
-      title={program.title}
-      subtitle={`ID Program: ${id}`}
-      isEdit
-      form={form}
-      onSubmit={onSubmit}
-      onDelete={onDelete}
-      programImage={program.image}
-      backUrl={routes.admin.donasi.root()}
-    />
+    <>
+      <AdminProgramFormTemplate
+        title={program.title}
+        subtitle={`ID Program: ${id}`}
+        isEdit
+        form={form}
+        onSubmit={onSubmit}
+        onDelete={onDelete}
+        programImage={program.image}
+        backUrl={routes.admin.donasi.root()}
+      />
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title="Konfirmasi Hapus"
+        message={`Apakah Anda yakin ingin menghapus program "${program.title}"? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Hapus"
+        cancelText="Batal"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
+    </>
   );
 }

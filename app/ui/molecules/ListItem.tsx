@@ -38,10 +38,10 @@ export const ListItem: React.FC<ListItemProps> = ({
     padding='md'
     className="w-full flex items-center justify-between  border-b border-gray-50 group active:bg-gray-50 transition-all cursor-pointer">
       <Container className="flex items-center gap-4">
-        <Container className="text-gray-600 group-hover:text-red-secondary transition-colors">
+        <Container className="text-gray-600 group-hover:text-red-primary transition-colors">
           <Icn icon={icon} size={20} color='current' />
         </Container>
-        <span className="text-sm font-medium text-gray-800 group-hover:text-red-secondary transition-colors">{label}</span>
+        <span className="text-sm font-medium text-gray-800 group-hover:text-red-primary transition-colors">{label}</span>
       </Container>
       <ChevronRight size={18} className="text-gray-300 group-hover:text-red-primary group-hover:translate-x-1 transition-all" />
     </Container>

@@ -29,6 +29,7 @@ export default defineConfig({
         statements: 30,
       },
     },
+    exclude: ["tests/**", "node_modules/**", "node_modules_old/**"],
   },
   resolve: {
     alias: {

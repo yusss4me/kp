@@ -6,6 +6,9 @@ export interface LoginUser {
   name: string;
   email: string;
   role: string;
+  photo?: string;
+  image?: string;
+  foto_identitas?: string;
 }
 
 export interface LoginResponse {
@@ -14,12 +17,18 @@ export interface LoginResponse {
   user?: LoginUser;
   role?: string;
   name?: string;
+  photo?: string;
+  foto_identitas?: string;
+  image?: string;
   data?: {
     token?: string;
     access_token?: string;
     user?: LoginUser;
     role?: string;
     name?: string;
+    photo?: string;
+    foto_identitas?: string;
+    image?: string;
   };
 }
 
@@ -340,6 +349,7 @@ export interface CurrentUserResponse {
   nik?: string;
   alamat?: string;
   photo?: string;
+  image?: string;
 }
 
 /**

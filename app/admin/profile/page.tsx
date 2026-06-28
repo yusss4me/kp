@@ -7,6 +7,7 @@ import { useAuthStore } from "@/app/lib/stores/auth-store";
 import { useDashboardSummary } from "@/app/lib/hooks/useDashboard";
 import { ToastProvider, useToast } from "@/app/ui/atoms/toast";
 import { getImageUrl } from "@/app/lib/utils/image";
+import { DashboardHeader } from "@/app/ui/organisms/dashboard-header";
 
 // ─── Inner page (butuh akses ke useToast, jadi harus di dalam Provider) ───────
 
@@ -19,6 +20,7 @@ function AdminProfilePageContent() {
   const { show: showToast } = useToast();
 
   const [editing, setEditing] = useState(false);
+  const [isPreview, setIsPreview] = useState(false);
   const [name, setName] = useState(authUser?.name || "Administrator");
   const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -64,20 +66,31 @@ function AdminProfilePageContent() {
   };
 
   return (
-    <AdminProfileTemplate
-      name={name}
-      image={authUser?.image ? getImageUrl(authUser.image) : ""}
-      setName={setName}
-      editing={editing}
-      setEditing={setEditing}
-      onSave={handleSave}
-      onLogout={handleLogout}
-      fileInputRef={fileInputRef}
-      onImageUpload={() => fileInputRef.current?.click()}
-      totalDonasi={totalDonasi}
-      programAktif={programAktif}
-      menungguVerifikasi={menungguVerifikasi}
-    />
+    <DashboardHeader
+      headerTitle="Profil Admin"
+      user={{
+        name: authUser?.name || "Admin",
+        role: authUser?.role || "Administrator",
+        image: authUser?.image ? getImageUrl(authUser.image) : undefined,
+      }}
+    >
+      <AdminProfileTemplate
+        name={name}
+        image={authUser?.image ? getImageUrl(authUser.image) : ""}
+        setName={setName}
+        editing={editing}
+        setEditing={setEditing}
+        isPreview={isPreview}
+        setIsPreview={setIsPreview}
+        onSave={handleSave}
+        onLogout={handleLogout}
+        fileInputRef={fileInputRef}
+        onImageUpload={() => fileInputRef.current?.click()}
+        totalDonasi={totalDonasi}
+        programAktif={programAktif}
+        menungguVerifikasi={menungguVerifikasi}
+      />
+    </DashboardHeader>
   );
 }
 

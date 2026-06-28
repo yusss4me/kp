@@ -40,7 +40,7 @@ export interface HeroSectionProps {
  */
 export const HeroSection = ({usersAvatar, userContribution, slide, title, desc }: HeroSectionProps) => {
   return (
-    <section className="relative overflow-hidden pb-16 md:pt-12 md:pb-32">
+    <section className="relative overflow-hidden pb-16 pt-6 md:pt-12 md:pb-32">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <div className="space-y-8 text-center lg:text-left order-2 lg:order-1">
           <Badge icon={Heart} variant="soft" color="primary" className="inline-flex items-center gap-2 px-4 py-2">

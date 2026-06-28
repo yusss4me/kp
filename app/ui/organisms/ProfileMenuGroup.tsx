@@ -24,7 +24,10 @@ import { Container } from "../atoms/container";
 
 export interface ProfileMenuGroupProps {
   className?: string;
+  onLogout?: () => void;
 }
+
+import { useAuthStore } from "@/app/lib/stores/auth-store";
 
 /**
  * ProfileMenuGroup
@@ -37,9 +40,13 @@ export interface ProfileMenuGroupProps {
  * @param {ProfileMenuGroupProps} props - Properti komponen
  * @returns {JSX.Element} Komponen ProfileMenuGroup
  */
-export const ProfileMenuGroup: React.FC<ProfileMenuGroupProps> = () => {
+export const ProfileMenuGroup: React.FC<ProfileMenuGroupProps> = ({ onLogout }) => {
+  const user = useAuthStore((state) => state.user);
+  const userName = user?.name || "Donatur YAMUTI";
+  const userImage = user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=random`;
+
   return (
-    <Container className="flex flex-col gap-8 pb-24">
+    <Container className="flex flex-col gap-8 pb-24 w-full max-w-2xl mx-auto">
       {/* Profile Header */}
       <Container className="bg-red-primary p-8 rounded-b-[40px] shadow-xl relative overflow-hidden flex flex-col">
         {/* Decorative element */}
@@ -48,8 +55,8 @@ export const ProfileMenuGroup: React.FC<ProfileMenuGroupProps> = () => {
         <Container className="flex items-center gap-6 relative z-10">
           <Container className="relative">
             <Img
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop"
-              alt="M. Ardiansyah"
+              src={userImage}
+              alt={userName}
               w={80}
               h={80}
               rounded="lg"
@@ -60,7 +67,7 @@ export const ProfileMenuGroup: React.FC<ProfileMenuGroupProps> = () => {
           </Container>
           <Container className="space-y-1 flex flex-col">
             <Txt variant="h5" weight="bold" color="light">
-              M. Ardiansyah
+              {userName}
             </Txt>
             <Container className="flex items-center gap-2 px-2.5 py-1 bg-white/10 rounded-full border border-white/10">
               <Txt variant="caption" weight="bold" className="text-[10px] text-white uppercase tracking-widest">
@@ -126,6 +133,7 @@ export const ProfileMenuGroup: React.FC<ProfileMenuGroupProps> = () => {
           size="lg"
           shape="rounded"
           className="w-full py-4 rounded-[24px] bg-red-50 text-red-primary font-black text-sm mb-8"
+          onClick={onLogout}
         >
           Keluar Akun
         </Btn>

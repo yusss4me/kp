@@ -8,6 +8,7 @@ import { Icn } from '../atoms/Icn';
 import { Btn } from '../atoms/button';
 import { Badge } from '../atoms/badge';
 import { MilestoneCard } from '../molecules/milestoneCard';
+import { Input } from '../atoms/input';
 
 export interface AdminProfileHeaderProps {
   className?: string;
@@ -17,6 +18,14 @@ export interface AdminProfileHeaderProps {
   totalDonasi: string;
   programAktif: string;
   menungguVerifikasi: string;
+  editing?: boolean;
+  setEditing?: (editing: boolean) => void;
+  isPreview?: boolean;
+  setIsPreview?: (preview: boolean) => void;
+  name?: string;
+  setName?: (name: string) => void;
+  onSave?: () => void;
+  onImageUpload?: () => void;
 }
 
 /**
@@ -34,14 +43,57 @@ export const AdminProfileHeader: React.FC<AdminProfileHeaderProps> = (props) => 
     const { title, subtitle, image, totalDonasi, programAktif, menungguVerifikasi, className } = props;
   return (
     <Container variant='red' padding='md' radius='lg' shadow='xl' className="relative overflow-hidden w-full">
-      {/* Decorative element */}
-      
-      
-      <Container gap='lg' className="items-center relative z-10">
-        <MilestoneCard 
-        image={image} 
-        title={title} 
-        range={subtitle}/>
+      <Container gap='lg' className="items-center relative z-10 flex flex-col md:flex-row justify-between w-full">
+        {props.editing && !props.isPreview ? (
+          <div className="flex flex-col gap-4 w-full md:w-2/3 bg-white/20 p-4 rounded-2xl backdrop-blur-sm">
+            <Txt variant="h5" weight="bold" color="light">Edit Profil Admin</Txt>
+            <div className="w-full">
+              <label className="text-white text-sm mb-1 block">Nama Admin</label>
+              <input
+                type="text"
+                value={props.name || ''}
+                onChange={(e) => props.setName && props.setName(e.target.value)}
+                className="w-full px-4 py-2 rounded-xl text-gray-900 border-none outline-none focus:ring-2 focus:ring-white"
+              />
+            </div>
+            
+            <div className="flex items-center gap-4 mb-2">
+              <div 
+                className="relative cursor-pointer group"
+                onClick={props.onImageUpload}
+              >
+                <Img src={props.image || "https://ui-avatars.com/api/?name=Admin"} width={64} height={64} className="rounded-full object-cover border-2 border-white/50 w-16 h-16" alt="Avatar" />
+                <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                   <span className="text-[10px] text-white font-bold">Ubah</span>
+                </div>
+              </div>
+              <Txt variant="small" color="light">Klik foto untuk mengubah</Txt>
+            </div>
+
+            <div className="flex gap-2 mt-2">
+              <Btn size="sm" variant="light" onClick={() => props.setEditing && props.setEditing(false)}>Batal</Btn>
+              <Btn size="sm" variant="outline" onClick={() => props.setIsPreview && props.setIsPreview(true)}>Lihat Pratinjau (Preview)</Btn>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col md:flex-row justify-between w-full items-center">
+            <MilestoneCard 
+              image={image} 
+              title={props.isPreview ? (props.name || title) : title} 
+              range={subtitle}
+            />
+            <div className="flex gap-2 mt-4 md:mt-0">
+              {props.isPreview ? (
+                <>
+                  <Btn size="sm" variant="light" onClick={() => props.setIsPreview && props.setIsPreview(false)}>Kembali Edit</Btn>
+                  <Btn size="sm" variant="outline" onClick={props.onSave}>Simpan Profil</Btn>
+                </>
+              ) : (
+                <Btn size="sm" variant="light" onClick={() => props.setEditing && props.setEditing(true)}>Edit Profil</Btn>
+              )}
+            </div>
+          </div>
+        )}
       </Container>
 
       {/* Admin Quick Stats Card */}

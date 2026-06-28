@@ -15,11 +15,22 @@ function SuperAdminProfileContent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { show: showToast } = useToast();
 
+  const [previewImage, setPreviewImage] = useState<string>("");
+
   const handleImageUpload = () => {
     fileInputRef.current?.click();
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewImage(url);
+    }
+  };
+
   return (
+    <>
     <AdminProfileTemplate
       name={name}
       setName={setName}
@@ -36,7 +47,10 @@ function SuperAdminProfileContent() {
       }}
       fileInputRef={fileInputRef}
       onImageUpload={handleImageUpload}
+      image={previewImage || undefined}
     />
+    <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
+    </>
   );
 }
 

@@ -5,11 +5,13 @@ import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   Compass,
-  Grip
+  Grip,
+  User
 } from "lucide-react";
 import { routes } from "@/app/lib/constants/routes";
 import { ADMIN_PROFILE_MENU_GROUPS } from "@/app/lib/constants/profile-constants";
 import { BroadcastBubble } from "@/app/ui/organisms/broadcast-bubble";
+import { useRouter } from "next/navigation";
 
 export default function Layout({
   children,
@@ -23,7 +25,15 @@ export default function Layout({
     { label: t("dashboard"), href: routes.admin.root(), icon: LayoutDashboard },
     { label: t("activity"), href: routes.admin.quickAccess.root(), icon: Grip },
     { label: t("explore"), href: routes.admin.explore.root(), icon: Compass },
+    { label: "Profil", href: routes.admin.profile.root(), icon: User, hideOnDesktop: true },
   ];
+
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await useAuthStore.getState().logout();
+    router.push("/auth");
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50/50">
@@ -35,6 +45,7 @@ export default function Layout({
           role: "Administrator"
         }}
         profileMenuGroups={ADMIN_PROFILE_MENU_GROUPS}
+        onLogout={handleLogout}
       />
       <main className="flex-grow pb-24 md:pb-0 relative">
         {children}

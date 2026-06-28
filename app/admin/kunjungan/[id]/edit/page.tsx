@@ -7,6 +7,8 @@ import * as z from "zod";
 import { AdminBookingFormTemplate, BookingFormInput } from "@/app/ui/templates/admin-booking-form";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { routes } from "@/app/lib/constants/routes";
+import { useState } from "react";
+import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
 
 const schema = z.object({
   visitor: z.string().min(2, "Nama pengunjung wajib diisi"),
@@ -25,6 +27,8 @@ export default function EditKunjunganPage() {
   const updateBooking = useYamutiStore((s) => s.updateBooking);
   const deleteBooking = useYamutiStore((s) => s.deleteBooking);
 
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+
   const form = useForm<BookingFormInput>({
     resolver: zodResolver(schema),
     values: booking
@@ -42,20 +46,35 @@ export default function EditKunjunganPage() {
   };
 
   const onDelete = () => {
-    if (confirm("Hapus jadwal kunjungan ini?")) {
-      deleteBooking(id);
-      router.push(routes.admin.kunjungan.root());
-    }
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setIsConfirmOpen(false);
+    deleteBooking(id);
+    router.push(routes.admin.kunjungan.root());
   };
 
   return (
-    <AdminBookingFormTemplate
-      title={booking.visitor}
-      isEdit
-      form={form}
-      onSubmit={onSubmit}
-      onDelete={onDelete}
-      backUrl={routes.admin.kunjungan.root()}
-    />
+    <>
+      <AdminBookingFormTemplate
+        title={booking.visitor}
+        isEdit
+        form={form}
+        onSubmit={onSubmit}
+        onDelete={onDelete}
+        backUrl={routes.admin.kunjungan.root()}
+      />
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title="Konfirmasi Hapus"
+        message="Apakah Anda yakin ingin menghapus jadwal kunjungan ini? Tindakan ini tidak dapat dibatalkan."
+        confirmText="Hapus"
+        cancelText="Batal"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
+    </>
   );
 }

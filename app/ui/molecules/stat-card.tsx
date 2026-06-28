@@ -54,12 +54,12 @@ export const StatCard = ({
   return (
     <Container
       className={cn(
-        "bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300",
+        "bg-white/80 backdrop-blur-xl p-6 rounded-[2.5rem] border border-white shadow-xl shadow-gray-200/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group",
         className,
       )}
     >
       <div className="flex justify-between items-start mb-4">
-        <div className={cn("p-3 rounded-2xl", colorClasses[color])}>
+        <div className={cn("p-4 rounded-[1.25rem] transition-colors duration-300 group-hover:scale-110", colorClasses[color])}>
           <Icn icon={Icon} size={24} color="current" />
         </div>
         {trend && (

@@ -49,7 +49,6 @@ export interface NavLink {
 const DEFAULT_LINKS: NavLink[] = [
   { label: "Beranda", href: routes.user.root(), icon: Home },
   { label: "Aktivitas", href: routes.user.aktivitas.root(), icon: HandCoins },
-  { label: "Profil", href: routes.user.aktivitas.profile.root(), icon: User, hideOnDesktop: true },
 ];
 
 export interface NavbarProps {
@@ -64,6 +63,7 @@ export interface NavbarProps {
   amountDonatedUser?: string;
   className?: string;
   profileMenuGroups?: any;
+  onLogout?: () => void;
 }
 
 /**
@@ -90,6 +90,7 @@ export const Navbar = ({
   amountDonatedUser = "Rp 0",
   className = "",
   profileMenuGroups,
+  onLogout,
 }: NavbarProps) => {
   const pathname = usePathname();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -150,47 +151,6 @@ export const Navbar = ({
           </nav>
         </Container>
 
-        {/* Bottom Section: User Profile */}
-        <Container className="pt-6 border-t border-white/10">
-          <Container className="flex items-center justify-center p-3">
-            <Btn
-              onClick={() => setIsProfileOpen(!isProfileOpen)}
-              variant="transparent"
-              className="text-white hover:bg-white/10 rounded-full p-3"
-              aria-label={isProfileOpen ? "Tutup profil" : "Buka profil"}
-              aria-expanded={isProfileOpen}
-            >
-              {isProfileOpen
-                ? <Icn icon={X} size={25} color="current" />
-                : <Icn icon={User} size={25} color="current" />}
-            </Btn>
-          </Container>
-        </Container>
-
-        {/* Profile Overlay (Desktop Fly-out) */}
-        {isProfileOpen && (
-          <div
-            className="absolute left-full top-0 h-screen w-[400px] bg-black/20 backdrop-blur-sm z-[60] animate-in slide-in-from-left-4 duration-300"
-            role="dialog"
-            aria-label="Menu profil pengguna"
-          >
-            <div className="h-full " onClick={(e) => e.stopPropagation()}>
-              <ProfileTemplate
-                user={user}
-                amountProgramUser={amountProgramUser}
-                amountVisitUser={amountVisitUser}
-                amountDonatedUser={amountDonatedUser}
-                listMenu={profileMenuGroups || PROFILE_MENU_GROUPS}
-                className={className}
-                isFlyout={true} />
-            </div>
-            {/* Close trigger for clicking outside the card but within the flyout area */}
-            <div
-              className="absolute inset-0 -z-10"
-              onClick={() => setIsProfileOpen(false)}
-            />
-          </div>
-        )}
       </Container>
 
       {/* Mobile View: Top Header + Bottom Navigation */}

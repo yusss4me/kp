@@ -16,7 +16,8 @@ import { useToast } from "@/app/ui/providers/toast-provider";
 import { useRouter } from "next/navigation";
 import { useYamutiStore } from "@/app/lib/stores/yamuti-store";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
 
 const donasiSchema = z.object({
   nama_donatur: z.string().min(3, "Nama minimal 3 karakter").optional().or(z.literal("")),
@@ -51,11 +52,22 @@ export function DonationFormTemplate({ activityId, isUser }: DonationFormTemplat
   const fetchPrograms = useYamutiStore((s) => s.fetchPrograms);
   const user = useAuthStore((s) => s.user);
 
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [pendingData, setPendingData] = useState<DonasiFormValues | null>(null);
+
   useEffect(() => {
     fetchPrograms();
   }, [fetchPrograms]);
 
-  const onSubmit = async (data: DonasiFormValues) => {
+  const onFormSubmit = (data: DonasiFormValues) => {
+    setPendingData(data);
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirm = async () => {
+    if (!pendingData) return;
+    setIsConfirmOpen(false);
+    const data = pendingData;
     try {
       const payload: any = {
         ...data,
@@ -136,8 +148,9 @@ export function DonationFormTemplate({ activityId, isUser }: DonationFormTemplat
   };
 
   const formContent = (
+    <>
     <FormActionTemplate
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onFormSubmit)}
       className={isUser ? "" : "p-6 md:p-10 shadow-2xl shadow-black/10 border border-white/20 rounded-2xl bg-white relative z-20"}
     >
       {/* Program Info */}
@@ -199,6 +212,17 @@ export function DonationFormTemplate({ activityId, isUser }: DonationFormTemplat
         Donasi Sekarang
       </Btn>
     </FormActionTemplate>
+    <ConfirmationModal
+      isOpen={isConfirmOpen}
+      title="Konfirmasi Donasi"
+      message="Apakah Anda yakin ingin melanjutkan pembayaran donasi dengan nominal ini?"
+      confirmText="Ya, Lanjutkan"
+      cancelText="Batal"
+      variant="info"
+      onConfirm={handleConfirm}
+      onCancel={() => setIsConfirmOpen(false)}
+    />
+    </>
   );
 
   if (isUser) {

@@ -9,11 +9,7 @@ import Link from "next/link";
 import { CheckCircle } from "lucide-react";
 import Script from "next/script";
 
-declare global {
-  interface Window {
-    snap: any;
-  }
-}
+
 
 function SuccessContent({ programId }: { programId: string }) {
   const searchParams = useSearchParams();
@@ -24,16 +20,18 @@ function SuccessContent({ programId }: { programId: string }) {
   const token = searchParams.get("token");
 
   useEffect(() => {
-    if (token && token !== "Simulasi-Token-123" && window.snap) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (token && token !== "Simulasi-Token-123" && (window as any).snap) {
       // Trigger Midtrans Snap popup
-      window.snap.pay(token, {
-        onSuccess: function (result: any) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).snap.pay(token, {
+        onSuccess: function (result: unknown) {
           console.log("Payment success:", result);
         },
-        onPending: function (result: any) {
+        onPending: function (result: unknown) {
           console.log("Payment pending:", result);
         },
-        onError: function (result: any) {
+        onError: function (result: unknown) {
           console.error("Payment error:", result);
         },
         onClose: function () {

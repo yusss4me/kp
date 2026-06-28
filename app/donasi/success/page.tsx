@@ -11,11 +11,7 @@ import Link from "next/link";
 import { CheckCircle } from "lucide-react";
 import Script from "next/script";
 
-declare global {
-  interface Window {
-    snap: any;
-  }
-}
+
 
 function SuccessContent() {
   const searchParams = useSearchParams();
@@ -26,9 +22,9 @@ function SuccessContent() {
   const token = searchParams.get("token");
 
   useEffect(() => {
-    if (token && token !== "Simulasi-Token-123" && window.snap) {
+    if (token && token !== "Simulasi-Token-123" && (window as any).snap) {
       // Trigger Midtrans Snap popup
-      window.snap.pay(token, {
+      (window as any).snap.pay(token, {
         onSuccess: function (result: any) {
           console.log("Payment success:", result);
         },

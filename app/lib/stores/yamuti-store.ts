@@ -92,13 +92,13 @@ interface YamutiStore {
   deleteInventory: (id: number) => void;
 
   addTransaction: (data: Omit<FinanceTransaction, "id" | "amount">) => number;
-  deleteTransaction: (id: number) => void;
+  deleteTransaction: (id: number | string) => void;
   getDistributions: () => FundDistribution[];
 
-  getBookingById: (id: number) => VisitBooking | undefined;
+  getBookingById: (id: number | string) => VisitBooking | undefined;
   addBooking: (data: Omit<VisitBooking, "id">) => Promise<number>;
-  updateBooking: (id: number, data: Partial<VisitBooking>) => void;
-  deleteBooking: (id: number) => void;
+  updateBooking: (id: number | string, data: Partial<VisitBooking>) => void;
+  deleteBooking: (id: number | string) => void;
 
   getAdminById: (id: string) => OwnerAdmin | undefined;
   addAdmin: (data: Omit<OwnerAdmin, "id">) => string;
@@ -399,14 +399,14 @@ export const useYamutiStore = create<YamutiStore>()(
           formData.append("tanggal_lahir", tanggal_lahir || "");
           formData.append("jenis_kelamin", data.jenis_kelamin || "Laki-laki");
           formData.append("status", data.status);
-          formData.append("kategori_bayi", data.kategori_bayi ? "true" : "false");
+          formData.append("kategori_bayi", data.kategori_bayi ? "1" : "0");
           if (data.foto_identitas) {
             formData.append("foto_identitas", data.foto_identitas);
           }
           
           await createAnakAsuh(formData);
         } catch (error: any) {
-          console.error("Gagal menambah anak asuh via API:", error);
+          console.error("Gagal menambah anak asuh via API:", error.response?.data || error);
           // Rollback on failure
           set({ error: getErrorMessage(error, "Gagal menambah anak asuh"), orphans: prev });
           throw error;

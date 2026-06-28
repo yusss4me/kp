@@ -81,16 +81,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           </Container>
         </Container>
       </Container>
-      <Lnk href="/user/profil" className="w-full sm:w-auto shrink-0">
-        <Btn
-          variant="light"
-          size="sm"
-          shape="rounded"
-          className="w-full sm:w-auto py-2.5 px-6 shadow-lg bg-white/10 border border-white/20 text-white hover:bg-white hover:text-red-primary active:scale-[0.98] transition-all font-bold"
-        >
-          Lihat Profil
-        </Btn>
-      </Lnk>
+      
     </Container>
   );
 };

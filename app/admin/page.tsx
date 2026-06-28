@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { AdminDashboard } from "@/app/ui/templates/admin-dashboardTemplate";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
@@ -13,6 +14,7 @@ import { ErrorDisplay } from "@/app/ui/molecules/error-display";
 export default function Page() {
   const router = useRouter();
   const authUser = useAuthStore((s) => s.user);
+  const now = useMemo(() => Date.now(), []);
   const { data: orphans = [], isLoading: orphansLoading, error: orphansError, refetch: refetchOrphans } = useOrphans();
   const { data: programs = [], isLoading: programsLoading, error: programsError, refetch: refetchPrograms } = usePrograms();
   const { data: transaksiKeuangan = [] } = useTransaksiKeuangan();
@@ -25,7 +27,7 @@ export default function Page() {
     // Compute age from birthDate
     const birthDate = o.birthDate ? new Date(o.birthDate) : null;
     const age = birthDate
-      ? Math.floor((Date.now() - birthDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000))
+      ? Math.floor((now - birthDate.getTime()) / (365.25 * 24 * 60 * 60 * 1000))
       : 0;
 
     return {

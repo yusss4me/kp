@@ -13,7 +13,9 @@ import { Input } from "../atoms/input";
 import { Btn } from "../atoms/button";
 import { createKunjungan } from "@/app/lib/api/services/kunjungan";
 import { useAuthStore } from "@/app/lib/stores/auth-store";
+import { useState } from "react";
 import { InteractiveCalendar } from "./interactive-calendar";
+import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
 
 const visitSchema = z.object({
   fullName: z.string().min(3, "Nama lengkap minimal 3 karakter").optional().or(z.literal("")),
@@ -65,7 +67,18 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
   const visitDate = watch("visitDate");
   const visitTime = watch("visitTime");
 
-  const onSubmit = async (data: VisitFormValues) => {
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [pendingData, setPendingData] = useState<VisitFormValues | null>(null);
+
+  const onFormSubmit = (data: VisitFormValues) => {
+    setPendingData(data);
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirm = async () => {
+    if (!pendingData) return;
+    setIsConfirmOpen(false);
+    const data = pendingData;
     try {
       const payload = {
         nama_tamu: isUser && user ? user.name || "Donatur" : data.fullName || "Donatur",
@@ -121,7 +134,7 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
         <Container
           className="p-6 md:p-10 shadow-2xl shadow-black/10 border border-white/20 rounded-2xl bg-white"
         >
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
+          <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col gap-8">
             <div className="flex flex-col gap-6">
               <div className="space-y-4">
                 {!isUser && (
@@ -204,6 +217,17 @@ export const ActivityKunjungan = ({isUser}: KunjunganClientTemplateProps) => {
           <li>Konfirmasi akan dikirimkan melalui WhatsApp/Email.</li>
         </ul>
       </div>
+
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title="Konfirmasi Pengajuan"
+        message="Apakah Anda yakin ingin mengirim pengajuan kunjungan ini?"
+        confirmText="Ya, Kirim"
+        cancelText="Batal"
+        variant="info"
+        onConfirm={handleConfirm}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
     </div>
   );
 };

@@ -9,6 +9,8 @@ import { Input } from "@/app/ui/atoms/input";
 import { Container } from "@/app/ui/atoms/container";
 import { ChevronLeft, Save, Trash2 } from "lucide-react";
 import type { InventoryItem } from "@/app/lib/types/entities";
+import { useState } from "react";
+import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
 
 export type InventoryFormInput = {
   name: string;
@@ -38,9 +40,24 @@ export function AdminInventoryFormTemplate({
 }: AdminInventoryFormTemplateProps) {
   const { register, formState: { errors, isSubmitting } } = form;
 
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [pendingData, setPendingData] = useState<InventoryFormInput | null>(null);
+
+  const onFormSubmit = (data: InventoryFormInput) => {
+    setPendingData(data);
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirm = () => {
+    if (pendingData) {
+      setIsConfirmOpen(false);
+      onSubmit(pendingData);
+    }
+  };
+
   return (
     <DashboardHeader headerTitle={isEdit ? `Edit: ${title}` : "Barang Baru"}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-2xl mx-auto space-y-8 pb-20">
+      <form onSubmit={form.handleSubmit(onFormSubmit)} className="max-w-2xl mx-auto space-y-8 pb-20">
         <div className="flex justify-between items-center">
           <Link href={backUrl} className="inline-flex items-center gap-2 text-gray-500 hover:text-red-primary transition-colors group">
             <div className="p-2 rounded-xl bg-gray-100 group-hover:bg-red-50 transition-colors">
@@ -75,6 +92,16 @@ export function AdminInventoryFormTemplate({
           {isEdit ? "Simpan Perubahan" : "Tambah Barang"}
         </Btn>
       </form>
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title={isEdit ? "Konfirmasi Perubahan" : "Konfirmasi Simpan"}
+        message={isEdit ? "Apakah Anda yakin ingin menyimpan perubahan pada data inventaris ini?" : "Apakah Anda yakin ingin menyimpan data inventaris baru ini?"}
+        confirmText="Ya, Simpan"
+        cancelText="Batal"
+        variant="info"
+        onConfirm={handleConfirm}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
     </DashboardHeader>
   );
 }

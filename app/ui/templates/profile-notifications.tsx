@@ -23,6 +23,7 @@ export function ProfileNotificationsTemplate({ settings: defaultSettings }: Prof
     const saved = localStorage.getItem("yamuti_notification_settings");
     if (saved) {
       try {
+        // eslint-disable-next-line
         setSettings(JSON.parse(saved));
       } catch (e) {
         // ignore

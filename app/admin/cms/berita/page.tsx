@@ -14,6 +14,7 @@ import { format } from "date-fns";
 import { id } from "date-fns/locale";
 import { createArtikel, updateArtikel, deleteArtikel, fetchArtikelList } from "@/app/lib/api/services/artikel";
 import { getImageUrl } from "@/app/lib/utils/image";
+import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
 
 const formSchema = z.object({
   title: z.string().min(1, "Judul Berita wajib diisi"),
@@ -31,6 +32,9 @@ export default function AdminNewsPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<{id: string, title: string} | null>(null);
 
   const loadNews = async () => {
     try {
@@ -121,10 +125,16 @@ export default function AdminNewsPage() {
     }
   };
 
-  const handleDelete = async (itemId: string) => {
-    if (confirm("Hapus berita ini?")) {
+  const handleDeleteClick = (itemId: string, title: string) => {
+    setPendingDelete({ id: itemId, title });
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (pendingDelete) {
       try {
-        await deleteArtikel(itemId);
+        setIsConfirmOpen(false);
+        await deleteArtikel(pendingDelete.id);
         loadNews();
       } catch (e) {
         console.error(e);
@@ -271,7 +281,7 @@ export default function AdminNewsPage() {
                         border="border"
                         borderColor="dark"
                         className="flex-1 gap-2 text-red-600 border-red-200 hover:bg-red-50" 
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() => handleDeleteClick(item.id, item.judul)}
                       >
                         <Trash2 size={16} /> Hapus
                       </Btn>
@@ -283,6 +293,16 @@ export default function AdminNewsPage() {
           </div>
         )}
       </div>
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title="Konfirmasi Hapus"
+        message={`Apakah Anda yakin ingin menghapus berita "${pendingDelete?.title}"? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Hapus"
+        cancelText="Batal"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
     </DashboardHeader>
   );
 }

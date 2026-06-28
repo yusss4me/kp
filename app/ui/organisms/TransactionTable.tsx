@@ -7,14 +7,31 @@ import { Table, THead, TBody, TR, TH, TD } from "../atoms/table";
 import { Container } from "../atoms/container";
 import { Btn } from "../atoms/button";
 import type { FinanceTransaction } from "@/app/lib/types/entities";
+import { useState } from "react";
+import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
 
 export interface TransactionTableProps {
   transactions: FinanceTransaction[];
-  onDelete?: (id: number) => void;
+  onDelete?: (id: number | string) => void;
   className?: string;
 }
 
 export const TransactionTable = ({ transactions, onDelete }: TransactionTableProps) => {
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<number | string | null>(null);
+
+  const handleDeleteClick = (id: number | string) => {
+    setPendingDeleteId(id);
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (pendingDeleteId && onDelete) {
+      setIsConfirmOpen(false);
+      onDelete(pendingDeleteId);
+    }
+  };
+
   return (
     <Container className="bg-white rounded-[40px] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
       <Container className="p-8 border-b border-gray-50 flex items-center justify-between">
@@ -66,9 +83,7 @@ export const TransactionTable = ({ transactions, onDelete }: TransactionTablePro
                       variant="light"
                       size="sm"
                       className="text-red-primary bg-red-50 gap-1"
-                      onClick={() => {
-                        if (confirm("Hapus transaksi ini?")) onDelete(tx.id);
-                      }}
+                      onClick={() => handleDeleteClick(tx.id)}
                     >
                       <Trash2 size={14} /> Hapus
                     </Btn>
@@ -79,6 +94,16 @@ export const TransactionTable = ({ transactions, onDelete }: TransactionTablePro
           </TBody>
         </Table>
       </Container>
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title="Konfirmasi Hapus"
+        message="Apakah Anda yakin ingin menghapus transaksi ini? Tindakan ini tidak dapat dibatalkan."
+        confirmText="Hapus"
+        cancelText="Batal"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
     </Container>
   );
 };

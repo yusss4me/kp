@@ -6,7 +6,7 @@ import {Calendar, Clock} from "lucide-react"
 import { Lnk } from "../atoms/link";
 
 interface VisitingCardProps {
-    id: number;
+    id: number | string;
     visitor: string;
     date: string;
     time: string;

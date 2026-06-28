@@ -5,6 +5,8 @@ import { Btn } from "../atoms/button";
 import { Table, THead, TBody, TR, TH, TD } from "../atoms/table";
 import { Pencil, Trash2 } from "lucide-react";
 import type { InventoryItem } from "@/app/lib/types/entities";
+import { useState } from "react";
+import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
 
 export interface InventoryTableProps {
   items: InventoryItem[];
@@ -18,6 +20,21 @@ export const InventoryTable = ({ items, onDelete, editUrl }: InventoryTableProps
     if (status === "Cukup") return "success" as const;
     if (status === "Menipis") return "warning" as const;
     return "danger" as const;
+  };
+
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<{id: number, name: string} | null>(null);
+
+  const handleDeleteClick = (id: number, name: string) => {
+    setPendingDelete({ id, name });
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (pendingDelete && onDelete) {
+      setIsConfirmOpen(false);
+      onDelete(pendingDelete.id);
+    }
   };
 
   return (
@@ -64,9 +81,7 @@ export const InventoryTable = ({ items, onDelete, editUrl }: InventoryTableProps
                         variant="light"
                         size="sm"
                         className="text-red-primary bg-red-50 gap-1"
-                        onClick={() => {
-                          if (confirm(`Hapus ${item.name}?`)) onDelete(item.id);
-                        }}
+                        onClick={() => handleDeleteClick(item.id, item.name)}
                       >
                         <Trash2 size={14} /> Hapus
                       </Btn>
@@ -78,6 +93,16 @@ export const InventoryTable = ({ items, onDelete, editUrl }: InventoryTableProps
           </TBody>
         </Table>
       </div>
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title="Konfirmasi Hapus"
+        message={`Apakah Anda yakin ingin menghapus data inventaris ${pendingDelete?.name}? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Hapus"
+        cancelText="Batal"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
     </div>
   );
 };

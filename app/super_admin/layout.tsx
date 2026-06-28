@@ -6,9 +6,11 @@ import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   Compass,
+  User
 } from "lucide-react";
 import { routes } from "@/app/lib/constants/routes";
 import { OWNER_PROFILE_MENU_GROUPS } from "@/app/lib/constants/profile-constants";
+import { useRouter } from "next/navigation";
 
 /**
  * Owner Layout
@@ -26,7 +28,15 @@ export default function OwnerLayout({
     { label: t("dashboard"), href: routes.owner.root(), icon: LayoutDashboard },
     { label: t("activity"), href: routes.owner.quickAccess.root(), icon: Compass },
     { label: t("explore"), href: routes.owner.explore.root(), icon: Compass },
+    { label: "Profil", href: routes.owner.profile.root(), icon: User, hideOnDesktop: true },
   ];
+
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await useAuthStore.getState().logout();
+    router.push("/auth");
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50/50">
@@ -39,6 +49,7 @@ export default function OwnerLayout({
           image: user?.image || ""
         }}
         profileMenuGroups={OWNER_PROFILE_MENU_GROUPS}
+        onLogout={handleLogout}
       />
 
       {/* Konten Utama */}

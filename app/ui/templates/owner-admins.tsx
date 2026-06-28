@@ -8,6 +8,8 @@ import { Container } from "@/app/ui/atoms/container";
 import { Badge } from "@/app/ui/atoms/badge";
 import { Plus, ShieldCheck, Pencil, Trash2 } from "lucide-react";
 import type { OwnerAdmin } from "@/app/lib/types/entities";
+import { useState } from "react";
+import { ConfirmationModal } from "@/app/ui/molecules/confirmation-modal";
 
 interface OwnerAdminsTemplateProps {
   admins: OwnerAdmin[];
@@ -17,6 +19,21 @@ interface OwnerAdminsTemplateProps {
 }
 
 export function OwnerAdminsTemplate({ admins, onDelete, addUrl, editUrl }: OwnerAdminsTemplateProps) {
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<{id: string, name: string} | null>(null);
+
+  const handleDeleteClick = (id: string, name: string) => {
+    setPendingDelete({ id, name });
+    setIsConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (pendingDelete) {
+      setIsConfirmOpen(false);
+      onDelete(pendingDelete.id);
+    }
+  };
+
   return (
     <DashboardHeader headerTitle="Manajemen Administrator">
       <div className="space-y-6">
@@ -62,9 +79,7 @@ export function OwnerAdminsTemplate({ admins, onDelete, addUrl, editUrl }: Owner
                   variant="light"
                   size="sm"
                   className="text-red-primary bg-red-50 gap-1"
-                  onClick={() => {
-                    if (confirm(`Hapus admin ${admin.name}?`)) onDelete(admin.id);
-                  }}
+                  onClick={() => handleDeleteClick(admin.id, admin.name)}
                 >
                   <Trash2 size={16} /> Hapus
                 </Btn>
@@ -76,6 +91,16 @@ export function OwnerAdminsTemplate({ admins, onDelete, addUrl, editUrl }: Owner
           )}
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={isConfirmOpen}
+        title="Konfirmasi Hapus"
+        message={`Apakah Anda yakin ingin menghapus data admin ${pendingDelete?.name}? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Hapus"
+        cancelText="Batal"
+        variant="danger"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsConfirmOpen(false)}
+      />
     </DashboardHeader>
   );
 }

@@ -7,6 +7,7 @@ import { Home, HandCoins, User } from "lucide-react";
 
 import { routes } from "@/app/lib/constants/routes";
 import { BroadcastBubble } from "@/app/ui/organisms/broadcast-bubble";
+import { useRouter } from "next/navigation";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const user = useAuthStore((s) => s.user);
@@ -18,6 +19,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { label: t("profile"), href: routes.user.aktivitas.profile.root(), icon: User, hideOnDesktop: true },
   ];
 
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await useAuthStore.getState().logout();
+    router.push("/auth/donatur");
+  };
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-50/50">
       <Navbar
@@ -27,6 +35,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           role: "Donatur",
           image: "/logo/yamuti.png",
         }}
+        onLogout={handleLogout}
       />
       <main className="flex-grow pb-24 md:pb-0 relative">
         {children}
