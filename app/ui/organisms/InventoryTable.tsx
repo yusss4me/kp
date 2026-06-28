@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Txt } from "../atoms/text";
 import { Badge } from "../atoms/badge";
